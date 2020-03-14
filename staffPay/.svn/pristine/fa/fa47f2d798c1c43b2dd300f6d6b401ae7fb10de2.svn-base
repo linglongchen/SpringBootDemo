@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <title>通知管理</title>
+
+    <head th:include="init :: init"></head>
+
+    <script type="text/javascript">
+        //提交表单
+        function validForm(){
+            $('#signupForm').validate({
+                submitHandler:function(form){
+                    loading();
+                    form.action = '[[${ctx}]]/platform/notice/saveAll';
+                    form.submit();
+                }
+            });
+            $('#signupForm').submit();
+        }
+
+        //触发事件
+        layui.use(['form'], function(){
+            var form = layui.form;
+            form.on('radio(formDemo)', function(data) {
+                alert(1);
+            });
+
+        });
+
+        /*function demo(){
+            var t=document.getElementById("noticeTitle");
+            if(this.value="预览"){
+                showMsgSuccess('进入预览');
+                t.readOnly=true;
+            }else{
+                showMsgSuccess('退出预览');
+                t.readOnly=false;
+            }
+
+        }*/
+
+        function demo() {
+            if (true){
+                showMsgSuccess('进入预览');
+                document.getElementById("noticeTitle").disabled = true;
+                document.getElementById("noticeContent").disabled = true;
+                document.getElementById("circularEndTime").disabled = true;
+                document.getElementById("noticeRoll1").disabled = true;
+                document.getElementById("noticeRoll2").disabled = true;
+            }else if (false){
+                showMsgSuccess('退出预览');
+                document.getElementById("noticeTitle").disabled = false;
+                document.getElementById("noticeContent").disabled = false;
+                document.getElementById("circularEndTime").disabled = false;
+                document.getElementById("noticeRoll1").disabled = false;
+                document.getElementById("noticeRoll2").disabled = false;
+            }
+        }
+
+        function dem() {
+                showMsgSuccess('退出预览');
+                document.getElementById("noticeTitle").disabled = false;
+                document.getElementById("noticeContent").disabled = false;
+                document.getElementById("circularEndTime").disabled = false;
+                document.getElementById("noticeRoll1").disabled = false;
+                document.getElementById("noticeRoll2").disabled = false;
+
+        }
+
+        window.onload=function(){
+                var a =document.getElementById('noticeTitle');
+                var b =document.getElementById('noticeContent');
+                var c =document.getElementById('circularEndTime');
+                var d =document.getElementById('noticeRoll1');
+                var e =document.getElementById('noticeRoll2');
+                var oBtn=document.getElementById('preview');
+                var kg=true;
+                oBtn.onclick=function(){
+                    if(kg){
+                        showMsgSuccess('进入预览');
+                        a.disabled=true;
+                        b.disabled=true;
+                        c.disabled=true;
+                        d.disabled=true;
+                        e.disabled=true;
+                    }else{
+                        showMsgSuccess('退出预览');
+                        a.disabled=false;
+                        b.disabled=false;
+                        c.disabled=false;
+                        d.disabled=false;
+                        e.disabled=false;
+                    }
+                    kg=!kg;
+                }
+            }
+    </script>
+
+</head>
+<body class="gray-bg">
+<div class="wrapper animated fadeInRight">
+    <div class="ibox-content">
+        <div class="row">
+            <form id="signupForm" class="layui-form form-horizontal m-t" action="">
+                <input type="hidden" name="id" th:value="${localNotice.id}">
+                <div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+                    <label class="col-xs-3 layui-form-label">标题</label>
+                    <div class="col-xs-6">
+                        <input type="text" id="noticeTitle" name="noticeTitle" th:value="${localNotice.noticeTitle}" autocomplete="off" placeholder="请输入标题" required class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+                    <label class="col-xs-3 layui-form-label">内容</label>
+                    <div class="col-xs-6">
+                        <textarea id="noticeContent" name="noticeContent" th:text="${localNotice.noticeContent}" placeholder="请输入内容" required class="layui-textarea"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+                    <label class="col-xs-3 layui-form-label">首页滚动</label>
+                    <div class="col-lg-5 col-xs-6">
+                        <!--
+                            cradio 的 required 表示必须选中一个
+                        -->
+                        <input type="radio" id="noticeRoll1" name="noticeRoll" value="1"  th:field="${localNotice.noticeRoll}" title="是" checked="" required>
+                        <input type="radio" id="noticeRoll2" name="noticeRoll" value="2" th:field="${localNotice.noticeRoll}" title="否">
+                    </div>
+                </div>
+                <div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+                    <label class="col-xs-3 layui-form-label">结束时间</label>
+                    <div class="col-xs-6">
+                        <!--
+                            日期下拉选择框，其中lay-date的取值范围是date和datetime，如果有其他需要可以参考官网后修改代码
+                            lay-formatt表示显示的时间格式，当lay-date为date时，默认为yyyy-MM-dd，当lay-date为datetime时，默认为yyyy-MM-dd HH:mm:ss
+                            注意：使用该空间需要包含id属性
+                        -->
+
+                        <input type="date" name="circularEndTime" id="circularEndTime" placeholder="请选择日期" th:value="${#dates.
+                            format(localNotice.circularEndTime, 'yyyy-MM-dd')}" autocomplete="off" class="layui-input" lay-date="date" lay-format="yyyy-MM-dd" readonly required>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <input id="preview" style="display: none" th:onclick="'demo()'" class="btn btn-primary " type="button" value="预览" >
+                </div>
+                <div class="layui-inline">
+                    <input id="preview1" style="display: none" th:onclick="'demo1()'" class="btn btn-primary " type="button" value="返回" >
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

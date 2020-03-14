@@ -1,0 +1,253 @@
+ <!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:include="init :: init"></head>
+    <head th:include="init_bootstrap_table :: bootstrap_table"></head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+
+    <style>
+        .wrap{width: 140px;
+            height: 140px;
+            background-color: white;
+            border: 2px #D1D1D1 solid;
+            -webkit-border-radius: 100px;
+            margin-right: 50px;
+        }
+
+        .quan{
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+        }
+
+        .sl{
+            padding-left: 60px;
+            font-size: 30px;
+        }
+    </style>
+<script>
+    $(function(){
+        $('#table').bootstrapTable({
+            undefinedText : '',//defined的默认显示文本
+            striped : true,//条纹
+            method : 'get',
+            url : '[[${ctx}]]/install/customerOrder/listThree',
+            pagination : true,//显示分页
+            sidePagination : 'server',//定义分页为服务器端分页
+            pageNumber : 1,//起始页数
+            pageSize : 20,//默认显示行数
+            pageList : [20, 50, 100 ,200],//可选分页数
+            singleSelect : false,//多选
+            height : 'auto',
+            columns: [
+                {
+                    field: 'orderSn',
+                    title: '订单号',
+                    halign : 'center',
+                    align : 'center',
+                }, {
+                    field: 'hotelName',
+                    title: '所属酒店',
+                    halign : 'center',
+                    align : 'center'
+                },{
+                    field: 'orderRoom',
+                    title: '下单房号',
+                    halign : 'center',
+                    align : 'center'
+                },{
+                    field: 'createDate',
+                    title: '下单时间',
+                    halign : 'center',
+                    align : 'center'
+
+                },{
+                    field: 'goodsName',
+                    title: '商品内容',
+                    halign : 'center',
+                    align : 'center'
+                },{
+                    field: 'serviceMode.serviceMode',
+                    title: '服务方式',
+                    halign : 'center',
+                    align : 'center'
+                }
+                ,{
+                    field: 'goodsTotalPrice',
+                    title: '金额(元)',
+                    halign : 'center',
+                    align : 'center'
+                }, {
+                    field: 'status',
+                    title: '状态',
+                    halign : 'center',
+                    align : 'center',
+                    formatter: function(value,row,index){
+                        if(row.status==0){
+                            return "未接单 ";
+                        }else if(row.status==1){
+                            return "已接单";
+                        }else if(row.status==2){
+                            return "已完成 ";
+                        }else if(row.status==3){
+                            return "取消订单 ";
+                        }
+                    }
+                },{
+                    field : 'option',
+                    title : '操作',
+                    halign : 'center',
+                    align : 'center',
+                    formatter : function(value, row, index){
+                        if(row.status == 0){
+                            var _html = '<ul class="grid_btn_ul">';
+                            _html += '<li><a href="javascript:receiptOrder('+row.id+',1)" class="btn btn-success btn-xs">接单 </a></li>';
+                            _html += '<li><a href="javascript:cancelCustomerOrder('+row.id+',3)" class="btn btn-success btn-xs">取消订单 </a></li>';
+                            _html += '</ul>';
+                            return _html;
+                        }else if (row.status == 1){
+                            var _html = '<ul class="grid_btn_ul">';
+                            _html += '<li><a href="javascript:completeOrder('+row.id+',2)" class="btn btn-success btn-xs">已完成 </a></li>';
+                            _html += '</ul>';
+                            return _html;
+                        }
+                    }
+                }],
+            onLoadSuccess : function(data){
+                if(data.total == 0){
+                    $('#table').bootstrapTable('removeAll');
+                }
+            }
+        });
+    });
+
+
+    function completeOrder(id,status){
+        layer.confirm('您确定订单已完成吗？',function(){
+            parent.loading();
+            $.post('[[${ctx}]]/install/customerOrder/cancel',{
+                id : id,status:status
+            },function(result){
+                closeLoading();
+                layer.closeAll();
+                if(result.success){
+                    showMsgSuccess('更改成功');
+                    refreshTable();
+                }else{
+                    showMsgError(result.msg);
+                }
+            },'json');
+        });
+    }
+
+    //取消订单
+    function cancelCustomerOrder(id,status){
+        layer.confirm('您确定要取消订单吗？',function(){
+            parent.loading();
+            $.post('[[${ctx}]]/install/customerOrder/cancel',{
+                id : id,status:status
+            },function(result){
+                closeLoading();
+                layer.closeAll();
+                if(result.success){
+                    showMsgSuccess('更改成功');
+                    refreshTable();
+                }else{
+                    showMsgError(result.msg);
+                }
+            },'json');
+        });
+    }
+
+    //接单
+    function receiptOrder(id,status){
+        layer.confirm('您确定要接单吗？',function(){
+            parent.loading();
+            $.post('[[${ctx}]]/install/customerOrder/cancel',{
+                id : id,status:status
+            },function(result){
+                closeLoading();
+                layer.closeAll();
+                if(result.success){
+                    showMsgSuccess('操作成功');
+                    refreshTable();
+                }else{
+                    showMsgError(result.msg);
+                }
+            },'json');
+        });
+    }
+
+
+    function search(){
+        var param = $('#searchForm').serialize();
+        $('#table').bootstrapTable('refresh', {url : '[[${ctx}]]/install/customerOrder/listThree?' + param});
+    }
+
+    function demo1() {
+    	location='[[${ctx}]]/install/customerOrder/index5';
+    }
+
+
+</script>
+</head>
+<body layadmin-themealias="default">
+<div th:replace="head :: myfooter"></div>
+<div style="width: 100%;height: 100px">
+    <div class="layui-inline" style="position: absolute;right: 20px;top: 100px;">
+        <button class="btn btn-primary " type="button" th:onclick="'demo1()'">&nbsp;入驻申请</button>
+    </div>
+</div>
+<div class="quan">
+    <div class="wrap">
+        <p style="    margin-left: 26px;  padding-top: 33px; font-size: 20px;">今日订单</p>
+        <p class="sl"><b th:text="${customerOrder?.totalOrder}"></b></p>
+    </div>
+    <div class="wrap">
+        <p style="margin-left: 16px;padding-top: 33px; font-size: 20px;">未完成订单</p>
+        <p class="sl"><b th:text="${customerOrder?.notOrder}"></b></p>
+    </div>
+    <div class="wrap">
+        <p style="margin-left: 16px;padding-top: 33px; font-size: 20px;">已完成订单</p>
+        <p class="sl"><b th:text="${customerOrder?.completeOrder}"></b></p>
+    </div>
+    <div class="wrap">
+        <p style="padding-top: 33px; margin-left: 9px;font-size: 20px;">二维码展示次数</p>
+        <p class="sl"><b th:text="${customerOrder?.codeOrder}"></b></p>
+    </div>
+</div>
+<div class="layui-fluid animated fadeInRight" style="margin-top: 60px;">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+            <div class="layui-form-item form-head">
+                <form id="searchForm">
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <input name="orderSn" autocomplete="off" class="layui-input" placeholder="请输入订单号" type="text">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <input type="text" name="dateBegin" id="dateBegin" placeholder="请选择开始日期" autocomplete="off" class="layui-input" lay-date="date" lay-format="yyyy-MM-dd" readonly>
+                        </div>
+                        <div class="layui-form-mid layui-word-aux" style="float: left"> -</div>
+                        <div class="layui-input-inline">
+                            <input type="text" name="dateEnd" id="dateEnd" placeholder="请选择结束日期" autocomplete="off" class="layui-input" lay-date="date" lay-format="yyyy-MM-dd" readonly>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <button class="btn btn-primary " type="button" onclick="search()"><i class="fa fa-search"></i>&nbsp;查询</button>
+                    </div>
+                </form>
+            </div>
+
+
+            <table id="table">
+
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

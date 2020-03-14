@@ -1,0 +1,217 @@
+package com.chunqiu.mrjuly.modules.system.dao;
+
+
+import com.chunqiu.mrjuly.common.persistence.CrudDao;
+import com.chunqiu.mrjuly.modules.system.model.BankInfo;
+import com.chunqiu.mrjuly.modules.system.model.CodeExport;
+import com.chunqiu.mrjuly.modules.system.model.HotelCode;
+
+import java.util.List;
+
+/**
+ * 银行
+ */
+public interface SystemSetupDao extends CrudDao<HotelCode, Long> {
+
+    /**
+     * 查询所有银行列表
+     *
+     * @return
+     */
+    List<BankInfo> bankList();
+
+    /**
+     * 新增银行账户
+     *
+     * @param bankInfo
+     * @return
+     */
+    int insertBank(BankInfo bankInfo);
+
+    /**
+     * 查询对开账户的信息
+     *
+     * @return
+     */
+    BankInfo bankInfo();
+
+    /**
+     * 更新对开账户信息
+     *
+     * @param bankInfo
+     * @return
+     */
+    int updateBankInfoById(BankInfo bankInfo);
+
+
+    /**
+     * 新增酒店前缀
+     *
+     * @param hotelCode
+     * @return
+     */
+    int insertSaveHotel(HotelCode hotelCode);
+
+    /**
+     * 判断是否存在该酒店
+     *
+     * @param hotelCode
+     * @return
+     */
+    int isHotel(HotelCode hotelCode);
+
+    /**
+     * 根据前缀id查询绑定的设备
+     *
+     * @param hotelCode
+     * @return
+     */
+    List<HotelCode> findCodeList(HotelCode hotelCode);
+
+    /**
+     * 更新前缀编码
+     *
+     * @param hotelCode
+     * @return
+     */
+    int updateCodeById(HotelCode hotelCode);
+
+    /**
+     * 判断是否有重复的前缀编码
+     *
+     * @param hotelCode
+     * @return
+     */
+    int isNameByStr(HotelCode hotelCode);
+
+
+
+     List<HotelCode> getSelect();
+
+
+    /**
+     * 新增外壳设备编码
+     *
+     * @param codeExport
+     * @return
+     */
+    int insertShellCoding(List<CodeExport> codeExport);
+
+    /**
+     * 查询设备外壳编号
+     *
+     * @param hotelCode
+     * @return
+     */
+    List<HotelCode> findShellCodingList(HotelCode hotelCode);
+
+    /**
+     * 查询所有酒店前缀编码
+     *
+     * @return
+     */
+    List<HotelCode> hotelCodingList();
+
+    /**
+     * 单条归入设备编码
+     *
+     * @param hotelCode
+     * @return
+     */
+    int SingleCode(HotelCode hotelCode);
+
+    /**
+     * 更新外壳编号状态
+     *
+     * @param hotelCode
+     * @return
+     */
+    int updateShellCodeById(HotelCode hotelCode);
+
+    /**
+     * 更新绑定过的前缀编码
+     *
+     * @param hotelCode
+     * @return
+     */
+    int updateCodeBindingById(HotelCode hotelCode);
+
+    /**
+     * 多条归入设备
+     *
+     * @param hotelCodes
+     * @return
+     */
+    int insertManyCodeById(List<HotelCode> hotelCodes);
+
+    /**
+     * 多条更新设备编码状态
+     *
+     * @param hotelCodes
+     * @return
+     */
+    int updateManyCodeById(List<HotelCode> hotelCodes);
+
+    /**
+     * 删除外壳编号
+     *
+     * @param hotelCode
+     * @return
+     */
+    int deleteCodeById(HotelCode hotelCode);
+
+    /**
+     * 删除绑定编号
+     *
+     * @param hotelCode
+     * @return
+     */
+    int deleteBindingById(HotelCode hotelCode);
+
+    /**
+     * 更改外壳设备绑定状态
+     *
+     * @param hotelCode
+     * @return
+     */
+    int breakEncodingById(HotelCode hotelCode);
+
+
+    /**
+     * 多条更改外壳设备绑定状态
+     * @param hotelCode
+     * @return
+     */
+    int updateMultipleBreakById(List<HotelCode> hotelCode);
+
+    /**
+     * 多条删除绑定编号
+     * @param hotelCode
+     * @return
+     */
+    int deleteMultipleBreakById(List<HotelCode> hotelCode);
+
+
+    /**
+     *更新前缀编码状态
+     * @param hotelCode
+     * @return
+     */
+    int updatePrefixCodeById(HotelCode hotelCode);
+
+    /**
+     * 解绑当前前缀编码下的外壳编码
+     * @param hotelCode
+     * @return
+     */
+    int updateMatchingCodeById(HotelCode hotelCode);
+
+    /**
+     * 查询前缀编码下已经绑定的外壳编号id
+     * @param hotelCode
+     * @return
+     */
+    List<HotelCode> hotelCodeIdById(HotelCode hotelCode);
+
+
+}

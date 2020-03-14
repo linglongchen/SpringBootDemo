@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>展业申请</title>
+<head th:include="init :: init"></head>
+
+<script type="text/javascript">
+	layui.use('laydate', function() {
+		var laydate = layui.laydate;
+		laydate.render({
+			elem: '#leaseTerm',
+			trigger: 'click',
+			isInitValue: false,
+			min:minDate()
+		});
+	});
+	
+	//设置最小可选的日期
+	function minDate(){
+		var now = new Date();
+		return now.getFullYear()+"-" + (now.getMonth()+1) + "-" + now.getDate();
+	}
+
+	//提交表单
+	function apply() {
+		var hotelId =  $("#hotelCodeId").val();
+        if (hotelId == null || hotelId == "") {
+        	showMsgError("请选择酒店！");
+        	return;
+        }
+		var openingType =  $("#openingType").val();
+        if (openingType == null || openingType == "") {
+        	showMsgError("请选择展业状态！");
+        	return;
+        }
+		var leaseTerm =  $("#leaseTerm").val();
+        if (leaseTerm == null || leaseTerm == "") {
+        	showMsgError("请选择展业结束日期！");
+        	return;
+        }
+		
+        $.ajax({
+            type: "post",
+            url: '[[${ctx}]]/shophotel/shopHotel/saveApplyHotel',
+            data: {
+            	"hotelCodeId":hotelId,"leaseTerm":leaseTerm,"openingType":openingType
+            	},  //此处data是你的酒店类型参数  1表示你具体参数值  自己改一下
+            cache: false,
+            async: true,
+            dataType: "json",
+            success: function (data) {
+            	console.info(data);
+            	if (data.success) {
+	            	showMsgSuccess(data.msg);
+	            	var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+	            	parent.layer.close(index); //再执行关闭
+            	} else {
+            		showMsgError(data.msg);
+            	}
+            }
+        });
+	};
+	
+	function calDistance() {
+        var hotelId =  $("#hotelCodeId").val();
+        if (hotelId == null || hotelId == "") {
+            $('#hotelAddress').text("");
+            $('#distanceAdress').text("");
+        	showMsgError("请选择酒店！");
+        	return;
+        }
+        var shopLng = $("#shopLng").val();
+        var shopLat = $("#shopLat").val();
+        /*alert(hotelCodeId)*/
+        $.ajax({
+            type: "post",
+            url: '[[${ctx}]]/shopinfo/ShopCreate/select',
+            data: {"hotelCodeId":hotelId,"shopLng":shopLng,"shopLat":shopLat},  //此处data是你的酒店类型参数  1表示你具体参数值  自己改一下
+            cache: false,
+            async: false,
+            dataType: "json",
+            success: function (data) {
+                $('#hotelAddress').text(data.hotelAddress);
+                $('#distanceAdress').text(parseInt(data.distanceAdress));
+            }
+        });
+    }
+</script>
+
+</head>
+<body class="gray-bg">
+	<div class="wrapper animated fadeInRight" style="height: 100%">
+		<div class="ibox-content" style="height: 100%">
+			<div class="row">
+				<form id="applyHotel" class="layui-form form-horizontal m-t">
+					<input type="hidden" name="id" th:value="${shopInfo.id}">
+                    <input type="hidden" name="shopLng" th:value="${shopInfo?.shopLng}" id="shopLng">
+                    <input type="hidden" name="shopLat" th:value="${shopInfo?.shopLat}" id="shopLat">
+					<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+	                    <label class="col-xs-3 layui-form-label">酒店列表：</label>
+	                    <div class="col-xs-10">
+	                        <select th:onchange="'calDistance()'" class="chosen-select-deselect form-control layui-input" name="hotelCodeId" id="hotelCodeId" data-placeholder="请选择酒店" data-label="hotelCodeId">
+	                            <option></option>
+	                            <option th:each="hotelInfo:${hotelInfoList}" th:value="${hotelInfo.hotelCodeId}" th:text="${hotelInfo.hotelName}"></option>
+	                        </select>
+	                    </div>
+                	</div>
+					<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+                        <label class="col-xs-3 layui-form-label">入驻酒店地址：</label>
+                        <div>
+                            <label id="hotelAddress" class="col-xs-3 layui-form-label"></label>
+                        </div>
+                    </div>
+					<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+                        <label class="col-xs-3 layui-form-label">入驻酒店距离(m)：</label>
+                        <div class="col-xs-6">
+                            <label id="distanceAdress" class="col-xs-3 layui-form-label"></label>
+                        </div>
+                    </div>
+					<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+                        <label class="col-xs-3 layui-form-label">展业状态：</label>
+	                    <div class="col-xs-5">
+	                        <select id="openingType" name="openingType" data-placeholder="请选择展业状态" class="chosen-select-deselect form-control layui-input">
+	                            <option></option>
+	                            <option value="1">新开业</option>
+	                            <option value="2">续租</option>
+	                        </select>
+                        </div>
+                    </div>
+					<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+                        <label class="col-xs-3 layui-form-label">展业结束日期：</label>
+                        <div class="layui-input-inline">
+                            <input required type="date" name="leaseTerm" id="leaseTerm" placeholder="请选择日期" autocomplete="off" class="layui-input" lay-date="date" lay-format="yyyy-MM-dd" readonly >
+                        </div>
+                    </div>
+                    <button class="btn btn-primary " style="margin-left: 15px;position: absolute;right: 30px;bottom: 10px;" id="btn" type="button" data-toggle="modal" onclick="apply()"> <i class="fa fa-save"></i>&nbsp;提交</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

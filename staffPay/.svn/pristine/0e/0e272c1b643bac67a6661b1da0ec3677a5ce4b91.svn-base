@@ -1,0 +1,106 @@
+package com.chunqiu.mrjuly.modules.hotelinfo.model;
+
+import java.util.Date;
+
+public class LyHotelDeviceActivate {
+    private Long id;//主键ID
+
+    private Integer hotelId;//酒店ID
+
+    private Integer deviceId;//设备ID
+
+    private Integer roomId;//房间号
+
+    private String name;//姓名
+
+    private Date activateDate;//激活日期
+
+    private Byte status;//激活状态
+
+    private Byte agreeStatus;//用户协议状态
+
+    private Date createTime;//创建时间
+    
+    private Byte joinStatus;//参与抽奖状态
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Integer getHotelId() {
+        return hotelId;
+    }
+
+    public void setHotelId(Integer hotelId) {
+        this.hotelId = hotelId;
+    }
+
+    public Integer getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(Integer deviceId) {
+        this.deviceId = deviceId;
+    }
+
+    public Integer getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(Integer roomId) {
+        this.roomId = roomId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name == null ? null : name.trim();
+    }
+
+    public Date getActivateDate() {
+        return activateDate;
+    }
+
+    public void setActivateDate(Date activateDate) {
+        this.activateDate = activateDate;
+    }
+
+    public Byte getStatus() {
+        return status;
+    }
+
+    public void setStatus(Byte status) {
+        this.status = status;
+    }
+
+    public Byte getAgreeStatus() {
+        return agreeStatus;
+    }
+
+    public void setAgreeStatus(Byte agreeStatus) {
+        this.agreeStatus = agreeStatus;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+	public Byte getJoinStatus() {
+		return joinStatus;
+	}
+
+	public void setJoinStatus(Byte joinStatus) {
+		this.joinStatus = joinStatus;
+	}
+    
+}

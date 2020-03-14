@@ -1,0 +1,30 @@
+package com.chunqiu.mrjuly.modules.devicematchinginfo.dao;
+
+import com.chunqiu.mrjuly.common.persistence.CrudDao;
+import com.chunqiu.mrjuly.modules.devicematchinginfo.model.DeviceMatchingInfo;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+
+/**
+ * 设备匹配DAO接口
+ * @author 周天
+ * @version 2019-03-11
+ */
+public interface DeviceMatchingInfoDao extends CrudDao<DeviceMatchingInfo, Integer> {
+	List<DeviceMatchingInfo>serverSideListById(DeviceMatchingInfo deviceMatchingInfo);
+
+	List<DeviceMatchingInfo>findCommunicationPage(DeviceMatchingInfo deviceMatchingInfo);
+
+	List<DeviceMatchingInfo>hotelClientList(DeviceMatchingInfo deviceMatchingInfo);
+
+	int insertDevice(List<DeviceMatchingInfo> deviceMatchingInfoList);
+
+	int updateDeviceStatus(List<DeviceMatchingInfo> deviceMatchingInfoList);
+
+	int updateMatchingStatus(@Param("deviceMatchingInfo") DeviceMatchingInfo deviceMatchingInfo,@Param("deviceMatchingInfoList")List<DeviceMatchingInfo> deviceMatchingInfoList);
+
+	int updateClientStatus(List<DeviceMatchingInfo> deviceMatchingInfoList);
+
+	int delClient(List<DeviceMatchingInfo> deviceMatchingInfoList);
+}

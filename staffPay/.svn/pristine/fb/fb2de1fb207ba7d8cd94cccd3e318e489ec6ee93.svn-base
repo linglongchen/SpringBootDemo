@@ -1,0 +1,31 @@
+package com.chunqiu.mrjuly.modules.hotelinfo.service;
+
+import javax.annotation.Resource;
+import org.springframework.stereotype.Service;
+
+import com.chunqiu.mrjuly.modules.hotelinfo.dao.LyHotelUserPrizeDao;
+import com.chunqiu.mrjuly.modules.hotelinfo.model.LyHotelUserPrize;
+
+@Service
+public class LyHotelUserPrizeService {
+	
+	@Resource
+	private LyHotelUserPrizeDao hotelUserPrizeDao;
+	
+    public int deleteByPrimaryKey(Long id){
+    	return hotelUserPrizeDao.deleteByPrimaryKey(id);
+    }
+
+    public int insertSelective(LyHotelUserPrize record){
+    	return hotelUserPrizeDao.insertSelective(record);
+    }
+
+    public LyHotelUserPrize selectByPrimaryKey(Long id){
+    	return hotelUserPrizeDao.selectByPrimaryKey(id);
+    }
+
+    public int updateByPrimaryKeySelective(LyHotelUserPrize record){
+    	return hotelUserPrizeDao.updateByPrimaryKeySelective(record);
+    }
+
+}

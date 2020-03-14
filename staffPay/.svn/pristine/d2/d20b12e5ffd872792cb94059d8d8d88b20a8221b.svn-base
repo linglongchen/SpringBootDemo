@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>二级菜单</title>
+
+    <head th:include="init :: init"></head>
+
+    <script type="text/javascript">
+
+        //提交表单
+        function validForm(){
+            $('#signupForm').validate({
+                submitHandler:function(form){
+                    loading();
+                    form.action = '[[${ctx}]]/adviertisement/adviertisementType/addType';
+                    form.submit();
+                }
+            });
+            $('#signupForm').submit();
+        }
+    </script>
+</head>
+<body class="gray-bg">
+<div class="wrapper animated fadeInRight">
+    <div class="ibox-content">
+        <div class="row">
+            <form id="signupForm" class="layui-form form-horizontal m-t">
+                <input type="hidden" name="typeId" th:value="${typeId}" id="typeId">
+                <div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+                    <label class="col-xs-3 layui-form-label"><i class="required">*</i>二级菜单名称：</label>
+                    <div class="col-xs-6">
+                        <input name="type2Name" class="layui-input" placeholder="请输入二级菜单名称" autocomplete="off" type="text" required  maxlength="50">
+                    </div>
+                </div>
+                <div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+                    <label class="col-xs-3 layui-form-label"><i class="required">*</i>二级菜单编号：</label>
+                    <div class="col-xs-6">
+                        <input name="type2Num" class="layui-input" placeholder="请输入二级菜单编号" autocomplete="off" type="text" required  maxlength="50">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

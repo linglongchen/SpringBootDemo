@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chunqiu.mrjuly.modules.hotelinfo.dao.DepartmentCategoriesDao">
+
+	<sql id="departmentCategoriesColumns">
+		a.id AS "id",
+		a.category_name AS "categoryName",
+		a.create_date AS "createDate",
+		a.create_by AS "createBy.id",
+		a.update_date AS "updateDate",
+		a.update_by AS "updateBy.id",
+		a.del_flag AS "delFlag",
+		a.hotel_code_id AS "hotelCodeId",
+		a.department_id AS departmentId 
+	</sql>
+
+	<sql id="departmentCategoriesJoins">
+	</sql>
+
+	<select id="get" resultType="DepartmentCategories">
+		SELECT
+			<include refid="departmentCategoriesColumns"/>
+		FROM department_categories a
+		<include refid="departmentCategoriesJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="DepartmentCategories">
+		SELECT
+			<include refid="departmentCategoriesColumns"/>
+		FROM department_categories a
+		<include refid="departmentCategoriesJoins"/>
+		<where>
+			a.hotel_code_id = #{hotelCodeId}
+			and a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="categoryName != null and categoryName != ''">
+				AND a.category_name = #{categoryName}
+			</if>
+		</where>
+		<choose>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="DepartmentCategories">
+		SELECT
+			<include refid="departmentCategoriesColumns"/>
+		FROM department_categories a
+		<include refid="departmentCategoriesJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="hotelCodeId != null">
+				and a.hotel_code_id = #{hotelCodeId}
+			</if>
+		</where>
+		<choose>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO department_categories(
+						category_name,
+						create_by,
+						hotel_code_id,
+						department_id
+		) VALUES (
+						#{categoryName},
+						#{createBy.id},
+						#{hotelCodeId},
+						#{departmentId}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE department_categories
+		<set>
+			<if test="categoryName != null and categoryName != ''">
+				category_name = #{categoryName},
+			</if>
+				update_date = #{updateDate},
+				update_by = #{updateBy.id},
+			<if test="delFlag != null and delFlag != ''">
+				del_flag = #{delFlag},
+			</if>
+			<if test="hotelCodeId != null">
+				hotel_code_id = #{hotelCodeId},
+			</if>
+			<if test="departmentId != null">
+				department_id = #{departmentId},
+			</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		UPDATE department_categories SET
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<select id="getCategoriesByDepartment" resultType="DepartmentCategories">
+		SELECT
+			<include refid="departmentCategoriesColumns"/>
+		FROM department_categories a
+		<where>
+			a.del_flag =0
+			<if test="hotelCodeId != null">
+				and a.hotel_code_id = #{hotelCodeId}
+			</if>
+			<if test="departmentId != null">
+				and a.department_id = #{departmentId}
+			</if>
+		</where>
+	</select>
+</mapper>

@@ -1,0 +1,13 @@
+package com.chunqiu.mrjuly.modules.advertisingplaytime.dao;
+
+import com.chunqiu.mrjuly.common.persistence.CrudDao;
+import com.chunqiu.mrjuly.modules.advertisingplaytime.model.AdvertisingPlayTime;
+
+/**
+ * 广告滚动时间DAO接口
+ * @author qj
+ * @version 2019-04-12
+ */
+public interface AdvertisingPlayTimeDao extends CrudDao<AdvertisingPlayTime, Integer> {
+	
+}

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>消息通知</title>
+	<link href="https://cdn.staticfile.org/twitter-bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+	<head th:include="init :: init"></head>
+	<head th:include="init_bootstrap_table :: bootstrap_table"></head>
+
+	<script type="text/javascript">
+
+	</script>
+</head>
+<body layadmin-themealias="default">
+<div class="layui-fluid animated fadeInRight">
+	<div class="layui-card">
+		<div class="layui-form layui-card-header layuiadmin-card-header-auto">
+			<div class="layui-form-item form-head">
+
+
+
+			<table class="table">
+
+				<tr>
+					<th>类型</th>
+					<td name="type" th:text="${type}"></td>
+				</tr>
+				<tr>
+					<th>标题</th>
+					<td name="noticeTitle" th:text="${alerts.noticeTitle}" ></td>
+				</tr>
+				<tr>
+					<th>内容</th>
+					<td name="noticeContent" th:text="${alerts.noticeContent}"></td>
+				</tr>
+				<tr>
+					<th>发布者</th>
+					<td name="target" th:text="在线商家系统后台"></td>
+				</tr>
+				<tr>
+					<th>发布时间</th>
+					<td name="createDate" th:text="${#dates.format(noticeForm, 'yyyy-MM-dd')}"></td>
+				</tr>
+
+			</table>
+		</div>
+	</div>
+</div>
+	</div>
+</body>
+</html>

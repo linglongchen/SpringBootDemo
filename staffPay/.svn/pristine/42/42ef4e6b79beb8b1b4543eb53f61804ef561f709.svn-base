@@ -1,0 +1,299 @@
+package com.chunqiu.mrjuly.modules.alipay.controller;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import javax.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.alibaba.fastjson.JSONObject;
+import com.alipay.api.AlipayApiException;
+import com.alipay.api.internal.util.AlipaySignature;
+import com.chunqiu.mrjuly.common.annotation.Log;
+import com.chunqiu.mrjuly.common.enums.PlatformTypeEnum;
+import com.chunqiu.mrjuly.common.utils.DateUtils;
+import com.chunqiu.mrjuly.common.utils.UserUtils;
+import com.chunqiu.mrjuly.common.vo.Grid;
+import com.chunqiu.mrjuly.modules.advertiserinfo.model.AdvertiserInfo;
+import com.chunqiu.mrjuly.modules.advertiserinfo.service.AdvertiserInfoService;
+import com.chunqiu.mrjuly.modules.alipay.AlipayUtils;
+import com.chunqiu.mrjuly.modules.alipay.model.AlipayConfig;
+import com.chunqiu.mrjuly.modules.alipay.model.AlipayNotifyParam;
+import com.chunqiu.mrjuly.modules.alipay.model.AlipayRequestParam;
+import com.chunqiu.mrjuly.modules.alipay.model.AlipayTradeStatus;
+import com.chunqiu.mrjuly.modules.flowsheetinfo.model.FlowSheetInfo;
+import com.chunqiu.mrjuly.modules.flowsheetinfo.service.FlowSheetInfoService;
+import com.chunqiu.mrjuly.modules.invoiceinfo.model.PaymentInModel;
+import com.chunqiu.mrjuly.modules.mybill.model.MyBillInfo;
+import com.chunqiu.mrjuly.modules.mybill.service.MyBillInfoService;
+import com.chunqiu.mrjuly.modules.shopinfo.model.ShopInfo;
+import com.chunqiu.mrjuly.modules.shopinfo.service.ShopInfoService;
+import com.chunqiu.mrjuly.modules.system.model.User;
+
+@Slf4j
+@Controller
+@RequestMapping(value = "${adminPath}/alipay")
+@Transactional
+public class AlipayController {
+	
+	private static final Integer[] MONEY_ARRAY = { 100, 200, 500, 1000, 2000, 5000, 10000};
+	
+	private static final String ALIPAY_MSG = "支付宝充值成功";
+
+    @Autowired
+    private MyBillInfoService myBillInfoService;
+    @Autowired
+    private ShopInfoService shopInfoService;
+    @Autowired
+    private AdvertiserInfoService advertiserInfoService;
+    @Autowired
+    private FlowSheetInfoService flowSheetInfoService;
+	
+	@Log("充值页面")
+    @RequestMapping("paymentInPage")
+    @RequiresPermissions("accountrecharge:accountRecharge:view")
+    public String buyPackagePage(){
+        return "accountrecharge/paymentInPage";
+    }
+	
+	@Log("充值金额列表")
+    @RequestMapping("moneyList")
+    @ResponseBody
+    @RequiresPermissions("accountrecharge:accountRecharge:view")
+    public Grid moneyList(ModelMap modelMap) {
+    	List<PaymentInModel> paymentInModels = new ArrayList<PaymentInModel>();
+    	PaymentInModel model = null;
+    	for (int i = 0; i < MONEY_ARRAY.length; i++) {
+    		model = new PaymentInModel();
+    		model.setMoney(MONEY_ARRAY[i]);
+    		model.setId(i);
+    		paymentInModels.add(model);
+		}
+        Grid grid = new Grid();
+        grid.setRows(paymentInModels);
+        grid.setTotal(paymentInModels.size());
+        return grid;
+    }
+    
+	@ResponseBody
+	@RequestMapping("alipaying")
+    @RequiresPermissions("accountrecharge:accountRecharge:view")
+	public String alipay(AlipayRequestParam request){
+		User user = UserUtils.getUser();
+//		request.setTotalAmount(MONEY_ARRAY[request.getId()].toString());
+		request.setTotalAmount("0.01");
+		request.setSubject("账户充值");
+		request.setTradeOrderNo(createTradeOrderNo());
+		request.setBody("账户充值");
+		MyBillInfo myBillInfo = new MyBillInfo();
+		myBillInfo.setBillOfOriginId(request.getTradeOrderNo());
+		myBillInfo.setCreateBy(user);
+		myBillInfo.setObjectId(user.getBusinessId());
+		myBillInfo.setAmountPrice(Float.valueOf(request.getTotalAmount()));
+		if (user.getRoleType() == 3) {
+			myBillInfo.setType(1);
+		} else if (user.getRoleType() == 4) {
+			myBillInfo.setType(2);
+		}
+		myBillInfo.setStatus(3);
+		myBillInfo.setRemarks("支付宝账户充值中");
+		myBillInfoService.insertSelective(myBillInfo);
+		return AlipayUtils.getPayResult(request);
+	}
+
+	@Log("支付同步通知")
+    @RequestMapping("returnResult")
+    public String returnResult(HttpServletRequest request, ModelMap modelMap){
+		Map<String, String> params = convertRequestParamsToMap(request); // 将异步通知中收到的待验证所有参数都存放到map中
+        String paramsJson = JSONObject.toJSONString(params);
+        log.info("支付宝同步回调，{}", paramsJson);
+        modelMap.addAttribute("result", "success");
+        return "accountrecharge/paymentInPage";
+    }
+
+	@Log("支付异步通知")
+	@RequestMapping("notifyResult")
+	@ResponseBody
+	public String notifyResult(HttpServletRequest request, ModelMap modelMap){
+		Map<String, String> params = convertRequestParamsToMap(request); // 将异步通知中收到的待验证所有参数都存放到map中
+        String paramsJson = JSONObject.toJSONString(params);
+        log.info("支付宝异步回调，{}", paramsJson);
+        try {
+            // 调用SDK验证签名
+            boolean signVerified = AlipaySignature.rsaCheckV1(params, AlipayConfig.alipay_public_key,
+            		AlipayConfig.charset, AlipayConfig.sign_type);
+            if (signVerified) {
+                log.info("支付宝回调签名认证成功");
+                // 按照支付结果异步通知中的描述，对支付结果中的业务内容进行1\2\3\4二次校验，校验成功后在response中返回success，校验失败返回failure
+            	try {
+            		MyBillInfo billInfo = check(params);
+            		if (ALIPAY_MSG.equals(billInfo.getRemarks())) {
+                        log.info("已完成回调");
+            	        return "success";
+					}
+                    AlipayNotifyParam param = buildAlipayNotifyParam(params);
+                    String trade_status = param.getTradeStatus();
+                    // 支付成功
+                    if (trade_status.equals(AlipayTradeStatus.TRADE_SUCCESS.getStatus())
+                            || trade_status.equals(AlipayTradeStatus.TRADE_FINISHED.getStatus())) {
+                    	// 处理支付成功逻辑
+                    	billInfo.setRemarks(ALIPAY_MSG);
+                    	myBillInfoService.updateByAlipay(billInfo);
+                    	BigDecimal orderMoney = new BigDecimal(billInfo.getAmountPrice());
+                    	FlowSheetInfo flowSheet = new FlowSheetInfo();
+                        flowSheet.setOperatingAmount(new BigDecimal(orderMoney.floatValue()));
+                        flowSheet.setOperationMode(1);
+                        flowSheet.setRemarks(ALIPAY_MSG);
+                        flowSheet.setCreateBy(UserUtils.getUser());
+                    	if (billInfo.getType() == 1) {
+                    		//商家
+                            ShopInfo shopInfo = shopInfoService.get(billInfo.getObjectId());
+                            ShopInfo updateData = new ShopInfo();
+                            updateData.setId(shopInfo.getId());
+                            updateData.setAccount(shopInfo.getAccount() + orderMoney.floatValue());
+                            shopInfoService.updateByPrimaryKeySelective(updateData);
+                            
+                            flowSheet.setAccountAmount(new BigDecimal(shopInfo.getAccount() + orderMoney.floatValue()));
+                            flowSheet.setObjectId(shopInfo.getId());
+                            flowSheet.setFlowSheetPlatform(PlatformTypeEnum.SHOP.getType());
+                            flowSheet.setMerchantCode(shopInfo.getShopNumber());
+                            flowSheet.setMerchantName(shopInfo.getShopName());
+                            flowSheetInfoService.insertSelective(flowSheet);
+                        } else if (billInfo.getType() == 2) {
+                        	//广告商
+                            AdvertiserInfo advertiserInfo = advertiserInfoService.get(billInfo.getObjectId());
+                            AdvertiserInfo updateData = new AdvertiserInfo();
+                            updateData.setId(advertiserInfo.getId());
+                            updateData.setAccountBalance(advertiserInfo.getAccountBalance() + orderMoney.floatValue());
+                            advertiserInfoService.updateByPrimaryKeySelective(updateData);
+
+                            flowSheet.setAccountAmount(new BigDecimal(advertiserInfo.getAccountBalance() + orderMoney.floatValue()));
+                            flowSheet.setObjectId(advertiserInfo.getId());
+                            flowSheet.setFlowSheetPlatform(PlatformTypeEnum.ADVERTISER.getType());
+                            flowSheet.setMerchantCode(advertiserInfo.getAdvertiserNumber());
+                            flowSheet.setMerchantName(advertiserInfo.getCompanyName());
+                            flowSheetInfoService.insertSelective(flowSheet);
+                        }
+                    } else {
+                    	log.error("没有处理支付宝回调业务，支付宝交易状态：{},params:{}",trade_status,paramsJson);
+                        return "failure";
+                    }
+                } catch (Exception e) {
+                    log.error("支付宝回调业务处理报错,params:" + paramsJson, e);
+                    return "failure";
+                }
+                // 如果签名验证正确，立即返回success，后续业务另起线程单独处理
+                // 业务处理失败，可查看日志进行补偿，跟支付宝已经没多大关系。
+            } else {
+                log.info("支付宝回调签名认证失败，signVerified=false, paramsJson:{}", paramsJson);
+                return "failure";
+            }
+        } catch (Exception e) {
+            log.error("支付宝回调签名认证失败,paramsJson:{},errorMsg:{}", paramsJson, e.getMessage());
+            return "failure";
+        }
+        return "success";
+	}
+	
+	// 将request中的参数转换成Map
+    private static Map<String, String> convertRequestParamsToMap(HttpServletRequest request) {
+    	log.info("convertRequestParamsToMap start");
+        Map<String, String> retMap = new HashMap<String, String>();
+        Set<Entry<String, String[]>> entrySet = request.getParameterMap().entrySet();
+        for (Entry<String, String[]> entry : entrySet) {
+            String name = entry.getKey();
+            String[] values = entry.getValue();
+            int valLen = values.length;
+            if (valLen == 1) {
+                retMap.put(name, values[0]);
+            } else if (valLen > 1) {
+                StringBuilder sb = new StringBuilder();
+                for (String val : values) {
+                    sb.append(",").append(val);
+                }
+                retMap.put(name, sb.toString().substring(1));
+            } else {
+                retMap.put(name, "");
+            }
+        }
+    	log.info("convertRequestParamsToMap end");
+        return retMap;
+    }
+	
+	/**
+     * 1、商户需要验证该通知数据中的out_trade_no是否为商户系统中创建的订单号，
+     * 2、判断total_amount是否确实为该订单的实际金额（即商户订单创建时的金额），
+     * 3、校验通知中的seller_id（或者seller_email)是否为out_trade_no这笔单据的对应的操作方（有的时候，一个商户可能有多个seller_id/seller_email），
+     * 4、验证app_id是否为该商户本身。上述1、2、3、4有任何一个验证不通过，则表明本次通知是异常通知，务必忽略。
+     * 在上述验证通过后商户必须根据支付宝不同类型的业务通知，正确的进行不同的业务处理，并且过滤重复的通知结果数据。
+     * 在支付宝的业务通知中，只有交易通知状态为TRADE_SUCCESS或TRADE_FINISHED时，支付宝才会认定为买家付款成功。
+     * 
+     * @param params
+     * @throws AlipayApiException
+     */
+    private MyBillInfo check(Map<String, String> params) throws AlipayApiException {
+    	log.info("check start");
+        String outTradeNo = params.get("out_trade_no");
+
+        // 1、商户需要验证该通知数据中的out_trade_no是否为商户系统中创建的订单号
+        MyBillInfo myBillInfo = new MyBillInfo();
+        myBillInfo.setBillOfOriginId(outTradeNo);
+        myBillInfo = myBillInfoService.getMybillByBillId(myBillInfo);
+        
+        if (myBillInfo == null || !outTradeNo.equals(myBillInfo.getBillOfOriginId())) {
+        	log.info("out_trade_no >>> " + outTradeNo);
+            throw new AlipayApiException("out_trade_no错误");
+        }       
+
+        // 2、判断total_amount是否确实为该订单的实际金额（即商户订单创建时的金额），
+        long total_amount = new BigDecimal(params.get("total_amount")).multiply(new BigDecimal(100)).longValue();
+        long order_money = new BigDecimal(myBillInfo.getAmountPrice().toString()).multiply(new BigDecimal(100)).longValue();
+        if (total_amount != order_money) {
+        	log.info("total_amount >>> " + total_amount);
+        	log.info("myBillInfo total_amount >>> " + order_money);
+            throw new AlipayApiException("error total_amount");
+        }
+
+        // 3、校验通知中的seller_id（或者seller_email)是否为out_trade_no这笔单据的对应的操作方（有的时候，一个商户可能有多个seller_id/seller_email），
+        // 第三步可根据实际情况省略
+
+        // 4、验证app_id是否为该商户本身。
+        if (!params.get("app_id").equals(AlipayConfig.app_id)) {
+        	log.info("app_id >>> " + params.get("app_id"));
+            throw new AlipayApiException("app_id不一致");
+        }
+    	log.info("check end");
+        return myBillInfo;
+    }
+
+	
+	private AlipayNotifyParam buildAlipayNotifyParam(Map<String, String> params) {
+        String json = JSONObject.toJSONString(params);
+        return JSONObject.parseObject(json, AlipayNotifyParam.class);
+    }
+
+	
+	/**
+	 * 生成唯一订单号：yyyyMMdd+当前毫秒数
+	 * @return
+	 * @author wy
+	 */
+	private String createTradeOrderNo(){
+		String currentDate = DateUtils.getDate(DateUtils.PATTERN_DATE_SHORT);
+		Calendar calendar = Calendar.getInstance();
+		long currentMillis = calendar.getTimeInMillis();
+		return currentDate + currentMillis;
+	}
+}

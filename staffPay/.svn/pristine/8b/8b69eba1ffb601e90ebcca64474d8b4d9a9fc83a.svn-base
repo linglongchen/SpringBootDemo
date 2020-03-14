@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>二级菜单</title>
+
+    <head th:include="init :: init"></head>
+
+    <script type="text/javascript">
+
+        //提交表单
+        function validForm(){
+            $('#signupForm').validate({
+                submitHandler:function(form){
+                    loading();
+                    form.action = '[[${ctx}]]/adviertisement/adviertisementType/addTypeForm';
+                    form.submit();
+                }
+            });
+            $('#signupForm').submit();
+        }
+        $(function () {
+            var img = $('#content').val();
+            var extenstion = img.substring(img.lastIndexOf(".")).toLowerCase();
+            if (extenstion == ".jpg" || extenstion == ".jpeg" || extenstion == ".bmp" || extenstion == ".png") {
+                //上传文件是图片
+                $('#img').attr("src",img);
+                $('#img').show();
+                $('#video').hide();
+            } else if (extenstion == ".rm" || extenstion == ".rmvb" || extenstion == ".mov" || extenstion == ".mtv" || extenstion == ".avi" || extenstion == ".3gp" || extenstion == ".amv" || extenstion == ".dmv" || extenstion == ".flv" || extenstion == ".mp4") {
+                //上传文件是视频
+                $('#video').attr("src",img);
+                $('#video').show();
+                $('#img').hide();
+            }
+        })
+    </script>
+</head>
+<body class="gray-bg">
+<div class="wrapper animated fadeInRight">
+    <div class="ibox-content">
+        <div class="row">
+            <form id="signupForm" class="layui-form form-horizontal m-t">
+               <input th:value="${advertiseContent}" type="hidden" id="content">
+                <img src="" id="img" style="height: 800px;width: 900px">
+                <video controls="controls" src="" id="video" style="max-width: 500px;max-height: 600px"></video>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

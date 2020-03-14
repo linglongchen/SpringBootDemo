@@ -1,0 +1,187 @@
+package com.chunqiu.mrjuly.modules.communicationrecordinfo.model;
+
+import org.hibernate.validator.constraints.Length;
+
+import com.chunqiu.mrjuly.common.persistence.DataEntity;
+
+import java.util.List;
+
+/**
+ * 通讯记录Entity
+ * @author 周天
+ * @version 2019-03-13
+ */
+public class CommunicationRecordInfo extends DataEntity<CommunicationRecordInfo, Integer> {
+
+	private static final long serialVersionUID = 1L;
+	private Integer type;		// 1.客户端 2.服务端
+	private Integer serverSideId;		// 服务端id
+	private Integer clientId;		// 客户端id
+	private Integer status;		// 1.呼入 2.呼出
+	private String talkTime;		// 通话时长
+
+	private String codeName;
+	private String callRecord;
+
+	private String clientCode;
+	private int hotelCodeId;
+
+	private String clientName;
+	private String serverName;
+
+	private String idList;
+	private List<String> stringList;
+
+	private String  serverSideIdList;
+	private List<String> serverSideIdStr;
+
+	private String  clientIdList;
+	private List<String> clientIdStr;
+
+
+	public String getServerSideIdList() {
+		return serverSideIdList;
+	}
+
+	public void setServerSideIdList(String serverSideIdList) {
+		this.serverSideIdList = serverSideIdList;
+	}
+
+	public List<String> getServerSideIdStr() {
+		return serverSideIdStr;
+	}
+
+	public void setServerSideIdStr(List<String> serverSideIdStr) {
+		this.serverSideIdStr = serverSideIdStr;
+	}
+
+	public String getClientIdList() {
+		return clientIdList;
+	}
+
+	public void setClientIdList(String clientIdList) {
+		this.clientIdList = clientIdList;
+	}
+
+	public List<String> getClientIdStr() {
+		return clientIdStr;
+	}
+
+	public void setClientIdStr(List<String> clientIdStr) {
+		this.clientIdStr = clientIdStr;
+	}
+
+	public List<String> getStringList() {
+		return stringList;
+	}
+
+	public void setStringList(List<String> stringList) {
+		this.stringList = stringList;
+	}
+
+	public String getIdList() {
+		return idList;
+	}
+
+	public void setIdList(String idList) {
+		this.idList = idList;
+	}
+
+	public String getClientName() {
+		return clientName;
+	}
+
+	public void setClientName(String clientName) {
+		this.clientName = clientName;
+	}
+
+	public String getServerName() {
+		return serverName;
+	}
+
+	public void setServerName(String serverName) {
+		this.serverName = serverName;
+	}
+
+	public int getHotelCodeId() {
+		return hotelCodeId;
+	}
+
+	public void setHotelCodeId(int hotelCodeId) {
+		this.hotelCodeId = hotelCodeId;
+	}
+
+	public String getClientCode() {
+		return clientCode;
+	}
+
+	public void setClientCode(String clientCode) {
+		this.clientCode = clientCode;
+	}
+
+	public String getCodeName() {
+		return codeName;
+	}
+
+	public void setCodeName(String codeName) {
+		this.codeName = codeName;
+	}
+
+	public String getCallRecord() {
+		return callRecord;
+	}
+
+	public void setCallRecord(String callRecord) {
+		this.callRecord = callRecord;
+	}
+
+	public CommunicationRecordInfo() {
+		super();
+	}
+
+	public CommunicationRecordInfo(Integer id){
+		super(id);
+	}
+
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
+	}
+
+	public Integer getServerSideId() {
+		return serverSideId;
+	}
+
+	public void setServerSideId(Integer serverSideId) {
+		this.serverSideId = serverSideId;
+	}
+
+	public Integer getClientId() {
+		return clientId;
+	}
+
+	public void setClientId(Integer clientId) {
+		this.clientId = clientId;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	@Length(min=0, max=20, message="通话时长长度必须介于 0 和 20 之间")
+	public String getTalkTime() {
+		return talkTime;
+	}
+
+	public void setTalkTime(String talkTime) {
+		this.talkTime = talkTime;
+	}
+
+}

@@ -1,0 +1,50 @@
+package com.chunqiu.mrjuly.modules.advertisement.model;
+
+
+import com.chunqiu.mrjuly.common.persistence.DataEntity;
+
+/**
+ * 禁播广告Entity
+ * @author chen
+ * @version 2019-04-12
+ */
+public class BanAdvertisementType extends DataEntity<BanAdvertisementType, Integer> {
+	
+	private static final long serialVersionUID = 1L;
+	private Integer typeId;		// 广告类型id
+	private Integer typeStatus;		// 禁播级别 1：一级 2：二级  3：三级
+	private Integer hotelCodeId;		// 酒店唯一编码id
+	
+	public BanAdvertisementType() {
+		super();
+	}
+
+	public BanAdvertisementType(Integer id){
+		super(id);
+	}
+
+	public Integer getTypeId() {
+		return typeId;
+	}
+
+	public void setTypeId(Integer typeId) {
+		this.typeId = typeId;
+	}
+	
+	public Integer getTypeStatus() {
+		return typeStatus;
+	}
+
+	public void setTypeStatus(Integer typeStatus) {
+		this.typeStatus = typeStatus;
+	}
+	
+	public Integer getHotelCodeId() {
+		return hotelCodeId;
+	}
+
+	public void setHotelCodeId(Integer hotelCodeId) {
+		this.hotelCodeId = hotelCodeId;
+	}
+	
+}

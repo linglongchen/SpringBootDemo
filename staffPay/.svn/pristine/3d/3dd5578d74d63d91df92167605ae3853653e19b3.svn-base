@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chunqiu.mrjuly.modules.hotelinfo.dao.DepartmentInfoDao">
+
+	<sql id="departmentInfoColumns">
+		a.id AS "id",
+		a.server_number_id AS "serverNumberId",
+		a.hotel_code_id AS "hotelCodeId",
+		a.department_name AS "departmentName",
+		a.department_name_en AS "departmentNameEn",
+		a.department_head AS "departmentHead",
+		a.start_time AS "startTime",
+		a.end_time AS "endTime",
+		a.departmental_position_pic AS "departmentalPositionPic",
+		a.departmental_position_video AS "departmentalPositionVideo",
+		a.departmental_position_content AS "departmentalPositionContent",
+		a.departmental_special_description AS "departmentalSpecialDescription",
+		a.departmental_tel AS "departmentalTel",
+		a.status AS "status",
+		a.create_date AS "createDate",
+		a.create_by AS "createBy.id",
+		a.update_date AS "updateDate",
+		a.update_by AS "updateBy.id",
+		a.del_flag AS "delFlag"
+	</sql>
+
+	<sql id="departmentInfoJoins">
+	</sql>
+
+	<select id="get" resultType="DepartmentInfoList">
+		SELECT
+			<include refid="departmentInfoColumns"/>
+		FROM department_info a
+		<include refid="departmentInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="DepartmentInfoList">
+		SELECT
+			<include refid="departmentInfoColumns"/>
+		FROM department_info a
+		<include refid="departmentInfoJoins"/>
+		<where>
+			a.hotel_code_id = #{hotelCodeId}
+			and a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+		</where>
+		<choose>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.id DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAll" resultType="com.chunqiu.mrjuly.modules.hotelinfo.model.DepartmentInfoList">
+		SELECT
+		<include refid="departmentInfoColumns"/>
+		FROM department_info a
+		<include refid="departmentInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="departmentName != null and departmentName != ''">
+				AND a.department_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{departmentName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{departmentName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{departmentName},'%')</if>
+			</if>
+			<if test="hotelCodeId != null">
+			  and a.hotel_code_id = #{hotelCodeId}
+			</if>
+		</where>
+	</select>
+
+	<select id="findAllList" resultType="DepartmentInfo">
+		SELECT
+			<include refid="departmentInfoColumns"/>
+		FROM department_info a
+		<include refid="departmentInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO department_info(
+						server_number_id,
+						hotel_code_id,
+						department_name,
+						department_head,
+						start_time,
+						end_time,
+						departmental_position_pic,
+						departmental_position_video,
+						departmental_position_content,
+						departmental_special_description,
+						create_date,
+						create_by
+		) VALUES (
+						#{serverNumberId},
+						#{hotelCodeId},
+						#{departmentName},
+						#{departmentHead},
+						#{startTime},
+						#{endTime},
+						#{departmentalPositionPic},
+						#{departmentalPositionVideo},
+						#{departmentalPositionContent},
+						#{departmentalSpecialDescription},
+						#{createDate},
+						#{createBy.id}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE department_info
+		<set>
+			<if test="hotelCodeId != null">
+				hotel_code_id = #{hotelCodeId},
+			</if>
+			<if test="departmentName != null and departmentName != ''">
+				department_name = #{departmentName},
+			</if>
+			<if test="departmentNameEn != null and departmentNameEn != ''">
+				department_name_en = #{departmentNameEn},
+			</if>
+			<if test="departmentHead != null and departmentHead != ''">
+				department_head = #{departmentHead},
+			</if>
+			<if test="startTime != null and startTime != ''">
+				start_time = #{startTime},
+			</if>
+			<if test="endTime != null and endTime != ''">
+				end_time = #{endTime},
+			</if>
+			<if test="departmentalPositionPic != null and departmentalPositionPic != ''">
+				departmental_position_pic = #{departmentalPositionPic},
+			</if>
+			<if test="departmentalPositionVideo != null and departmentalPositionVideo != ''">
+				departmental_position_video = #{departmentalPositionVideo},
+			</if>
+			<if test="departmentalPositionContent != null and departmentalPositionContent != ''">
+				departmental_position_content = #{departmentalPositionContent},
+			</if>
+			<if test="departmentalSpecialDescription != null and departmentalSpecialDescription != ''">
+				departmental_special_description = #{departmentalSpecialDescription},
+			</if>
+			<if test="departmentalTel != null and departmentalTel != ''">
+				departmental_tel = #{departmentalTel},
+			</if>
+				update_date = #{updateDate},
+				update_by = #{updateBy.id},
+		</set>
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		UPDATE department_info SET
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+
+	<update id="updateStatusById">
+		UPDATE `department_info`
+		SET
+		 `status` = #{status}
+		WHERE
+			id = #{id}
+	</update>
+
+	<select id="serviceModeList" resultType="DepartmentInfoList">
+			select id,service_mode as "serviceMode" from  service_mode  where  type = 1 and  object_id = #{hotelCodeId}
+	</select>
+
+	<select id="serverNumberById" resultType="DepartmentInfoList">
+			SELECT
+				a.id,
+				CONCAT(b.hotel_code ,"-",a.equipment_name) AS "equipmentName"
+			FROM
+				client_bianma_info as a LEFT JOIN hotel_unique_code as b ON a.equipment_number = b.id
+			WHERE
+				a.type = 2
+			AND a.STATUS = 0
+			AND a.equipment_number = #{hotelCodeId}
+		<choose>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.id DESC
+			</otherwise>
+		</choose>
+	</select>
+
+
+	<update id="updateStatusByListId" parameterType="list">
+		UPDATE `client_bianma_info`
+			SET
+			 `status` = 1
+			WHERE
+			`id` in	(
+		<foreach collection="list" item="item" index="index" open="" close="" separator=",">
+			#{item.id}
+		</foreach>
+				);
+	</update>
+
+	<update id="updateStatusByListIdNot" parameterType="list">
+		UPDATE `client_bianma_info`
+		SET
+		`status` = 0
+		WHERE
+		`id` in	(
+		<foreach collection="list" item="item" index="index" open="" close="" separator=",">
+			#{item.id}
+		</foreach>
+		);
+	</update>
+
+	<select id="departmentInfoListById" parameterType="list" resultType="DepartmentInfoList">
+			  SELECT
+				a.id,
+				CONCAT(b.hotel_code ,"-",a.equipment_name) AS "equipmentName"
+			FROM
+				client_bianma_info as a LEFT JOIN hotel_unique_code as b ON a.equipment_number = b.id
+			WHERE
+			   a.id in
+				(
+				<foreach collection="list" item="item" index="index" open="" close="" separator=",">
+					#{item.id}
+				</foreach>
+			   )
+	</select>
+</mapper>

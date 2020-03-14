@@ -1,0 +1,16 @@
+package com.chunqiu.mrjuly.modules.foregroundConfiguration.dao;
+
+import com.chunqiu.mrjuly.common.persistence.CrudDao;
+import com.chunqiu.mrjuly.modules.foregroundConfiguration.model.PositionInfo;
+import com.chunqiu.mrjuly.modules.foregroundConfiguration.model.ReceptionInfo;
+
+import java.util.List;
+
+/**
+ * 前台配置DAO接口
+ * @author chen
+ * @version 2019-03-15
+ */
+public interface PositionInfoDao extends CrudDao<PositionInfo, Integer> {
+
+}

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <title>用户协议设置</title>
+
+    <head th:include="init :: init"></head>
+    <head th:include="init_ueditor :: ueditor"></head>
+
+    <script  th:inline="javascript" type="text/javascript">
+        //初始化Ueditor编辑器
+        $(function(){
+                UE.getEditor('container1');
+                window.setTimeout(setContent,1000);//一秒后再调用赋值方法
+        });
+
+        //给ueditor插入值
+        function setContent(){
+                //获取后台数据
+                var content = [[${agreement?.content}]];
+                UE.getEditor('container1').execCommand('insertHtml', content);
+        }
+
+            //提交
+         function validForm(){
+             //获取文本编辑框的HTML内容
+             var content = UE.getEditor('container1').getContent();
+             if (content == ""){
+                 showMsgError('请填写内容');
+                 return;
+             }
+
+             //请求
+             $.post([[${ctx}]]+'/install/agreement/saveAgreement',
+                 {
+                     content:content
+                 },
+                 function () {
+                     loading();
+                     closeLoading();
+                     showMsgSuccess('保存成功');
+                     return;
+             });
+         }
+
+    </script>
+
+</head>
+<body class="gray-bg">
+    <div class="wrapper animated fadeInRight">
+        <div class="ibox-content">
+            <div class="row">
+             <!--   <form id="signupForm" class="layui-form form-horizontal m-t" action="">-->
+                    <div class="layui-form-item col-lg-12 col-sm-12">
+                        <!--
+                            需要引入init_ueditor文件
+                        -->
+                        <div class="col-xs-12">
+                            <script id="container1" name="content" type="text/plain" >
+
+							</script>
+                        </div>
+                    </div>
+
+              <!--  </form>-->
+                <div style="padding-bottom: 10px;">
+                    <button style=" margin-left: 87%;width: 10rem;" class="btn btn-success " type="button" data-toggle="modal" th:onclick="'validForm()'">确认</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

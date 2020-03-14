@@ -1,0 +1,505 @@
+package com.chunqiu.mrjuly.modules.hotelinfo.service;
+
+import com.chunqiu.mrjuly.common.persistence.CrudService;
+import com.chunqiu.mrjuly.common.vo.Grid;
+import com.chunqiu.mrjuly.common.vo.GridParam;
+import com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder;
+import com.chunqiu.mrjuly.modules.adviertisement.model.AdvertisementUpload;
+import com.chunqiu.mrjuly.modules.hotelinfo.dao.HotelInfoDao;
+import com.chunqiu.mrjuly.modules.hotelinfo.model.DepartmentInfoList;
+import com.chunqiu.mrjuly.modules.hotelinfo.model.HotelInfo;
+import com.chunqiu.mrjuly.modules.hotelinfo.model.MenuInfo;
+import com.chunqiu.mrjuly.modules.install.model.ServiceMode;
+import com.chunqiu.mrjuly.modules.mybill.model.MyBillInfo;
+import com.chunqiu.mrjuly.modules.shophotel.model.ShopHotel;
+import com.chunqiu.mrjuly.modules.shopinfo.model.ShopInfo;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+/**
+ * 酒店信息Service
+ *
+ * @author chen
+ * @version 2019-03-01
+ */
+@Service
+public class HotelInfoService extends CrudService<HotelInfoDao, HotelInfo, Integer> {
+    @Resource
+    private HotelInfoDao dao;
+
+    /**
+     * 查询酒店信息
+     * @param hotelInfo
+     * @return
+     */
+    public HotelInfo hotelInfoById(HotelInfo hotelInfo) {
+        return dao.hotelInfoById(hotelInfo);
+    }
+
+    public void updateNum(HotelInfo hotelInfo) {
+        dao.updateNum(hotelInfo);
+    }
+
+    /**
+     * 查询1~3级菜单
+     * @param menu
+     * @return
+     */
+    public List<MenuInfo> menuListById(MenuInfo menu) {
+        return dao.menuListById(menu);
+    }
+
+    /**
+     * 查询菜单
+     * @param menu
+     * @return
+     */
+    public MenuInfo menuInfo(MenuInfo menu) {
+        return dao.menuInfo(menu);
+    }
+
+    public int insertDepartmentById(DepartmentInfoList departmentInfoList) {
+        return dao.insertDepartmentById(departmentInfoList);
+    }
+
+    public void changeFreezeAll(List<HotelInfo> list) {
+        dao.changeFreezeAll(list);
+    }
+
+    public int serviceMode(ServiceMode serviceMode) {
+        List<ServiceMode> serviceModeList = new ArrayList<>();
+        ServiceMode serviceMode1 = new ServiceMode();
+        serviceMode1.setObjectId(serviceMode.getObjectId());
+        serviceMode1.setServiceMode("到店自取");
+        serviceMode1.setType(serviceMode.getType());
+        serviceModeList.add(serviceMode1);
+        ServiceMode serviceMode2 = new ServiceMode();
+        serviceMode2.setObjectId(serviceMode.getObjectId());
+        serviceMode2.setServiceMode("由店铺送达");
+        serviceMode2.setType(serviceMode.getType());
+        serviceModeList.add(serviceMode2);
+        return dao.serviceMode(serviceModeList);
+    }
+
+    /**
+     * 酒店地址、端口前缀和商家距离
+     * @param hotelInfo
+     * @return
+     */
+    public HotelInfo selectHotel(HotelInfo hotelInfo) {
+        return dao.selectHotel(hotelInfo);
+    }
+
+    public int insertUploadAdver(List<AdvertisementUpload> advertisementUploads) {
+        return dao.insertUploadAdver(advertisementUploads);
+    }
+
+    /**
+     * 更新酒店信息
+     * @param list
+     */
+    public void updateAll(List<HotelInfo> list) {
+        dao.updateAll(list);
+    }
+
+    /**
+     * 广告商投放位选择列表数据
+     * @param entity
+     * @param param
+     * @return
+     */
+    public Grid findPage2(HotelInfo entity, GridParam param) {
+        Grid grid = new Grid();
+        Page page = PageHelper.offsetPage(param.getOffset(), param.getLimit(), true);
+        dao.findList2(entity);
+        grid.setRows(page.getResult());
+        grid.setTotal(page.getTotal());
+        return grid;
+    }
+
+    /**
+     * 在线商家投放位选择列表数据
+     * @param entity
+     * @param param
+     * @return
+     */
+    public Grid findPageAD(HotelInfo entity, GridParam param) {
+        Grid grid = new Grid();
+        Page page = PageHelper.offsetPage(param.getOffset(), param.getLimit(), true);
+        dao.findListAD(entity);
+        grid.setRows(page.getResult());
+        grid.setTotal(page.getTotal());
+        return grid;
+    }
+
+    /**
+     * 根据时间选择广告位
+     * @param advertisingOrder
+     * @param param
+     * @return
+     */
+    public Grid getUploadInfo(AdvertisingOrder advertisingOrder, GridParam param) {
+        Grid grid = new Grid();
+        Page page = PageHelper.offsetPage(param.getOffset(), param.getLimit(), true);
+        dao.getUploadInfo(advertisingOrder);
+        List<HotelInfo> hotelInfoList2 = new ArrayList<>();
+        grid.setRows(page.getResult());
+        grid.setTotal(page.getTotal());
+        List<HotelInfo> hotelInfoList = grid.getRows();
+        //将数据根据时间循环出相应时间的数据
+        for (int j = 6; j < 30; j++) {
+            Date date = new Date();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date); //需要将date数据转移到Calender对象中操作
+            calendar.add(calendar.DATE, j);//把日期往后增加n天.正数往后推,负数往前移动
+            date = calendar.getTime();   //这个时间就是日期往后推一天的结果
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String string = simpleDateFormat.format(date);
+            hotelInfoList.get(0).setTime(string);
+            HotelInfo hotelInfo2 = new HotelInfo();
+            //根据时间请求订单数据，若是有数据，则表明该天被拍卖，修改状态，若无数据，则当天没被拍卖。
+            advertisingOrder.setDate(string);
+            Integer count = dao.getAdvertisementOrder(advertisingOrder);
+            if (count==0){
+                hotelInfo2.setStatus(0);
+                hotelInfo2.setIsUpload(0);
+            }else if (count==1){
+                hotelInfo2.setStatus(1);
+                hotelInfo2.setIsUpload(1);
+            }
+            hotelInfo2.setId(j-6);
+            hotelInfo2.setTime(hotelInfoList.get(0).getTime());
+            hotelInfo2.setTotalPrice2(hotelInfoList.get(0).getTotalPrice2());
+            hotelInfo2.setTotalPrice(hotelInfoList.get(0).getTotalPrice());
+            hotelInfo2.setVideoPrice(hotelInfoList.get(0).getVideoPrice());
+            hotelInfo2.setPicturePrice(hotelInfoList.get(0).getPicturePrice());
+            hotelInfo2.setNowPrice(dao.getDateOrder(advertisingOrder));
+            hotelInfo2.setNowPrice2(dao.getDateOrder2(advertisingOrder));
+            hotelInfoList2.add(hotelInfo2);
+        }
+      grid.setRows(hotelInfoList2);
+        return grid;
+    }
+
+    /**
+     * 获取酒店下拉列表
+     * @param hotelInfo
+     * @return
+     */
+    public List<HotelInfo> findListHotel(HotelInfo hotelInfo) {
+        return dao.findListHotel(hotelInfo);
+    }
+
+    /**
+     * 广告位选择
+     * @param entity
+     * @param param
+     * @return
+     */
+    public Grid findPage3(HotelInfo entity, GridParam param) {
+        Grid grid = new Grid();
+        Page page = PageHelper.offsetPage(param.getOffset(), param.getLimit(), true);
+        dao.findList3(entity);
+        grid.setRows(page.getResult());
+        grid.setTotal(page.getTotal());
+        return grid;
+    }
+
+
+    /**
+     * 查询所有客户端数量
+     * @param hotelInfo
+     * @return
+     */
+    public int getHotelInfo(HotelInfo hotelInfo) {
+        return dao.getHotelInfo(hotelInfo);
+    }
+
+    /**
+     *所有的入驻酒店
+     * @param hotelInfo
+     * @return
+     */
+    public List<HotelInfo> findAllList9(HotelInfo hotelInfo) {
+        return dao.findAllList9(hotelInfo);
+    }
+
+    /**
+     * 广告位选择
+     * @param hotelInfo
+     * @return
+     */
+    public HotelInfo getSelectAdvertise(HotelInfo hotelInfo) {
+        return dao.getSelectAdvertise(hotelInfo);
+    }
+
+    /**
+     * 获取时间下拉列表
+     * @return
+     */
+    public List<HotelInfo> getTime() {
+        return dao.getTime();
+    }
+
+    public int getAllHotelInfo() {
+        return dao.getAllHotelInfo();
+    }
+
+    /**
+     * 酒店服务数据统计列表数据
+     * @param entity
+     * @param param
+     * @return
+     */
+    public Grid hotelServiceDateList(HotelInfo entity, GridParam param) {
+        Grid grid = new Grid();
+        Page page = PageHelper.offsetPage(param.getOffset(), param.getLimit(), true);
+        dao.hotelServiceDateList(entity);
+        grid.setRows(page.getResult());
+        grid.setTotal(page.getTotal());
+        return grid;
+    }
+
+    /**
+     * 商家类别
+     * @return
+     */
+    public List<ShopInfo> getShopType() {
+        return dao.getShopType();
+    }
+
+    /**
+     * 入驻详情
+     * @param hotelInfo
+     * @return
+     */
+    public HotelInfo getHotel(HotelInfo hotelInfo) {
+        return dao.getHotel(hotelInfo);
+    }
+
+    /**
+     * 根据时间获取商家数量
+     * @param shopHotel
+     * @return
+     */
+    public Integer getShopCount(ShopHotel shopHotel) {
+        return dao.getShopCount(shopHotel);
+    }
+
+    /**
+     * 营收详情数据
+     * @param entity
+     * @param param
+     * @return
+     */
+    public Grid getMyBill(HotelInfo entity, GridParam param) {
+        Grid grid = new Grid();
+        Page page = PageHelper.offsetPage(param.getOffset(), param.getLimit(), true);
+        dao.getMyBill(entity);
+        grid.setRows(page.getResult());
+        grid.setTotal(page.getTotal());
+        return grid;
+    }
+
+    /**
+     * 滚屏广告收入
+     * @param entity
+     * @param param
+     * @return
+     */
+    public Grid getMyBill6(HotelInfo entity, GridParam param) {
+        Grid grid = new Grid();
+        Page page = PageHelper.offsetPage(param.getOffset(), param.getLimit(), true);
+        dao.getMyBill3(entity);
+        grid.setRows(page.getResult());
+        grid.setTotal(page.getTotal());
+        return grid;
+    }
+    /**
+     * 滚屏广告收入
+     * @param entity
+     * @param param
+     * @return
+     */
+    public Grid getMyBill3(HotelInfo entity, GridParam param) {
+        Grid grid = new Grid();
+        Page page = PageHelper.offsetPage(param.getOffset(), param.getLimit(), true);
+        dao.getMyBill2(entity);
+        grid.setRows(page.getResult());
+        grid.setTotal(page.getTotal());
+        return grid;
+    }
+
+    public Grid getMy(HotelInfo entity, GridParam param) {
+        Grid grid = new Grid();
+        Page page = PageHelper.offsetPage(param.getOffset(), param.getLimit(), true);
+        dao.getMy(entity);
+        grid.setRows(page.getResult());
+        grid.setTotal(page.getTotal());
+        return grid;
+    }
+
+    /**
+     * 导出数据
+     * @param hotelInfo
+     * @return
+     */
+    public List<MyBillInfo> getMyBill2(HotelInfo hotelInfo) {
+        return dao.getMyBill(hotelInfo);
+    }
+    /**
+     * 导出数据
+     * @param hotelInfo
+     * @return
+     */
+    public List<MyBillInfo> getBillChart(HotelInfo hotelInfo) {
+        return dao.getMy(hotelInfo);
+    }
+
+    /**
+     * 导出数据
+     * @param hotelInfo
+     * @return
+     */
+    public List<MyBillInfo> getMyBill4(HotelInfo hotelInfo) {
+        return dao.getMyBill2(hotelInfo);
+    }
+
+    /**
+     * 导出数据
+     * @param hotelInfo
+     * @return
+     */
+    public List<MyBillInfo> getMyBill5(HotelInfo hotelInfo) {
+        return dao.getMyBill3(hotelInfo);
+    }
+
+
+    /**
+     * 根据时间获取商家数量
+     * @param hotelInfo
+     * @return
+     */
+    public Float getCount(HotelInfo hotelInfo) {
+        return dao.getCount(hotelInfo);
+    }
+
+    public Float getCount6(HotelInfo hotelInfo) {
+        return dao.getCount6(hotelInfo);
+    }
+
+    public Float getCount2(HotelInfo hotelInfo) {
+        return dao.getCount2(hotelInfo);
+    }
+
+    public String getNewTime(AdvertisingOrder advertisingOrder) {
+        return dao.getNewTime(advertisingOrder);
+    }
+
+    public void setState(Integer time) {
+        dao.setState(time);
+    }
+
+
+    public void changeUnicode(String uniqueEncoding) {
+        dao.changeUnicode(uniqueEncoding);
+    }
+
+    public void changeUnicode2(String uniqueEncoding) {
+        dao.changeUnicode2(uniqueEncoding);
+    }
+
+    public HotelInfo hotelName(HotelInfo hotelInfo) {
+        return dao.hotelName(hotelInfo);
+    }
+
+    public Integer getSort1(Integer hotelId){
+        return dao.getSort1(hotelId);
+    }
+
+    /**
+     * 根据订单号获取订单中数量
+     * @param advertisingOrder
+     * @return
+     */
+    public Integer getAdvertisementOrder(AdvertisingOrder advertisingOrder){
+        return dao.getAdvertisementOrder(advertisingOrder);
+    }
+
+    /**
+     * 查询所有酒店ID和名称
+     * @return 查询结果集
+     * @author wy
+     */
+    public List<HotelInfo> getAllHetelIdAndName() {
+    	return dao.getAllHetelIdAndName();
+    }
+
+
+
+
+    /**
+     * 查询所有酒店类别类别 1.5版本
+     * @param hotelInfo
+     * @return
+     */
+    public Grid getHotelCategoryListByName(HotelInfo hotelInfo, GridParam param){
+        Grid grid = new Grid();
+        Page page = PageHelper.offsetPage(param.getOffset(), param.getLimit(), true);
+        dao.getHotelCategoryListByName(hotelInfo);
+        grid.setRows(page.getResult());
+        grid.setTotal(page.getTotal());
+        return grid;
+    }
+
+    /**
+     * 更新酒店启用 停用状态 1.5版本
+     * @param hotelInfo
+     * @return
+     */
+    public int updateHotelStatusById(HotelInfo hotelInfo){
+        return dao.updateHotelStatusById(hotelInfo);
+    }
+
+    /**
+     * 新增或者更新酒店编码 1.5版本
+     * @param entity
+     */
+    public void saveCode(HotelInfo entity) {
+        if (entity.getIsNewRecord()) {
+            entity.preInsert();
+            dao.insertCode(entity);
+        } else {
+            entity.preUpdate();
+            dao.updateCode(entity);
+        }
+    }
+
+    /**
+     *
+     * 查询酒店名称和编码是否有重复 1.5版本
+     * @param hotelInfo
+     * @return
+     */
+    public HotelInfo hotelInfoByName(HotelInfo hotelInfo){
+        return dao.hotelInfoByName(hotelInfo);
+    }
+
+
+    /**
+     * 查询当前酒店下的广告位
+     * @param hotelInfo
+     * @return
+     */
+    public  int uploadCountNumById(HotelInfo hotelInfo){
+        return dao.uploadCountNumById(hotelInfo);
+    }
+}

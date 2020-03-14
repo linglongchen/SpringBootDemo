@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>操作失败</title>
+
+    <head th:include="init :: init"></head>
+</head>
+<body>
+    <script type="text/javascript">
+        parent.closeLoading();
+        try{
+            parent.refreshTable();
+        }catch(e) {
+
+        }
+        parent.layer.closeAll('iframe');
+        parent.refreshTable();
+
+    </script>
+</body>
+</html>

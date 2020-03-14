@@ -1,0 +1,1323 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chunqiu.mrjuly.modules.advertisingorder.dao.AdvertisingOrderDao">
+
+    <sql id="advertisingOrderColumns">
+		a.id AS "id",
+		a.transactionodersn AS "transactionOderSn",
+		a.orderNumber AS "ordernumber",
+		a.create_date AS "createDate",
+		a.payment_date AS "paymentDate",
+		a.create_by AS "createBy.id",
+		a.type AS "type",
+		a.hotel_code_id AS "hotelCodeId",
+		a.delivery_type AS "deliveryType",
+		a.delivery_type_starting_price AS "deliveryTypeStartingPrice",
+		a.quantity_delivered AS "quantityDelivered",
+		a.auction_amount AS "auctionAmount",
+		a.coupon_id AS "couponId",
+		a.del_flag AS "delFlag",
+		a.auction_status AS "auctionStatus",
+		a.pay_status AS "payStatus",
+		a.put_in_time AS "putInTime",
+		a.price_type AS "priceType",
+		a.price_type_price AS "priceTypePrice",
+		a.object_id AS "objectId",
+		a.upload_id AS "uploadId",
+		a.start_time as "startTime",
+		a.end_time as "endTime",
+		a.advertising_content AS "advertisingContent",
+		a.advertising_description AS "advertisingDescription",
+		a.advertising_url AS "advertisingUrl",
+		a.url_description AS "urlDescription",
+		a.advertise_info_master_id AS "advertiseInfoMasterId",
+		a.type3_id AS "type3Id"
+	</sql>
+
+    <sql id="advertisingOrderJoins">
+    </sql>
+
+
+    <select id="getOrderNum" resultType="AdvertisingOrder">
+		select a.upload_id AS "uploadId",
+			a.ordernumber AS "ordernumber",
+			a.id AS "id"
+			from advertising_order a
+			where a.type =1 and a.object_id=#{objectId} and a.auction_status=3 and a.pay_status=2 and a.upload_count !=0 and a.state!=1
+			group by ordernumber
+	</select>
+    <select id="getOrderNum2" resultType="AdvertisingOrder">
+		select a.upload_id AS "uploadId",
+			a.ordernumber AS "ordernumber",
+			a.id AS "id"
+			from advertising_order a
+			where a.type =2 and a.object_id=#{objectId} and a.auction_status=3 and a.pay_status=2 and a.upload_count !=0 and a.state!=1
+			group by ordernumber
+	</select>
+
+    <select id="orderDetailList" resultType="AdvertisingOrder">
+        select
+        b.hotel_name as "hotelName",
+        a.state AS "state",
+        s.name AS "userName",
+        1 AS "days",
+        t3.type3_name As "type3Name",
+        m.advertiser_name AS "masterName",
+        <include refid="advertisingOrderColumns"/>
+        FROM advertising_order a
+        left join hotel_info b on a.hotel_code_id = b.hotel_code_id
+        left join advertising_upload u on u.id=a.upload_id
+        LEFT JOIN hotel_info i on i.hotel_code_id=a.hotel_code_id
+        LEFT JOIN adviertisement_type3 t3 ON t3.id =substring(i.hotel_ad_standard,7)
+        left join admin_user s on s.id=a.create_by
+        left join advertiser_master_info m on m.id=a.advertise_info_master_id
+        <include refid="advertisingOrderJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL} and a.type=#{type} and a.id=#{id}
+        </where>
+    </select>
+    <select id="getType3" resultType="AdviertisementType">
+		select id AS "id",
+		type3_name AS "type3Name"
+		from adviertisement_type3
+		where status=1
+	</select>
+    <select id="getDetail" resultType="AdvertisingOrder">
+        select
+        b.hotel_name as "hotelName",
+        b.hotel_code_id as "hotelCodeId",
+        a.state AS "state",
+        a.orderNumber AS "ordernumber",
+        s.name AS "userName",
+        <include refid="advertisingOrderColumns"/>
+        FROM advertising_order a
+        left join hotel_info b on a.hotel_code_id = b.hotel_code_id
+        left join advertising_upload u on u.id=a.upload_id
+        left join admin_user s on s.id=a.create_by
+        <include refid="advertisingOrderJoins"/>
+        where a.del_flag = #{DEL_FLAG_NORMAL} and a.type=#{type} and a.id=#{id}
+    </select>
+
+
+    <select id="get" resultType="AdvertisingOrder">
+        SELECT
+        b.now_price as "nowPrice",
+        b.now_price2 as "nowPrice2",
+        b.status,
+        d.picture_total_price as "totalPrice",
+        d.video_total_price as "totalPrice2",
+        a.upload_count AS "uploadCount",
+        c.hotel_ad_standard AS "hotelAdStandard",
+        a.price_type_price as "priceTypePrice",
+        <include refid="advertisingOrderColumns"/>
+        FROM advertising_order a
+        left join advertising_upload as b on b.id = a.upload_id
+        left join hotel_info as c on c.hotel_code_id = a.hotel_code_id 
+        left join ly_hotel_advert_price as d on d.upload_id = a.upload_id 
+        <include refid="advertisingOrderJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+
+    <select id="orderPriceListById" resultType="AdvertisingOrder">
+        SELECT
+        <include refid="advertisingOrderColumns"/>
+        FROM advertising_order a
+        <include refid="advertisingOrderJoins"/>
+        WHERE a.id IN
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+        #{item.id}
+        </foreach>
+        ORDER BY a.auction_amount DESC
+    </select>
+
+    <select id="advertisingOrderList" resultType="AdvertisingOrder">
+        SELECT
+        b.hotel_name as "hotelName",
+        b.hotel_code_id as "hotelCodeId",
+        <include refid="advertisingOrderColumns"/>
+        FROM advertising_order a left join hotel_info b on a.hotel_code_id = b.hotel_code_id
+        <include refid="advertisingOrderJoins"/>
+        <where>
+            a.del_flag = '0'
+            <if test="date != null and date != ''">
+                and date_format(a.create_date,'%Y-%m-%d') = #{date}
+            </if>
+            and a.auction_status = 2
+            and a.pay_status = 0
+            order by a.id desc
+        </where>
+
+    </select>
+
+    <select id="findList" resultType="AdvertisingOrder">
+        SELECT
+        b.hotel_name as "hotelName",
+        b.hotel_code_id as "hotelCodeId",
+        <include refid="advertisingOrderColumns"/>
+        FROM advertising_order a left join hotel_info b on a.hotel_code_id = b.hotel_code_id
+        <include refid="advertisingOrderJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="transactionodersn != null and transactionodersn != ''">
+                AND a.transactionOderSn = #{transactionodersn}
+            </if>
+            <if test="ordernumber != null and ordernumber != ''">
+                AND a.ordernumber LIKE
+                <if test="dbName == 'oracle'">'%'||#{ordernumber}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{ordernumber}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{ordernumber},'%')</if>
+            </if>
+            <if test="createDate != null and createDate != ''">
+                AND a.create_date = #{createDate}
+            </if>
+            <if test="paymentDate != null and paymentDate != ''">
+                AND a.payment_date = #{paymentDate}
+            </if>
+            <if test="releaseDate != null and releaseDate != ''">
+                AND a.release_date = #{releaseDate}
+            </if>
+            <if test="createBy != null and createBy.id != null and createBy.id != ''">
+                AND a.create_by = #{createBy.id}
+            </if>
+            <if test="type != null and type != ''">
+                AND a.type = #{type}
+            </if>
+            <if test="hotelCodeId != null and hotelCodeId != ''">
+                AND a.hotel_code_id = #{hotelCodeId}
+            </if>
+            <if test="deliveryType != null and deliveryType != ''">
+                AND a.delivery_type = #{deliveryType}
+            </if>
+            <if test="deliveryTypeStartingPrice != null and deliveryTypeStartingPrice != ''">
+                AND a.delivery_type_starting_price = #{deliveryTypeStartingPrice}
+            </if>
+            <if test="quantityDelivered != null and quantityDelivered != ''">
+                AND a.quantity_delivered = #{quantityDelivered}
+            </if>
+            <if test="auctionAmount != null and auctionAmount != ''">
+                AND a.auction_amount = #{auctionAmount}
+            </if>
+            <if test="couponId != null and couponId != ''">
+                AND a.coupon_id = #{couponId}
+            </if>
+            <if test="delFlag != null and delFlag != ''">
+                AND a.del_flag = #{delFlag}
+            </if>
+            <if test="auctionStatus != null and auctionStatus != ''">
+                AND a.auction_status = #{auctionStatus}
+            </if>
+            <if test="payStatus != null and payStatus != ''">
+                AND a.pay_status = #{payStatus}
+            </if>
+            <if test="putInTime != null and putInTime != ''">
+                AND a.put_in_time = #{putInTime}
+            </if>
+            <if test="priceType != null and priceType != ''">
+                AND a.price_type = #{priceType}
+            </if>
+            <if test="priceTypePrice != null and priceTypePrice != ''">
+                AND a.price_type_price = #{priceTypePrice}
+            </if>
+            <if test="objectId != null and objectId != ''">
+                AND a.object_id = #{objectId}
+            </if>
+        </where>
+        <choose>
+            <when test="orderBy != null and orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                order by a.id desc
+            </otherwise>
+        </choose>
+    </select>
+    <select id="findList2" resultType="AdvertisingOrder">
+        SELECT
+        a.id AS "id",
+        b.hotel_name as "hotelName",
+        b.hotel_code_id as "hotelCodeId",
+        a.state AS "state",
+        a.put_in_time AS "startTime",
+        a.ordernumber AS "ordernumber",
+        a.upload_id as "uploadId",
+        a.object_id AS "objectId",
+        a.upload_count AS "uploadCount",
+        m.advertiser_name AS "masterName"
+        FROM advertising_order a
+        left join hotel_info b on a.hotel_code_id = b.hotel_code_id
+        left join advertising_upload u on u.id=a.upload_id
+        left join advertiser_master_info m on m.id=a.advertise_info_master_id
+        <include refid="advertisingOrderJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL} and a.object_id=#{objectId} and a.type = #{type} and a.auction_status=3 and a.pay_status=2
+            <if test="orderType2!=null and orderType2 != ''">
+                AND a.ordernumber =#{orderType2}
+            </if>
+            <if test="transactionodersn != null and transactionodersn != ''">
+                AND a.transactionOderSn = #{transactionodersn}
+            </if>
+            <if test="createDate != null and createDate != ''">
+                AND a.create_date = #{createDate}
+            </if>
+            <if test="paymentDate != null and paymentDate != ''">
+                AND a.payment_date = #{paymentDate}
+            </if>
+            <if test="releaseDate != null and releaseDate != ''">
+                AND a.release_date = #{releaseDate}
+            </if>
+            <if test="createBy != null and createBy.id != null and createBy.id != ''">
+                AND a.create_by = #{createBy.id}
+            </if>
+            <if test="hotelCodeId != null and hotelCodeId != ''">
+                AND a.hotel_code_id = #{hotelCodeId}
+            </if>
+            <if test="deliveryType != null and deliveryType != ''">
+                AND a.delivery_type = #{deliveryType}
+            </if>
+            <if test="deliveryTypeStartingPrice != null and deliveryTypeStartingPrice != ''">
+                AND a.delivery_type_starting_price = #{deliveryTypeStartingPrice}
+            </if>
+            <if test="quantityDelivered != null and quantityDelivered != ''">
+                AND a.quantity_delivered = #{quantityDelivered}
+            </if>
+            <if test="auctionAmount != null and auctionAmount != ''">
+                AND a.auction_amount = #{auctionAmount}
+            </if>
+            <if test="couponId != null and couponId != ''">
+                AND a.coupon_id = #{couponId}
+            </if>
+            <if test="delFlag != null and delFlag != ''">
+                AND a.del_flag = #{delFlag}
+            </if>
+            <if test="auctionStatus != null and auctionStatus != ''">
+                AND a.auction_status = #{auctionStatus}
+            </if>
+            <if test="payStatus != null and payStatus != ''">
+                AND a.pay_status = #{payStatus}
+            </if>
+            <if test="putInTime != null and putInTime != ''">
+                AND a.put_in_time = #{putInTime}
+            </if>
+            <if test="priceType != null and priceType != ''">
+                AND a.price_type = #{priceType}
+            </if>
+            <if test="priceTypePrice != null and priceTypePrice != ''">
+                AND a.price_type_price = #{priceTypePrice}
+            </if>
+        </where>
+        group by ordernumber
+        <choose>
+            <when test="orderType ==1">
+                order by a.create_date asc
+            </when>
+            <when test="orderType == 2">
+                order by delivery_type desc
+            </when>
+            <when test="orderBy != null and orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            order by a.id desc
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="AdvertisingOrder">
+        SELECT
+        <include refid="advertisingOrderColumns"/>
+        FROM advertising_order a
+        <include refid="advertisingOrderJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="orderBy != null and orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            order by a.id desc
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+		INSERT INTO advertising_order(
+								transactionOderSn,
+						orderNumber,
+						create_date,
+						payment_date,
+						release_date,
+						create_by,
+						type,
+						hotel_code_id,
+						delivery_type,
+						delivery_type_starting_price,
+						quantity_delivered,
+						auction_amount,
+						coupon_id,
+						del_flag,
+						auction_status,
+						pay_status,
+						put_in_time,
+						price_type,
+						price_type_price,
+						object_id,
+						upload_id
+		) VALUES (
+								#{transactionodersn},
+						#{ordernumber},
+						#{createDate},
+						#{paymentDate},
+						#{releaseDate},
+						#{createBy.id},
+						#{type},
+						#{hotelCodeId},
+						#{deliveryType},
+						#{deliveryTypeStartingPrice},
+						#{quantityDelivered},
+						#{auctionAmount},
+						#{couponId},
+						#{delFlag},
+						#{auctionStatus},
+						#{payStatus},
+						#{putInTime},
+						#{priceType},
+						#{priceTypePrice},
+						#{objectId},
+						#{uploadId}
+		)
+	</insert>
+
+    <update id="update">
+        UPDATE advertising_order
+        <set>
+            <if test="transactionodersn != null and transactionodersn != ''">
+                transactionOderSn = #{transactionodersn},
+            </if>
+            <if test="ordernumber != null and ordernumber != ''">
+                orderNumber = #{ordernumber},
+            </if>
+            <if test="createDate != null and createDate != ''">
+                create_date = #{createDate},
+            </if>
+            <if test="paymentDate != null and paymentDate != ''">
+                payment_date = #{paymentDate},
+            </if>
+            <if test="releaseDate != null and releaseDate != ''">
+                release_date = #{releaseDate},
+            </if>
+
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="hotelCodeId != null">
+                hotel_code_id = #{hotelCodeId},
+            </if>
+            <if test="deliveryType != null">
+                delivery_type = #{deliveryType},
+            </if>
+            <if test="deliveryTypeStartingPrice != null and deliveryTypeStartingPrice != ''">
+                delivery_type_starting_price = #{deliveryTypeStartingPrice},
+            </if>
+            <if test="quantityDelivered != null">
+                quantity_delivered = #{quantityDelivered},
+            </if>
+            <if test="auctionAmount != null and auctionAmount != ''">
+                auction_amount = #{auctionAmount},
+            </if>
+            <if test="couponId != null">
+                coupon_id = #{couponId},
+            </if>
+            <if test="delFlag != null and delFlag != ''">
+                del_flag = #{delFlag},
+            </if>
+            <if test="auctionStatus != null">
+                auction_status = #{auctionStatus},
+            </if>
+            <if test="payStatus != null">
+                pay_status = #{payStatus},
+            </if>
+            <if test="putInTime != null and putInTime != ''">
+                put_in_time = #{putInTime},
+            </if>
+            <if test="priceType != null">
+                price_type = #{priceType},
+            </if>
+            <if test="priceTypePrice != null and priceTypePrice != ''">
+                price_type_price = #{priceTypePrice},
+            </if>
+            <if test="objectId != null">
+                object_id = #{objectId},
+            </if>
+            <if test="uploadId != null">
+                upload_id = #{uploadId},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="delete">
+		UPDATE advertising_order SET
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+
+    <select id="selCou" resultType="int">
+        SELECT
+        count(id) + (SELECT
+        count(id)
+        FROM notice_info
+        where target = 3 and object_id = #{objectId} and type = 2  and  is_read = 0 AND circular_endTime &gt;= date_format(now(), '%Y-%m-%d')) as a
+        FROM notice_info
+        where target = 3 and object_id = #{objectId} and type = 1  and  is_read = 0 AND (scheduled_release_time &lt;=NOW() or scheduled_release_time is null );
+    </select>
+    <select id="selCount" resultType="int">
+		SELECT
+			count(id)
+		FROM advertising_order
+		WHERE del_flag = 0 and type=2 and  auction_status=3 and pay_status=2 and state=1 and object_id=#{objectId} AND  put_in_time = date_format(now(),'%Y-%m-%d')
+	</select>
+
+    <select id="selCount1" resultType="int">
+		SELECT
+		count(id)
+		FROM advertising_order
+		WHERE del_flag = 0 and type=2 and  auction_status=3 and pay_status=2 and state=1 and object_id=#{objectId}
+	</select>
+
+    <select id="selDisCount" resultType="int">
+		select count(distinct hotel_code_id) from advertising_order
+		WHERE del_flag = 0  and type=2 and  auction_status=3 and pay_status=2 and state=1 and object_id=#{objectId} and start_time &lt;= date_format(now(),'%Y-%m-%d') and date_format(now(),'%Y-%m-%d')&lt;=end_time
+	</select>
+
+    <select id="selDisCount1" resultType="int">
+		select  count(distinct hotel_code_id) from advertising_order
+		WHERE del_flag=0 AND type =2 and object_id=#{objectId} AND auction_status=3 and state=1 and pay_status=2
+	</select>
+
+    <select id="getSum" resultType="com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder">
+		 select IFNULL(sum(quantity_delivered),'0') as "quantityDelivered" from advertising_order
+		 WHERE del_flag = 0 and type=2 and  auction_status=3 and pay_status=2 and state=1 and object_id=#{objectId} and start_time &lt;= date_format(now(),'%Y-%m-%d') and date_format(now(),'%Y-%m-%d')&lt;=end_time
+	</select>
+
+    <select id="getSum3" resultType="com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder">
+		select IFNULL(sum(quantity_delivered),'0') as "quantityDelivered" from advertising_order
+		WHERE del_flag = 0 and type=2 and  auction_status=3 and pay_status=2 and state=1 and object_id=#{objectId}
+	</select>
+
+    <select id="getSum1" resultType="com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder">
+		select IFNULL(sum(quantity_delivered),'0') as "quantityDelivered" from advertising_order
+		WHERE del_flag = 0  AND delivery_type=1 and type=2 and  auction_status=3 and pay_status=2 and state=1 and object_id=#{objectId} and start_time &lt;= date_format(now(),'%Y-%m-%d') and date_format(now(),'%Y-%m-%d')&lt;=end_time
+	</select>
+
+    <select id="getSum4" resultType="com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder">
+		select IFNULL(sum(quantity_delivered),'0') as "quantityDelivered" from advertising_order
+		WHERE del_flag=0 AND delivery_type=1 and object_id=#{objectId} AND auction_status=3 AND type =2 and state=1 and pay_status=2
+	</select>
+
+    <select id="getSum2" resultType="com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder">
+		select IFNULL(sum(quantity_delivered),'0') as "quantityDelivered" from advertising_order
+		WHERE del_flag = 0  AND delivery_type=2 and type=2 and  auction_status=3 and pay_status=2 and state=1 and object_id=#{objectId} and start_time &lt;= date_format(now(),'%Y-%m-%d') and date_format(now(),'%Y-%m-%d')&lt;=end_time
+	</select>
+
+    <select id="getSum5" resultType="com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder">
+		select IFNULL(sum(quantity_delivered),'0') as "quantityDelivered" from advertising_order
+		WHERE del_flag=0 AND delivery_type=2 and object_id=#{objectId} AND auction_status=3 AND type =2 and state=1 and pay_status=2
+	</select>
+
+    <select id="getTotal" resultType="com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder">
+		select IFNULL(sum(auction_amount),'0') as "auctionAmount" from advertising_order
+		WHERE del_flag = 0  and type=2 and  auction_status=3 and pay_status=2 and state=1 and object_id=#{objectId} and start_time &lt;= date_format(now(),'%Y-%m-%d') and date_format(now(),'%Y-%m-%d')&lt;=end_time
+	</select>
+
+    <select id="getTotal1" resultType="com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder">
+		select IFNULL(sum(auction_amount),'0') as "auctionAmount" from advertising_order
+		WHERE del_flag=0 AND auction_status=3 and object_id=#{objectId} AND type =2 and pay_status=2 and state=1
+	</select>
+
+
+    <select id="selTime" resultType="int">
+		select COUNT(*) from advertising_order
+		WHERE del_flag=0 AND auction_status=3 and object_id=#{objectId} AND type =2 and pay_status=2 and state=1 AND put_in_time = date_format(now(),'%Y-%m-%d')
+	</select>
+
+    <select id="getSum6" resultType="com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder">
+		select IFNULL(sum(quantity_delivered),'0') as "quantityDelivered" from advertising_order
+		WHERE del_flag=0 AND auction_status=3 and pay_status=2 and state=1 and object_id=#{objectId} AND type =2 AND end_time = date_format(now(),'%Y-%m-%d')
+	</select>
+
+    <select id="getSum7" resultType="com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder">
+		select IFNULL(sum(quantity_delivered),'0') as "quantityDelivered" from advertising_order
+		WHERE del_flag=0 AND auction_status=3 and pay_status=2 and state=1 and object_id=#{objectId} AND type =2 AND delivery_type=1 AND end_time = date_format(now(),'%Y-%m-%d')
+	</select>
+
+    <select id="getSum8" resultType="com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder">
+		select IFNULL(sum(quantity_delivered),'0') as "quantityDelivered" from advertising_order
+		WHERE del_flag=0 AND auction_status=3 and pay_status=2 and state=1 and object_id=#{objectId} AND type =2 AND delivery_type=2 AND end_time = date_format(now(),'%Y-%m-%d')
+	</select>
+
+    <select id="selDisCount2" resultType="int">
+		select count(distinct hotel_code_id) from advertising_order
+		WHERE del_flag=0 AND type =2 and pay_status=2 and pay_status=2 and state=1 and state=1 and object_id=#{objectId} AND auction_status=3 AND end_time = date_format(now(),'%Y-%m-%d')
+	</select>
+
+    <select id="getTotal2" resultType="com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder">
+		select IFNULL(sum(auction_amount),'0') as "auctionAmount" from advertising_order
+		WHERE del_flag=0 AND auction_status=3 and pay_status=2 and state=1 AND object_id=#{objectId} AND type =2 AND end_time = date_format(now(),'%Y-%m-%d')
+	</select>
+
+    <select id="selState" resultType="int">
+		select COUNT(*) from advertising_order a
+		WHERE a.del_flag = 0  and a.object_id=#{objectId} AND a.type =2 AND a.state=2
+	</select>
+
+    <select id="getStateSum" resultType="com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder">
+		select IFNULL(sum(quantity_delivered),'0') as "quantityDelivered" from advertising_order a
+		WHERE a.del_flag=0 AND a.auction_status=3 and a.object_id=#{objectId} AND a.type =2 AND a.state=2
+	</select>
+
+    <select id="getStateSum1" resultType="com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder">
+		select IFNULL(sum(quantity_delivered),'0') as "quantityDelivered" from advertising_order a
+		WHERE a.del_flag=0 AND a.auction_status=3 and a.object_id=#{objectId} AND a.type =2 AND a.state=2 AND a.delivery_type=1
+	</select>
+
+    <select id="getStateSum2" resultType="com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder">
+		select IFNULL(sum(quantity_delivered),'0') as "quantityDelivered" from advertising_order a
+		WHERE a.del_flag=0 AND a.auction_status=3 and a.object_id=#{objectId} AND a.type =2 AND a.state=2 AND a.delivery_type=2
+	</select>
+
+    <select id="selDisCount3" resultType="int">
+		select count(distinct hotel_code_id) from advertising_order a
+		WHERE a.del_flag=0 AND a.type =2 and a.object_id=#{objectId} AND a.auction_status=3 AND a.state=2
+	</select>
+
+    <select id="getTotal3" resultType="com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder">
+		select IFNULL(sum(auction_amount),'0') as "auctionAmount" from advertising_order a
+		WHERE a.del_flag=0 AND a.auction_status=3 and a.object_id=#{objectId} AND a.type =2 AND a.state=2 AND a.delivery_type=2
+	</select>
+
+
+	<select id="selContent" resultType="AdvertisingOrder">
+		SELECT
+		*
+		FROM
+			advertising_order a
+		LEFT JOIN hotel_info b ON a.hotel_code_id = b.hotel_code_id
+		WHERE
+			a.type = 2
+		AND a.auction_status = 3
+		AND a.pay_status = 2
+		AND a.state = 1
+		AND a.object_id = #{objectId}
+		AND a.del_flag = 0
+		group by a.hotel_code_id
+	</select>
+
+
+    <select id="selAll" resultType="com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder">
+
+		SELECT * FROM advertising_order WHERE
+		auction_status=3 AND pay_status=2 AND del_flag=0 AND type=2 and object_id=#{objectId}
+	</select>
+
+    <select id="selAll1" resultType="com.chunqiu.mrjuly.modules.advertiserinfo.model.AdvertiserInfo">
+		SELECT DISTINCT a.id, a.advertiser_number FROM advertiser_master_info a
+		LEFT JOIN advertising_order b on a.id=b.advertise_info_master_id
+		WHERE b.auction_status=3 AND b.pay_status=2 AND b.del_flag=0 AND b.type=2 and a.advertise_info_id=#{advertiseInfoId}
+	</select>
+
+    <select id="selNum" resultType="com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder">
+		SELECT
+            *
+        FROM
+            advertising_order AS a
+        WHERE
+            a.object_id = #{objectId}
+        AND type = 2
+        AND a.auction_status = 3
+        AND a.pay_status = 2
+        AND a.state = 1
+        AND a.advertise_info_master_id = #{advertiseInfoMasterId}
+        GROUP BY
+            a.ordernumber
+	</select>
+
+    <select id="selAllIn" resultType="com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder">
+		SELECT
+			a.delivery_type AS "deliveryType",
+			a.create_date AS "createDate",
+			sum(a.auction_amount) AS "auctionAmount",
+			sum(a.quantity_delivered) AS "quantityDelivered",
+			f.hotel_name AS "hotelName",
+			f.hotel_lng AS "hotelLng",
+			f.hotel_lat AS "hotelLat",
+			f.hotel_address AS "hotelAddress",
+			f.hotel_code_id as "hotelCodeId",
+			c.type3_name as "typeName",
+			COUNT(a.id) as "sum",
+			GROUP_CONCAT(a.put_in_time) as "putInTime"
+		FROM
+		advertising_order as a
+		LEFT JOIN hotel_info AS f ON a.hotel_code_id=f.hotel_code_id
+		LEFT JOIN adviertisement_type3 AS c ON a.type3_id=c.id
+		LEFT JOIN adviertisement_type2 AS d ON c.type2_id=d.id
+		LEFT JOIN adviertisement_type AS e ON d.type_id=e.id
+		WHERE a.ordernumber = #{ordernumber}
+		GROUP BY a.ordernumber
+	</select>
+
+
+    <update id="updateStatus">
+		UPDATE `advertising_order`
+		SET
+		auction_status = #{auctionStatus},pay_status = #{payStatus}
+		WHERE  id = #{id}
+	</update>
+
+
+    <update id="updateAdverPrice">
+        UPDATE `advertising_upload`
+        SET
+        <if test="deliveryType == 1">
+            now_price = #{nowPrice}
+        </if>
+        <if test="deliveryType == 2">
+            now_price2 = #{nowPrice2}
+        </if>
+        WHERE
+        id = #{uploadId}
+    </update>
+
+    <update id="updateOrderPrice">
+			UPDATE `advertising_order`
+				SET
+					price_type_price = #{priceTypePrice},
+					auction_amount = #{auctionAmount}
+				WHERE
+				id = #{id}
+	</update>
+
+    <update id="updatePosition">
+		UPDATE `advertising_upload`
+		SET
+		`status` = 0
+		WHERE
+		id = #{uploadId}
+	</update>
+
+    <update id="updatePosition2">
+		UPDATE `advertising_upload`
+		SET
+		`status` = 1,
+		`now_price` = 0,
+		`now_price2`= 0
+		WHERE
+		id = #{uploadId}
+	</update>
+
+
+    <update id="updatePosition3">
+		UPDATE `advertising_upload`
+		SET
+		 `state` = 0
+		WHERE
+			id = #{uploadId}
+	</update>
+
+    <update id="updateOrderById">
+			UPDATE `advertising_order`
+				SET
+				transactionodersn = #{transactionodersn},
+				payment_date = now(),
+				coupon_id = #{couponId},
+				pay_status = 2,
+				total_order_price = #{totalOrderPrice},
+				saving_money = #{savingMoney},
+				auction_amount = #{auctionAmount}
+				WHERE
+					id = #{id}
+	</update>
+
+    <update id="updateCouponById">
+		UPDATE `coupon_user_list`
+			SET
+			 `del_flag` = '1'
+			WHERE
+				coupon_id = #{couponId} and type = #{type} and object_id = #{objectId}
+	</update>
+
+    <select id="advertisingOrderListByBefore" resultType="AdvertisingOrder">
+        SELECT
+        b.hotel_name as "hotelName",
+        b.hotel_code_id as "hotelCodeId",
+        <include refid="advertisingOrderColumns"/>
+        FROM advertising_order a left join hotel_info b on a.hotel_code_id = b.hotel_code_id
+        <include refid="advertisingOrderJoins"/>
+        <where>
+            a.del_flag = '0'
+            and a.pay_status = 1
+            AND a.auction_status = 3
+            and date_format(a.create_date,'%Y-%m-%d') = #{date}
+            order by a.id asc
+        </where>
+    </select>
+
+    <insert id="insertFlowSheetList">
+		INSERT INTO flow_sheet_info(
+		flow_sheet_platform,
+		merchant_name,
+		merchant_code,
+		operation_mode,
+		operating_amount,
+		account_amount,
+		create_date,
+		create_by,
+		remarks,
+		object_id
+		) VALUES (
+		#{flowSheetPlatform},
+		#{merchantName},
+		#{merchantCode},
+		#{operationMode},
+		#{operatingAmount},
+		#{accountAmount},
+		now(),
+		#{objectId},
+		#{remarks},
+		#{objectId}
+		)
+	</insert>
+
+
+    <select id="successPurchase" resultType="AdvertisingOrder">
+        SELECT
+        b.account,
+        <include refid="advertisingOrderColumns"/>
+        FROM advertising_order a LEFT JOIN admin_user b on b.id = a.create_by
+        <include refid="advertisingOrderJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            AND a.auction_status = 3
+            AND a.pay_status = 2
+            AND a.type = #{type}
+            AND a.object_id = #{objectId}
+        </where>
+        order by a.payment_date desc
+    </select>
+    <update id="uploadAdvertisement">
+        update advertising_order
+        <set>
+            <if test="startTime != null and startTime != ''">
+                start_time = #{startTime},
+            </if>
+            <if test="endTime != null and endTime != ''">
+                end_time = #{endTime},
+            </if>
+            <if test="advertisingContent != null and advertisingContent != ''">
+                advertising_content = #{advertisingContent},
+            </if>
+            <if test="advertisingDescription != null and advertisingDescription != ''">
+                advertising_description = #{advertisingDescription},
+            </if>
+            <if test="advertisingUrl != null and advertisingUrl != ''">
+                advertising_url = #{advertisingUrl},
+            </if>
+            <if test="urlDescription != null and urlDescription != ''">
+                url_description = #{urlDescription},
+            </if>
+            <if test="hotelCodeId != null">
+                hotel_code_id = #{hotelCodeId},
+            </if>
+            <if test="objectId != null">
+                object_id = #{objectId},
+            </if>
+            <if test="type3Id != null">
+                type3_id = #{type3Id},
+            </if>
+            <if test="uploadId != null">
+                upload_id = #{uploadId},
+            </if>
+            <if test="state != null">
+                state = #{state},
+            </if>
+            <if test="uploadCount != null">
+                upload_count = #{uploadCount},
+            </if>
+            <if test="uploadCount != null">
+                upload_count = #{uploadCount},
+            </if>
+            <if test="advertiseMaterId != null">
+                advertise_info_master_id = #{advertiseMaterId},
+            </if>
+            <if test="advertisementMark != null and advertisementMark != ''">
+                advertisement_mark = #{advertisementMark},
+            </if>
+            type=1,
+        </set>
+        where ordernumber=#{ordernumber}
+    </update>
+    <update id="uploadAdvertisement2">
+        update advertising_order
+        <set>
+            <if test="startTime != null and startTime != ''">
+                start_time = #{startTime},
+            </if>
+            <if test="endTime != null and endTime != ''">
+                end_time = #{endTime},
+            </if>
+            <if test="advertisingContent != null and advertisingContent != ''">
+                advertising_content = #{advertisingContent},
+            </if>
+            <if test="advertisingDescription != null and advertisingDescription != ''">
+                advertising_description = #{advertisingDescription},
+            </if>
+            <if test="advertisingUrl != null and advertisingUrl != ''">
+                advertising_url = #{advertisingUrl},
+            </if>
+            <if test="urlDescription != null and urlDescription != ''">
+                url_description = #{urlDescription},
+            </if>
+            <if test="hotelCodeId != null">
+                hotel_code_id = #{hotelCodeId},
+            </if>
+            <if test="objectId != null">
+                object_id = #{objectId},
+            </if>
+            <if test="type3Id != null">
+                type3_id = #{type3Id},
+            </if>
+            <if test="state != null">
+                state = #{state},
+            </if>
+            <if test="uploadId != null">
+                upload_id = #{uploadId},
+            </if>
+            <if test="uploadCount != null">
+                upload_count = #{uploadCount},
+            </if>
+            <if test="uploadCount != null">
+                upload_count = #{uploadCount},
+            </if>
+            <if test="advertiseMaterId != null">
+                advertise_info_master_id = #{advertiseMaterId},
+            </if>
+            <if test="advertisementMark != null and advertisementMark != ''">
+                advertisement_mark = #{advertisementMark},
+            </if>
+            type=2,
+        </set>
+        where ordernumber=#{ordernumber}
+    </update>
+
+
+    <select id="getType" resultType="Integer">
+		select delivery_type AS "deliveryType"
+		from advertising_order
+		where id=#{id}
+	</select>
+
+    <select id="productionAdvertisingList" resultType="AdvertisingOrder">
+        SELECT
+        <include refid="advertisingOrderColumns"/>
+        FROM advertising_order a left join advertising_upload b on b.id = a.upload_id
+        <include refid="advertisingOrderJoins"/>
+        <where>
+            a.del_flag = '0'
+            AND a.auction_status = 3
+            AND a.pay_status = 2
+            and  DATE_FORMAT(NOW(),'%y%m%d') - DATE_FORMAT(a.create_date,'%y%m%d') = 2
+            and a.state != 1
+        </where>
+    </select>
+
+    <update id="rechargePrice">
+        <if test="type == 1">
+            update shop_info set account = account + #{auctionAmount} WHERE id = #{id};
+        </if>
+        <if test="type == 2">
+            update advertiser_info set account_balance = account_balance + #{auctionAmount} WHERE id = #{id};
+        </if>
+    </update>
+
+    <select id="AdvertisingOrderHotelList" resultType="AdvertisingOrder">
+		SELECT
+				c.hotel_code_id as "hotelCodeId",
+				c.hotel_name AS "hotelName"
+			FROM
+				advertising_order AS a
+			LEFT JOIN hotel_info AS c ON a.hotel_code_id = c.hotel_code_id
+			WHERE
+				a.type = 2
+			AND a.object_id = #{objectId}
+			AND a.auction_status = 3
+			AND a.pay_status = 2
+			AND a.state = 1
+			group by c.hotel_code_id
+	</select>
+
+    <select id="overviewOrderList" resultType="AdvertisingOrder">
+        SELECT
+        (SELECT count(id)*(select advertisement_num from hotel_info where hotel_code_id = #{hotelCodeId}) from
+        client_bianma_info WHERE type = 1 and equipment_number = #{hotelCodeId}) as sum,
+        sum(a.quantity_delivered) as "quantityDelivered",
+        x.date
+        FROM
+        advertising_order AS a
+        <if test="type == 1">
+            ,(SELECT DATE_FORMAT(DATE_SUB(NOW(), INTERVAL xc - 1 DAY), '%Y-%m-%d') as date
+            FROM (
+            SELECT @xi:=@xi+1 as xc from
+            (SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 ) xc1,
+            (SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6) xc2,
+            (SELECT @xi:=0) xc0
+            ) xcxc) x
+        </if>
+        <if test="type == 2">
+            ,(SELECT DATE_FORMAT(DATE_SUB(NOW(), INTERVAL xc - 30 DAY), '%Y-%m-%d') as date
+            FROM (
+            SELECT @xi:=@xi+1 as xc from
+            (SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 ) xc1,
+            (SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6) xc2,
+            (SELECT @xi:=0) xc0
+            ) xcxc) x
+        </if>
+        WHERE
+        a.type = 2
+        AND a.object_id = #{objectId}
+        AND a.auction_status = 3
+        AND a.pay_status = 2
+        AND a.state = 1
+        AND a.hotel_code_id = #{hotelCodeId}
+        AND a.put_in_time = x.date
+        <choose>
+            <when test="orderBy != null and orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                GROUP BY x.date
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="analysisOfAdvertisingDataList" resultType="AdvertisingOrder">
+        SELECT
+        a.id,
+        c.hotel_name AS "hotelName",
+        a.put_in_time AS "putInTime",
+        sum(d.scrolling_number) AS "scrollingNumber",
+        sum(d.radar_number) AS "radarNumber",
+        sum(d.click_number) AS "clickNumber",
+        c.hotel_code_id AS "hotelCodeId",
+        a.ordernumber AS "ordernumber"
+        FROM
+        (
+        SELECT
+        id,
+        GROUP_CONCAT(put_in_time) AS "put_in_time",
+        ordernumber AS "ordernumber",
+        hotel_code_id
+        FROM
+        advertising_order
+        WHERE
+        type = 2
+        AND object_id = #{objectId}
+        AND auction_status = 3
+        AND pay_status = 2
+        AND state = 1
+        GROUP BY
+        ordernumber
+        ) AS a
+        LEFT JOIN hotel_info AS c ON a.hotel_code_id = c.hotel_code_id
+        LEFT JOIN advertising_clicks_info AS d ON d.order_id = a.ordernumber
+        where 1 = 1
+        <if test="hotelName != null and hotelName !=''">
+            AND c.hotel_name like CONCAT(CONCAT('%',#{hotelName}),'%')
+        </if>
+        <if test="province != null and province != ''">
+            AND c.province =#{province}
+        </if>
+        <if test="city != null and city != ''">
+            AND c.city =#{city}
+        </if>
+        <if test="area != null and area != ''">
+            AND c.area =#{area}
+        </if>
+        <if test="hotelStar != null">
+            AND c.hotel_star = #{hotelStar}
+        </if>
+        <if test="hotelType != null and hotelType !=''">
+            AND c.hotel_type = #{hotelType}
+        </if>
+        <choose>
+            <when test="orderBy != null and orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                GROUP BY
+                d.order_id
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="orderCLickList" resultType="AdvertisingOrder">
+		select id,sum(scrolling_number) AS "scrollingNumber",
+	sum(radar_number) AS "radarNumber",
+	sum(click_number) AS "clickNumber",create_date as "date" from advertising_clicks_info where order_id = #{ordernumber} GROUP BY create_date
+	</select>
+
+    <select id="releaseRecordDataList" resultType="AdvertisingOrder">
+        SELECT
+        #{date} AS "putInTime",
+        a.delivery_type AS "deliveryType",
+        count(a.id) AS "date",
+        sum(a.price_type = 2) AS "priceType",
+        sum(
+        a.price_type = 1
+        AND a.auction_status = 3
+        ) AS "auctionSuccess",
+        sum(
+        a.price_type = 1
+        AND a.auction_status = 1
+        ) AS "auctionFailure",
+        sum(
+        (a.price_type = 2) + (
+        a.price_type = 1
+        AND a.auction_status = 3
+        ) + (
+        a.price_type = 1
+        AND a.auction_status = 1
+        )
+        ) AS "totalNumber"
+        from
+        advertising_order AS a
+        WHERE
+        a.type = 2
+        AND a.del_flag = '0'
+        AND a.object_id = #{objectId}
+        <if test="date != null and date != ''">
+            AND date_format(a.put_in_time,'%Y-%m') = #{date}
+        </if>
+        <choose>
+            <when test="orderBy != null and orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                GROUP BY
+                a.delivery_type
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="advertisingOrderExcel" resultType="AdvertisingOrder">
+        SELECT
+        #{date} AS "putInTime",
+        a.delivery_type AS "deliveryType",
+        count(a.id) AS "date",
+        sum(a.price_type = 2) AS "priceType",
+        sum(
+        a.price_type = 1
+        AND a.auction_status = 3
+        ) AS "auctionSuccess",
+        sum(
+        a.price_type = 1
+        AND a.auction_status = 1
+        ) AS "auctionFailure",
+        sum(
+        (a.price_type = 2) + (
+        a.price_type = 1
+        AND a.auction_status = 3
+        ) + (
+        a.price_type = 1
+        AND a.auction_status = 1
+        )
+        ) AS "totalNumber"
+        from
+        advertising_order AS a
+        WHERE
+        a.type = 2
+        AND a.del_flag = '0'
+        AND a.object_id = #{objectId}
+        <if test="date != null and date != ''">
+            AND date_format(a.put_in_time,'%Y-%m') = #{date}
+        </if>
+        GROUP BY
+        a.delivery_type
+    </select>
+
+    <select id="advertisingOrderInfo" resultType="AdvertisingOrder">
+		SELECT
+		sum(a.price_type = 2) AS "priceType",
+		sum(
+		a.price_type = 1
+		AND a.auction_status = 3
+		) AS "auctionSuccess",
+		sum(
+		a.price_type = 1
+		AND a.auction_status = 1
+		) AS "auctionFailure",
+		sum(
+		(a.price_type = 2) + (
+		a.price_type = 1
+		AND a.auction_status = 3
+		) + (
+		a.price_type = 1
+		AND a.auction_status = 1
+		)
+		) AS "totalNumber",
+		(
+       SELECT
+                   SUM(auction_amount)
+                FROM
+                    advertising_order
+                WHERE
+                  object_id = #{objectId}
+                AND type = 2
+                AND auction_status = 3
+                AND pay_status = 2
+                AND price_type = 1
+                AND date_format(put_in_time, '%Y-%m') = #{date}
+		) AS "currentPrice",
+		(
+            SELECT
+                   SUM(auction_amount)
+                FROM
+                    advertising_order
+                WHERE
+                  object_id = #{objectId}
+                AND type = 2
+                AND auction_status = 3
+                AND pay_status = 2
+                AND price_type = 2
+                AND date_format(put_in_time, '%Y-%m') = #{date}
+		) AS "bitePrice",
+		((
+ 		  SELECT
+			sum(auction_amount)
+		FROM
+			advertising_order
+		WHERE
+		object_id = #{objectId}
+		AND type = 2
+		AND auction_status = 3
+		AND pay_status = 2
+		AND price_type = 1
+		AND date_format(put_in_time,'%Y-%m') = #{date}
+		)+(
+ 		  SELECT
+			sum(auction_amount)
+		FROM
+			advertising_order
+		WHERE
+		object_id = #{objectId}
+		AND type = 2
+		AND auction_status = 3
+		AND pay_status = 2
+		AND price_type = 2
+		AND date_format(put_in_time,'%Y-%m') = #{date}
+		))as "auctionAmount"
+		from
+		advertising_order AS a
+		WHERE
+		a.type = 2
+		AND a.del_flag = '0'
+		AND a.object_id = #{objectId}
+		AND date_format(put_in_time,'%Y-%m') = #{date}
+	</select>
+
+    <select id="orderNumberData" resultType="AdvertisingOrder">
+    SELECT
+        sum(a.auction_amount) as "auctionAmount",
+		SUM(a.saving_money) as "couponPrice"
+        FROM
+        advertising_order AS a
+        WHERE
+        a.object_id = #{objectId}
+        AND a.type = 2
+        AND a.auction_status = 3
+        AND a.pay_status = 2
+        AND a.delivery_type = #{deliveryType}
+        AND date_format(a.put_in_time,'%Y-%m') = #{date}
+        GROUP BY
+        object_id
+    </select>
+
+
+    <select id="getTypeData" resultType="AdvertisingOrder">
+        select
+        <include refid="advertisingOrderColumns"/>,i.hotel_ad_standard AS "stand",GROUP_CONCAT(a.put_in_time) AS "putInTime2"
+        from advertising_order a
+        left join hotel_info i on i.hotel_code_id=a.hotel_code_id
+        where a.ordernumber=#{ordernumber}
+    </select>
+    <select id="getOrder" resultType="AdvertisingOrder">
+        select
+        <include refid="advertisingOrderColumns"/>
+        from advertising_order a
+        where a.object_id=#{objectId} and type=3
+    </select>
+    <select id="orderNum" resultType="java.lang.Integer">
+		select count(*)
+		from advertising_order
+		where
+			upload_id=#{uploadId} and (pay_status=1 or auction_status=2) and type=1 and object_id=#{objectId} and date_format(create_date,'%Y-%m-%d')=#{date}
+
+	</select>
+    <select id="orderNum2" resultType="java.lang.Integer">
+		select count(*)
+		from advertising_order
+		where
+			upload_id=#{uploadId} and (pay_status=1 or auction_status=2) and type=2 and object_id=#{objectId} and date_format(create_date,'%Y-%m-%d')=#{date}
+
+	</select>
+
+
+    <select id="advertisingOrderInfoById" resultType="AdvertisingOrder">
+            SELECT
+            type,
+            object_id AS "objectId",
+            delivery_type AS "deliveryType"
+        FROM
+            advertising_order
+        WHERE
+        hotel_code_id = #{hotelCodeId}
+        AND auction_status = 2
+        AND pay_status = 0
+        AND upload_id = #{uploadId}
+        AND put_in_time = #{putInTime}
+        ORDER BY
+            price_type_price DESC
+        LIMIT 1,1
+  </select>
+
+    <select id="hotelInfo" resultType="HotelInfo">
+        select hotel_name as "hotelName",hotel_code_id as "hotelCodeId" FROM hotel_info where is_freeze = 0  ORDER BY id desc;
+    </select>
+
+    <update id="updateHotelUpload">
+        UPDATE `hotel_info`
+			SET
+			 advertisement_num = advertisement_num + 1
+			WHERE
+				hotel_code_id = #{hotelCodeId}
+    </update>
+
+    <select id="couponInfoById" resultType="CouponInfo">
+        SELECT preferential_quota as "preferentialQuota" FROM coupon_info WHERE  id = #{id}
+    </select>
+    
+    <select id="getOrderMaxPriceByCondition" resultType="java.lang.Double">
+        SELECT
+        	MAX(a.price_type_price) 
+        FROM advertising_order a 
+        WHERE a.upload_id = #{uploadId} 
+        AND a.hotel_code_id = #{hotelCodeId} 
+        AND a.put_in_time = #{putInTime} 
+        AND a.delivery_type = #{deliveryType}
+		AND a.price_type = 1
+		AND a.auction_status = 2
+		AND a.pay_status = 0
+		AND a.del_flag = '0'
+    </select>
+</mapper>

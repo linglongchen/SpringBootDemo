@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chunqiu.mrjuly.modules.install.dao.LotteryRulesDao">
+
+	<sql id="lotteryRulesColumns">
+		a.id AS "id",
+		a.prize_content AS "prizeContent",
+		a.rule_content AS "ruleContent",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate"
+	</sql>
+
+	<sql id="lotteryRulesJoins">
+	</sql>
+
+	<select id="getAll" resultType="com.chunqiu.mrjuly.modules.install.model.LotteryRules">
+		SELECT
+		<include refid="lotteryRulesColumns"/>
+		FROM lottery_rules a
+		<include refid="lotteryRulesJoins"/>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO lottery_rules(
+		prize_content,
+		rule_content,
+		create_by,
+		create_date,
+		update_by,
+		update_date
+		) VALUES (
+		#{prizeContent},
+		#{ruleContent},
+		#{createBy.id},
+		#{createDate},
+		#{updateBy.id},
+		#{updateDate}
+		)
+	</insert>
+
+	<!--<insert id="insert1">
+		INSERT INTO lottery_rules(
+		rule_type,
+		rule_content,
+		create_by,
+		create_date,
+		update_by,
+		update_date
+		) VALUES (
+		1,
+		#{ruleContent},
+		#{createBy.id},
+		#{createDate},
+		#{updateBy.id},
+		#{updateDate}
+		)
+	</insert>
+
+	<insert id="insert2">
+		INSERT INTO lottery_rules(
+		rule_type,
+		rule_content,
+		create_by,
+		create_date,
+		update_by,
+		update_date
+		) VALUES (
+		2,
+		#{ruleContent},
+		#{createBy.id},
+		#{createDate},
+		#{updateBy.id},
+		#{updateDate}
+		)
+	</insert>-->
+
+	<update id="update">
+		UPDATE lottery_rules
+		<set>
+			<if test="prizeContent != null and prizeContent != null">
+				prize_content = #{prizeContent},
+			</if>
+			<if test="ruleContent != null and ruleContent != null">
+				rule_content = #{ruleContent},
+			</if>
+			<if test="updateBy != null and updateBy.id != null">
+				update_by = #{updateBy.id},
+			</if>
+			<if test="updateDate != null">
+				update_date = #{updateDate},
+			</if>
+			<if test="createBy != null and createBy.id != null">
+				create_by = #{createBy.id},
+			</if>
+			<if test="createDate != null">
+				create_date = #{createDate},
+			</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+
+</mapper>

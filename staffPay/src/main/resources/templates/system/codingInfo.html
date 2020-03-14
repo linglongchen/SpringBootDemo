@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>归入前缀编码</title>
+
+    <head th:include="init :: init"></head>
+    <head th:include="init_bootstrap_table :: bootstrap_table"></head>
+
+    <script type="text/javascript">
+        //提交表单
+        function validForm(){
+            $('#signupForm').validate({
+                submitHandler:function(form){
+                    loading();
+                    form.action = '[[${ctx}]]/system/setup/includeCode';
+                    form.submit();
+                }
+            });
+            $('#signupForm').submit();
+        }
+
+    </script>
+
+</head>
+<body layadmin-themealias="default">
+<div class="layui-fluid animated fadeInRight">
+    <form id="signupForm" class="layui-form">
+<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12" >
+    <label style="font-size: 15px" class="col-xs-3 layui-form-label">前缀编码：</label>
+    <div class="col-xs-6">
+        <div class="layui-input-inline" >
+            <div class="layui-input-inline">
+                <input type="hidden" name="idList" th:value="${hotelCode.idList }">
+                <input type="hidden" name="id" th:value="${hotelCode.id }">
+                <input type="hidden" name="type" th:value="${hotelCode.type }">
+                <input type="hidden" name="codeId" th:value="${hotelCode.codeId}">
+                <select style="width: 256px" name="hotelCode" data-placeholder="请选择酒店前缀编码" class="chosen-select-deselect form-control layui-input">
+                    <option th:each="hotelCodeList:${hotelCodeList }" th:value="${hotelCodeList.id }" th:text="${hotelCodeList.hotelCode }"></option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+    </form>
+</div>
+</body>
+</html>

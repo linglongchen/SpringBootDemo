@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>分配优惠券</title>
+
+	<head th:include="init :: init"></head>
+    <head th:include="init_bootstrap_table :: bootstrap_table"></head>
+
+	<script type="text/javascript">
+		$(function(){
+			$('#table').bootstrapTable({
+				undefinedText : '',//defined的默认显示文本
+				striped : true,//条纹
+				method : 'get',
+				url : '[[${ctx}]]/install/coupon/businessmenList?type=2',
+				pagination : true,//显示分页
+				sidePagination : 'server',//定义分页为服务器端分页
+				pageNumber : 1,//起始页数
+				pageSize : 20,//默认显示行数
+				pageList : [20, 50, 100 ,200],//可选分页数
+				singleSelect : false,//多选
+				//toolbar : '#toolbar',
+				height : 'auto',
+			    columns: [
+                    {
+                      checkbox:true
+                    },
+			   			{
+			        field: 'code',
+			        title: '广告商编号',
+			        halign : 'center',
+			        align : 'center'
+			    },{
+			        field: 'name',
+			        title: '广告商名称',
+			        halign : 'center',
+			        align : 'center'
+			    }],
+                onLoadSuccess : function(data){
+                    if(data.total == 0){
+                        $('#table').bootstrapTable('removeAll');
+                    }
+                    //禁止bootstrap table中的checkbox加载layui样式
+                    $('.table .bs-checkbox input').each(function () {
+                        $(this).attr("lay-ignore", "true");
+                    });
+                    $('.table thead .bs-checkbox .th-inner .layui-form-checkbox').remove();
+                }
+			});
+		});
+
+		$(function (){
+            $('#table2').bootstrapTable({
+                undefinedText : '',//defined的默认显示文本
+                striped : true,//条纹
+                method : 'get',
+                url :  '[[${ctx}]]/install/coupon/businessmenList?type=1',
+                pagination : true,//显示分页
+                sidePagination : 'server',//定义分页为服务器端分页
+                pageNumber : 1,//起始页数
+                pageSize : 20,//默认显示行数
+                pageList : [20, 50, 100 ,200],//可选分页数
+                singleSelect : false,//多选
+                //toolbar : '#toolbar',
+                height : 'auto',
+                columns: [
+                    {
+                        checkbox:true
+                    },
+                    {
+                        field: 'code',
+                        title: '企业编号',
+                        halign : 'center',
+                        align : 'center'
+                    },{
+                        field: 'name',
+                        title: '商家名称',
+                        halign : 'center',
+                        align : 'center'
+                    }],
+                onLoadSuccess : function(data){
+                    if(data.total == 0){
+                        $('#table2').bootstrapTable('removeAll');
+                    }
+                    //禁止bootstrap table中的checkbox加载layui样式
+                    $('.table .bs-checkbox input').each(function () {
+                        $(this).attr("lay-ignore", "true");
+                    });
+                    $('.table thead .bs-checkbox .th-inner .layui-form-checkbox').remove();
+                }
+            });
+		})
+
+
+		//查询
+		function search1(type){
+            var param = $('#searchForm').serialize();
+            $('#table').bootstrapTable('refresh', {url : '[[${ctx}]]/install/coupon/businessmenList?' + param+"&type="+type});
+
+        }
+
+        function search2(type){
+            var param = $('#searchForm').serialize();
+            $('#table2').bootstrapTable('refresh', {url : '[[${ctx}]]/install/coupon/businessmenList?' + param+"&type="+type});
+
+        }
+
+
+        //分配提交
+        function validForm(){
+		    var type = $("#type").val();
+            var idList = [];
+            if (type == 1){
+                var row = $.map($('#table2').bootstrapTable('getSelections'), function (row) {
+                    idList.push(row.id);
+                });
+			}else if (type == 2){
+                var row = $.map($('#table').bootstrapTable('getSelections'), function (row) {
+                    idList.push(row.id);
+                });
+			}
+
+			$("#idList").val(idList.toString());
+
+			if (idList.length<=0){
+				showMsgError("请选择需要分配的对象");
+				return;
+			}
+
+
+            $('#searchForm').validate({
+                submitHandler:function(form){
+                    loading();
+                    form.action = '[[${ctx}]]/install/coupon/insertCouponList';
+                    form.submit();
+                }
+            });
+            $('#searchForm').submit();
+        }
+
+
+
+
+        layui.use('element', function() {
+            var $ = layui.jquery , element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
+
+            element.on('tab(docDemoTabBrief)', function(data){
+                if (data.index == 0){
+                    $("#type").val(2);
+				}else if (data.index == 1){
+                    $("#type").val(1);
+				}
+            });
+        });
+	</script>
+
+
+	<style type="text/css">
+		.layui-form input[type="checkbox"]{
+			display: block;
+		}
+	</style>
+</head>
+<body layadmin-themealias="default">
+	<div class="layui-fluid animated fadeInRight">
+        <div class="layui-card">
+        	<div class="layui-form layui-card-header layuiadmin-card-header-auto">
+
+                <div class="layui-form-item form-head">
+					<form id="searchForm" class="layui-form">
+						<input type="hidden" id="type" name="type" value="2">
+						<input type="hidden"  name="couponId" th:value="${couponInfo.id}">
+						<input type="hidden"  name="idList" id="idList" >
+						<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+							<ul class="layui-tab-title">
+								<li class="layui-this">广告商</li>
+								<li>在线商家</li>
+							</ul>
+							<div class="layui-tab-content" >
+								<div class="layui-tab-item layui-show">
+									<div class="layui-input-inline">
+										<input type="text" name="advertiserName" autocomplete="off" placeholder="广告主名称" class="layui-input">
+									</div>
+									<div class="layui-inline">
+										<button class="btn btn-primary " style="float: left"type="button" onclick="search1(2)"><i class="fa fa-search"></i>&nbsp;查询</button>
+										</div>
+									<table id="table">
+
+									</table>
+								</div>
+								<div class="layui-tab-item ">
+									<div class="layui-input-inline">
+										<input type="text" name="businessName" autocomplete="off" placeholder="在线商家名称" class="layui-input">
+									</div>
+									<div class="layui-inline">
+										<button class="btn btn-primary " style="float: left" type="button" onclick="search2(1)"><i class="fa fa-search"></i>&nbsp;查询</button>
+									</div>
+									<table id="table2">
+
+									</table>
+								</div>
+							</div>
+						</div>
+
+					</form>
+				</div>
+
+
+	        </div>
+		</div>
+    </div>
+</body>
+</html>

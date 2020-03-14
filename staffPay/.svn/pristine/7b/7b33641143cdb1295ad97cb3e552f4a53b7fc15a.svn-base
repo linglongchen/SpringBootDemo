@@ -1,0 +1,161 @@
+package com.chunqiu.mrjuly.modules.adviertisement.model;
+
+import com.chunqiu.mrjuly.common.persistence.DataEntity;
+
+public class CheckRecord extends DataEntity<AdviertisementType, Integer> {
+    private String advertisingOrderId;
+    private Integer advertisingOrderState;
+    private Integer advertisingUploadId;
+    private Integer advertisingUploadState;
+    private String objectionContent;
+    private String objectionUrl;
+    private String updateTime;
+    private String advertisementMark;
+    private String startTime;
+    private String endTime;
+    private String advertisingContent;
+    private String advertisingUrl;
+    public String putInTime;
+    private Integer sort;
+    private Integer type;
+    private Integer objectId;
+
+    public String getPutInTime() {
+        return putInTime;
+    }
+
+    public void setPutInTime(String putInTime) {
+        this.putInTime = putInTime;
+    }
+
+    public String getAdvertisingOrderId() {
+        return advertisingOrderId;
+    }
+
+    public void setAdvertisingOrderId(String advertisingOrderId) {
+        this.advertisingOrderId = advertisingOrderId;
+    }
+
+    public Integer getAdvertisingOrderState() {
+        return advertisingOrderState;
+    }
+
+    public void setAdvertisingOrderState(Integer advertisingOrderState) {
+        this.advertisingOrderState = advertisingOrderState;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public String getAdvertisingContent() {
+        return advertisingContent;
+    }
+
+    public void setAdvertisingContent(String advertisingContent) {
+        this.advertisingContent = advertisingContent;
+    }
+
+    public String getAdvertisingUrl() {
+        return advertisingUrl;
+    }
+
+    public void setAdvertisingUrl(String advertisingUrl) {
+        this.advertisingUrl = advertisingUrl;
+    }
+
+    private AdvertisementUpload advertisementUpload;
+
+    public String getAdvertisementMark() {
+        return advertisementMark;
+    }
+
+    public void setAdvertisementMark(String advertisementMark) {
+        this.advertisementMark = advertisementMark;
+    }
+
+    public AdvertisementUpload getAdvertisementUpload() {
+        return advertisementUpload;
+    }
+
+    public void setAdvertisementUpload(AdvertisementUpload advertisementUpload) {
+        this.advertisementUpload = advertisementUpload;
+    }
+
+    public Integer getAdvertisingUploadId() {
+        return advertisingUploadId;
+    }
+
+    public void setAdvertisingUploadId(Integer advertisingUploadId) {
+        this.advertisingUploadId = advertisingUploadId;
+    }
+
+    public Integer getAdvertisingUploadState() {
+        return advertisingUploadState;
+    }
+
+    public void setAdvertisingUploadState(Integer advertisingUploadState) {
+        this.advertisingUploadState = advertisingUploadState;
+    }
+
+    public String getObjectionContent() {
+        return objectionContent;
+    }
+
+    public void setObjectionContent(String objectionContent) {
+        this.objectionContent = objectionContent;
+    }
+
+    public String getObjectionUrl() {
+        return objectionUrl;
+    }
+
+    public void setObjectionUrl(String objectionUrl) {
+        this.objectionUrl = objectionUrl;
+    }
+
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
+    }
+
+	public Integer getSort() {
+		return sort;
+	}
+
+	public void setSort(Integer sort) {
+		this.sort = sort;
+	}
+
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
+	}
+
+	public Integer getObjectId() {
+		return objectId;
+	}
+
+	public void setObjectId(Integer objectId) {
+		this.objectId = objectId;
+	}
+    
+}

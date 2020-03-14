@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>demo list页面</title>
+    <head th:include="init :: init"></head>
+    <head th:include="init_bootstrap_table :: bootstrap_table"></head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+
+
+
+
+    <style>
+        .wrap{width: 140px;
+            height: 140px;
+            background-color: white;
+            border: 2px #D1D1D1 solid;
+            -webkit-border-radius: 100px;
+            margin-right: 50px;
+        }
+
+        .quan{
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+        }
+
+        .sl{
+            padding-left: 60px;
+            font-size: 30px;
+        }
+    </style>
+<script>
+    $(function(){
+        $('#table').bootstrapTable({
+            undefinedText : '',//defined的默认显示文本
+            striped : true,//条纹
+            method : 'get',
+            url : '[[${ctx}]]/shopinfo/MerchantsHomepage/list',
+            pagination : true,//显示分页
+            sidePagination : 'server',//定义分页为服务器端分页
+            pageNumber : 1,//起始页数
+            pageSize : 20,//默认显示行数
+            pageList : [20, 50, 100 ,200],//可选分页数
+            singleSelect : false,//多选
+            showFooter: true,
+            totalRow: true,
+            height : 'auto',
+            columns: [
+                {
+                    field: 'orderSn',
+                    title: '订单号',
+                    halign : 'center',
+                    align : 'left',
+                    totalRowText: '合计'
+                }, {
+                    field: 'hotelInfo.hotelName',
+                    title: '所属酒店',
+                    halign : 'center',
+                    align : 'left'
+                },{
+                    field: 'orderRoom',
+                    title: '下单房号',
+                    halign : 'center',
+                    align : 'left'
+                },{
+                    field: 'createDate',
+                    title: '下单时间',
+                    halign : 'center',
+                    align : 'left',
+                    format:'yyyy-MM-dd HH:mm:ss'
+
+                },{
+                    field: 'shopGoodsInfo.goodsName',
+                    title: '商品',
+                    halign : 'center',
+                    align : 'left'
+                },   {
+                    field: 'goodsNum',
+                    title: '数量',
+                    halign : 'center',
+                    align : 'left',
+                    sort: true,
+                    totalRow: true,
+                    footerFormatter: function (value) {
+                        var count = 0;
+                        for (var i in value) {
+                            if(value[i].goodsNum !=null){
+                                count += value[i].goodsNum;
+                            }
+                        }
+                        return count.toFixed(0);//保留0位小数
+                    }
+
+                }, {
+                    field: 'status',
+                    title: '状态',
+                    halign : 'center',
+                    align : 'left',
+                    formatter: function(value,row,index){
+                        if(row.status==0){
+                            return "已取消 ";
+                        }else if(row.status==1){
+                            return "未完成";
+                        }else if(row.status==2){
+                            return "已完成 ";
+                        }
+                    }
+                },{
+                    field : 'option',
+                    title : '操作',
+                    halign : 'center',
+                    align : 'center',
+                    formatter : function(value, row, index){
+                        if(row.status==0){
+                            var _html = '<ul class="grid_btn_ul">';
+                            _html += '<li ><a href="javascript:seeCustomerOrder('+'\''+row.id+'\''+','+'\''+row.status+'\''+','+'\''+row.createDate+'\''+')" class="btn btn-success btn-xs">查看详情</a></li>';
+                            _html += '</ul>';
+                            return _html;
+                        }else if(row.status==1){
+                            var _html = '<ul class="grid_btn_ul">';
+                            _html += '<li><a href="javascript:editCustomerOrder('+'\''+row.id+'\''+','+'\''+row.status+'\''+','+'\''+row.createDate+'\''+')" class="btn btn-success btn-xs">设为完成 </a></li>';
+
+                            _html += '<li><a href="javascript:cancelCustomerOrder('+'\''+row.id+'\''+','+'\''+row.status+'\''+','+'\''+row.createDate+'\''+')" class="btn btn-success btn-xs">取消订单 </a></li>';
+                            _html += '</ul>';
+                            return _html;
+                        }else if(row.status==2){
+                            var _html = '<ul class="grid_btn_ul">';
+                            _html += '<li ><a href="javascript:seeCustomerOrder('+'\''+row.id+'\''+','+'\''+row.status+'\''+','+'\''+row.createDate+'\''+')" class="btn btn-success btn-xs">查看详情</a></li>';
+                            _html += '</ul>';
+                            return _html;
+                        }
+                    }
+                }],
+            onLoadSuccess : function(data){
+                if(data.total == 0){
+                    $('#table').bootstrapTable('removeAll');
+                }
+            }
+        });
+    });
+
+
+    function editCustomerOrder(id,status,createDate){
+
+
+        layer.confirm('您确定要更改状态吗？',function(){
+            parent.loading();
+            $.post('[[${ctx}]]/shopinfo/MerchantsHomepage/isPut',{
+                id : id,status:status,dateString:createDate
+            },function(result){
+                closeLoading();
+                layer.closeAll();
+                if(result.success){
+                    showMsgSuccess('更改成功');
+                    refreshTable();
+                }else{
+                    showMsgError(result.msg);
+                }
+            },'json');
+        });
+    }
+    function cancelCustomerOrder(id,status,createDate){
+
+        layer.confirm('您确定要更改状态吗？',function(){
+            parent.loading();
+            $.post('[[${ctx}]]/shopinfo/MerchantsHomepage/cancel',{
+                id : id,status:status,dateString:createDate
+
+            },function(result){
+                closeLoading();
+                layer.closeAll();
+                if(result.success){
+                    showMsgSuccess('更改成功');
+                    refreshTable();
+                }else{
+                    showMsgError(result.msg);
+                }
+            },'json');
+        });
+    }
+
+</script>
+</head>
+<body layadmin-themealias="default">
+<div style="width: 100%;height: 100px">
+    <div class="layui-inline" style="top: 50%;float: right; right: 1%;">
+        <button class="btn btn-primary " type="button" onclick="search()">&nbsp;入驻申请</button>
+    </div>
+</div>
+<div class="quan">
+    <div class="wrap">
+        <p style="    margin-left: 26px;  padding-top: 33px; font-size: 20px;">今日订单</p>
+        <p class="sl"><b>8</b></p>
+    </div>
+    <div class="wrap">
+        <p style="margin-left: 16px;padding-top: 33px; font-size: 20px;">由店铺送达</p>
+        <p class="sl"><b>6</b></p>
+    </div>
+    <div class="wrap">
+        <p style="padding-top: 33px; margin-left: 29px; font-size: 20px;">预约到店</p>
+        <p class="sl"><b>2</b></p>
+    </div>
+    <div class="wrap">
+        <p style="padding-top: 33px; margin-left: 9px;font-size: 20px;">二维码展示次数</p>
+        <p class="sl"><b>1</b></p>
+    </div>
+</div>
+<div class="layui-fluid animated fadeInRight" style="margin-top: 60px;">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+            <div class="layui-form-item form-head">
+                <form id="searchForm">
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <input type="text" name="goodsName" autocomplete="off" placeholder="请输入订单号" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">日期区间：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="beginDate" id="beginDate" placeholder="请选择开始日期" autocomplete="off" class="layui-input" lay-date="date" lay-format="yyyy-MM-dd" readonly>
+                        </div>
+                        <div class="layui-form-mid layui-word-aux" style="float: left"> -</div>
+                        <div class="layui-input-inline">
+                            <input type="text" name="endDate" id="endDate" placeholder="请选择结束日期" autocomplete="off" class="layui-input" lay-date="date" lay-format="yyyy-MM-dd" readonly>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <button class="btn btn-primary " type="button" onclick="search()"><i class="fa fa-search"></i>&nbsp;查询</button>
+                    </div>
+                </form>
+            </div>
+
+
+            <table id="table">
+
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

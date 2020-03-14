@@ -1,0 +1,20 @@
+package com.chunqiu.mrjuly.modules.advertisement.service;
+
+import javax.annotation.Resource;
+
+import com.chunqiu.mrjuly.common.persistence.CrudService;
+import org.springframework.stereotype.Service;
+import com.chunqiu.mrjuly.modules.advertisement.model.AdvertiserMasterInfo;
+import com.chunqiu.mrjuly.modules.advertisement.dao.AdvertiserMasterInfoDao;
+
+/**
+ * 广告主管理Service
+ * @author chen
+ * @version 2019-04-18
+ */
+@Service
+public class AdvertiserMasterInfoService extends CrudService<AdvertiserMasterInfoDao, AdvertiserMasterInfo, Integer> {
+	@Resource
+	private AdvertiserMasterInfoDao dao;
+
+}

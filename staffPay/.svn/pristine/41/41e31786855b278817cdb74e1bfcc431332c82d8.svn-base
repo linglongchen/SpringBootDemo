@@ -1,0 +1,61 @@
+package com.chunqiu.mrjuly.modules.install.service;
+
+import com.chunqiu.mrjuly.common.persistence.CrudService;
+import com.chunqiu.mrjuly.common.vo.Grid;
+import com.chunqiu.mrjuly.common.vo.GridParam;
+import com.chunqiu.mrjuly.modules.install.dao.CouponInfoDao;
+import com.chunqiu.mrjuly.modules.install.model.CouponInfo;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * 优惠券管理
+ */
+@Service
+public class CouponInfoService extends CrudService<CouponInfoDao, CouponInfo, Integer> {
+
+    @Resource
+    private CouponInfoDao couponInfoDao;
+
+    //查询所有广告商和在线商家列表
+    public Grid couponInfoList(CouponInfo couponInfo, GridParam param){
+        Grid grid = new Grid();
+        Page page = PageHelper.offsetPage(param.getOffset(), param.getLimit(), true);
+        couponInfoDao.couponInfoListByStatus(couponInfo);
+        grid.setRows(page.getResult());
+        grid.setTotal(page.getTotal());
+        return grid;
+    }
+
+    //保存优惠券编辑说明
+    public  int insertCouponList(CouponInfo couponInfo){
+        List<String> stringList = new ArrayList<>();
+        String [] str = couponInfo.getIdList().split(",");
+        for (int i = 0;i<str.length;i++){
+            stringList.add(str[i]);
+        }
+        couponInfo.preInsert();
+        couponInfo.setIdListStr(stringList);
+        return couponInfoDao.insertCouponList(couponInfo);
+    }
+
+    //广告商/在线商家的优惠券列表
+    public Grid couponInfoListById(CouponInfo entity, GridParam param){
+        Grid grid = new Grid();
+        Page page = PageHelper.offsetPage(param.getOffset(), param.getLimit(), true);
+        dao.couponInfoListById(entity);
+        grid.setRows(page.getResult());
+        grid.setTotal(page.getTotal());
+        return grid;
+    }
+
+    //登录在线商家我的优惠券页面
+    public CouponInfo couponInfo(){
+        return dao.couponInfo();
+    }
+}

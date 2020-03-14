@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>广告位价格管理</title>
+
+	<head th:include="init :: init"></head>
+	<head th:include="init_bootstrap_table :: bootstrap_table"></head>
+
+	<script type="text/javascript">
+		var priceJson = [];
+
+		function inputnum(obj,val){
+			obj.value = obj.value.replace(/[^\d.]/g,""); //清除"数字"和"."以外的字符
+			obj.value = obj.value.replace(/^\./g,""); //验证第一个字符是数字
+			obj.value = obj.value.replace(/\.{2,}/g,""); //只保留第一个, 清除多余的
+			obj.value = obj.value.replace(".","$#$").replace(/\./g,"").replace("$#$",".");
+			obj.value = obj.value.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3'); //只能输入两个小数
+		}
+		//提交表单
+		function validForm(){
+			var count = 0;
+			$("#table input[type=text]").each(function () {
+				if ($(this).val() == ""){
+					count ++;
+				}
+			})
+
+			if (count > 0) {
+				showMsgError("请完善价格！");
+				return;
+			}
+
+			var hotelId = $("#hotelId").val();
+			$("#table").find("tr").each(function(){
+				var tdArr = $(this).children();
+				var picturePrice = tdArr.eq(2).find('input').val();
+				if (picturePrice!=null){
+					var uploadId = tdArr.eq(0).text();
+					var pictureTotalPrice = tdArr.eq(3).find('input').val();
+					var videoPrice = tdArr.eq(4).find('input').val();
+					var videoTotalPrice = tdArr.eq(5).find('input').val();
+					var jsonStr = {"hotelId":hotelId,"uploadId":uploadId,"picturePrice":picturePrice,"pictureTotalPrice":pictureTotalPrice,"videoPrice":videoPrice,"videoTotalPrice":videoTotalPrice};
+					priceJson.push(jsonStr);
+				}
+			});
+			$("#list").val(JSON.stringify(priceJson));
+			$('#signupForm').validate({
+		        submitHandler:function(form){
+					loading();
+					form.action = '[[${ctx}]]/lyhoteladvertprice/lyHotelAdvertPrice/insertLyHotelAdvertPrice';
+					form.submit()
+		        }
+			});
+		    $('#signupForm').submit();
+			priceJson = [];
+		}
+
+		$(function(){
+			var hotelId = $("#hotelId").val();
+			if (hotelId == null) {
+				hotelId = 0;
+			}
+			$('#table').bootstrapTable({
+				undefinedText : '',//defined的默认显示文本
+				striped : true,//条纹
+				method : 'get',
+				url : '[[${ctx}]]/lyhoteladvertprice/lyHotelAdvertPrice/advertisingSpaceList?hotelId='+hotelId,
+				pagination : true,//显示分页
+				sidePagination : 'server',//定义分页为服务器端分页
+				pageNumber : 1,//起始页数
+				pageSize : 20,//默认显示行数
+				pageList : [20, 50, 100 ,200],//可选分页数
+				singleSelect : false,//多选
+				//toolbar : '#toolbar',
+				height : 'auto',
+				columns: [{
+					field: 'id',
+					title: '#',
+					halign : 'center',
+					align : 'center',
+					cellStyle: function (row, index) {
+							var style = {};
+							style={css:{'display':'none'}};
+							return style;
+						}
+					},{
+						field: 'sort',
+						title: '广告位',
+						halign : 'center',
+						align : 'center',
+						formatter : function(value, row, index){
+							return value + "号位";
+						},
+					},{
+						field: 'picturePrice',
+						title: '图文竞拍价(元)',
+						halign : 'center',
+						align : 'center',
+						formatter : function(value, row, index){
+						return '<input  id="picturePrice'+row.id+'" class="layui-input price"  oninput="inputnum(this)" ' +
+								' placeholder="请输入图文竞拍价" autocomplete="off" type="text" >';
+						}
+					},{
+						field: 'pictureTotalPrice',
+						title: '图文一口价(元)',
+						halign : 'center',
+						align : 'center',
+						formatter : function(value, row, index){
+							return '<input  id="pictureTotalPrice'+row.id+'"  class="layui-input price"  oninput="inputnum(this)" ' +
+									' placeholder="请输入图文一口价" autocomplete="off" type="text" >';
+						}
+					},{
+						field: 'videoPrice',
+						title: '视频竞拍价(元)',
+						halign : 'center',
+						align : 'center',
+						formatter : function(value, row, index){
+							return '<input  id="videoPrice'+row.id+'"  class="layui-input price"  oninput="inputnum(this)" ' +
+									' placeholder="请输入视频竞拍价" autocomplete="off" type="text" >';
+						}
+					},{
+						field: 'videoTotalPrice',
+						title: '视频一口价(元)',
+						halign : 'center',
+						align : 'center',
+						formatter : function(value, row, index){
+							return '<input id="videoTotalPrice'+row.id+'" class="layui-input price"  oninput="inputnum(this)" ' +
+									' placeholder="请输入视频一口价" autocomplete="off" type="text" >';
+						}
+					}],
+				onLoadSuccess : function(data){
+					if(data.total == 0){
+						$('#table').bootstrapTable('removeAll');
+					}
+				}
+			});
+			$('#table').children().children().children('th').eq(0).css("display","none");
+		});
+
+		//查询
+		function search(){
+			priceJson = [];
+			var param = $('#signupForm').serialize();
+			$('#table').bootstrapTable('refresh', {url : '[[${ctx}]]/lyhoteladvertprice/lyHotelAdvertPrice/advertisingSpaceList?' + param});
+		}
+
+	</script>
+</head>
+<body class="gray-bg">
+	<div class="wrapper animated fadeInRight">
+    	<div class="ibox-content">
+    		<div class="row">
+    			<form id="signupForm" class="layui-form form-horizontal m-t">
+					<div class="layui-inline">
+						<input name="list" id="list" type="hidden">
+						<label class="layui-form-label">选择酒店：</label>
+						<div class="layui-input-inline">
+							<select  required style="width: 200px" name="hotelId" id="hotelId" data-placeholder="选择酒店" class="chosen-select-deselect form-control layui-input">
+								<option th:each="hotelInfoList:${hotelInfoList}" th:value="${hotelInfoList?.id}" th:text="${hotelInfoList?.hotelName}"></option>
+							</select>
+						</div>
+					</div>
+					<button class="btn btn-primary " type="button" onclick="search()"><i class="fa fa-search"></i>&nbsp;搜索</button>
+				</form>
+    		</div>
+			<table id="table">
+
+			</table>
+    	</div>
+    </div>
+</body>
+</html>

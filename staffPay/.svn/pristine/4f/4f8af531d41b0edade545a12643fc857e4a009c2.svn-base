@@ -1,0 +1,227 @@
+package com.chunqiu.mrjuly.modules.advertiserinfo.model;
+
+import com.chunqiu.mrjuly.common.persistence.DataEntity;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.Date;
+
+/**
+ * 广告商管理Entity
+ * @author chen
+ * @version 2019-03-14
+ */
+public class AdvertiserInfo extends DataEntity<AdvertiserInfo, Integer> {
+
+	private static final long serialVersionUID = 1L;
+	private String advertiserName;		// 企业名称
+	private String advertiserNumber;		// 广告商编号
+	private String enterpriseNumber;		// 企业编号
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date validityTime;		// 经营有效期
+	private String businessLicense;		// 营业执照
+	private Integer status;		// 是否冻结 0.冻结 1.未冻结
+	private String mailbox;		// 邮箱
+	private String mobile;		// 联系人电话
+	private String companyName;		// 公司全称
+	private String taxpayersNumber;		// 纳税人识别号
+	private Float accountBalance;		// 账户余额
+	private String freezeReason;		//冻结原因
+	private String ids;
+	private String remittanceFlowNumber;
+	private Integer accountRechargeId;
+	private Integer advertiseInfoMasterId;
+	private Float price;
+	private String remark;
+	private Long starId;//星级ID
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	public Float getPrice() {
+		return price;
+	}
+
+	public void setPrice(Float price) {
+		this.price = price;
+	}
+
+	public Integer getAdvertiseInfoMasterId() {
+		return advertiseInfoMasterId;
+	}
+	private Integer insertId;
+
+	private Integer advertiseInfoId;
+
+	public Integer getAdvertiseInfoId() {
+		return advertiseInfoId;
+	}
+
+	public void setAdvertiseInfoId(Integer advertiseInfoId) {
+		this.advertiseInfoId = advertiseInfoId;
+	}
+
+	private String route;
+
+	public String getRoute() {
+		return route;
+	}
+
+	public void setRoute(String route) {
+		this.route = route;
+	}
+
+	public Integer getInsertId() {
+		return insertId;
+	}
+
+	public void setInsertId(Integer insertId) {
+		this.insertId = insertId;
+	}
+
+	public void setAdvertiseInfoMasterId(Integer advertiseInfoMasterId) {
+		this.advertiseInfoMasterId = advertiseInfoMasterId;
+	}
+
+	public String getRemittanceFlowNumber() {
+		return remittanceFlowNumber;
+	}
+
+	public void setRemittanceFlowNumber(String remittanceFlowNumber) {
+		this.remittanceFlowNumber = remittanceFlowNumber;
+	}
+
+	public Integer getAccountRechargeId() {
+		return accountRechargeId;
+	}
+
+	public void setAccountRechargeId(Integer accountRechargeId) {
+		this.accountRechargeId = accountRechargeId;
+	}
+
+	public String getIds() {
+		return ids;
+	}
+
+	public void setIds(String ids) {
+		this.ids = ids;
+	}
+
+	public String getFreezeReason() {
+		return freezeReason;
+	}
+
+	public void setFreezeReason(String freezeReason) {
+		this.freezeReason = freezeReason;
+	}
+
+	public AdvertiserInfo() {
+		super();
+	}
+
+	public AdvertiserInfo(Integer id){
+		super(id);
+	}
+
+	public String getAdvertiserName() {
+		return advertiserName;
+	}
+
+	public void setAdvertiserName(String advertiserName) {
+		this.advertiserName = advertiserName;
+	}
+
+	public String getAdvertiserNumber() {
+		return advertiserNumber;
+	}
+
+	public void setAdvertiserNumber(String advertiserNumber) {
+		this.advertiserNumber = advertiserNumber;
+	}
+
+	public String getEnterpriseNumber() {
+		return enterpriseNumber;
+	}
+
+	public void setEnterpriseNumber(String enterpriseNumber) {
+		this.enterpriseNumber = enterpriseNumber;
+	}
+
+	public Date getValidityTime() {
+		return validityTime;
+	}
+
+	public void setValidityTime(Date validityTime) {
+		this.validityTime = validityTime;
+	}
+
+	public String getBusinessLicense() {
+		return businessLicense;
+	}
+
+	public void setBusinessLicense(String businessLicense) {
+		this.businessLicense = businessLicense;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	public String getMailbox() {
+		return mailbox;
+	}
+
+	public void setMailbox(String mailbox) {
+		this.mailbox = mailbox;
+	}
+
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
+	public String getCompanyName() {
+		return companyName;
+	}
+
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
+
+	public String getTaxpayersNumber() {
+		return taxpayersNumber;
+	}
+
+	public void setTaxpayersNumber(String taxpayersNumber) {
+		this.taxpayersNumber = taxpayersNumber;
+	}
+
+	public Float getAccountBalance() {
+		return accountBalance;
+	}
+
+	public void setAccountBalance(Float accountBalance) {
+		this.accountBalance = accountBalance;
+	}
+
+	public Long getStarId() {
+		return starId;
+	}
+
+	public void setStarId(Long starId) {
+		this.starId = starId;
+	}
+	
+}

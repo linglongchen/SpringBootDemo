@@ -1,0 +1,99 @@
+package com.chunqiu.mrjuly.modules.platform.service;
+
+import com.chunqiu.mrjuly.common.persistence.CrudService;
+import com.chunqiu.mrjuly.common.vo.Grid;
+import com.chunqiu.mrjuly.common.vo.GridParam;
+import com.chunqiu.mrjuly.modules.platform.dao.LocalNoticeDao;
+import com.chunqiu.mrjuly.modules.platform.model.LocalNotice;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.util.List;
+
+/**
+ * 消息发布
+ */
+@Service
+@Transactional(readOnly = true)
+public class LocalNoticeService extends CrudService<LocalNoticeDao, LocalNotice, Integer>{
+
+    @Resource
+    private LocalNoticeDao localNoticeDao;
+
+
+    //批量删除
+    public int  delFramesByIdList(LocalNotice localNotice,List<LocalNotice> localNoticeList) {
+        return dao.delFramesByIdList(localNotice,localNoticeList);
+    }
+
+    //查询通知数据
+    public List<LocalNotice> findAll(LocalNotice localNotice) {
+        return dao.findAll(localNotice);
+    }
+
+    /**
+     * 查询所有的通知数据
+     * @param localNotice
+     * @param param
+     * @return
+     */
+    public Grid findPageList(LocalNotice localNotice, GridParam param){
+        Grid grid = new Grid();
+        Page page = PageHelper.offsetPage(param.getOffset(), param.getLimit(), true);
+        dao.findAll(localNotice);
+        grid.setRows(page.getResult());
+        grid.setTotal(page.getTotal());
+        return grid;
+    }
+
+    /**
+     * 新增和编辑
+     * @param localNotice
+     */
+    public void saveAll(LocalNotice localNotice) {
+        if (localNotice.getIsNewRecord()){
+            localNotice.preInsert();
+            dao.insertAll(localNotice);
+        }else{
+            localNotice.preUpdate();
+            dao.updateAll(localNotice);
+        }
+    }
+
+    //发送消息
+    public List<LocalNotice> selectAll(LocalNotice localNotice) {
+        return dao.selectAll(localNotice);
+    }
+
+    /**
+     * 查询所有的消息
+     * @param localNotice
+     * @param param
+     * @return
+     */
+    public Grid selectPageList(LocalNotice localNotice, GridParam param){
+        Grid grid = new Grid();
+        Page page = PageHelper.offsetPage(param.getOffset(), param.getLimit(), true);
+        dao.selectAll(localNotice);
+        grid.setRows(page.getResult());
+        grid.setTotal(page.getTotal());
+        return grid;
+    }
+
+    /**
+     * 新增和编辑
+     * @param localNotice
+     */
+    public void saveMessage(LocalNotice localNotice) {
+        if (localNotice.getIsNewRecord()){
+            localNotice.preInsert();
+            dao.insertMessage(localNotice);
+        }else{
+            localNotice.preUpdate();
+            dao.updateAll(localNotice);
+        }
+    }
+}

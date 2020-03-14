@@ -1,0 +1,14 @@
+package com.chunqiu.mrjuly.modules.install.dao;
+
+import com.chunqiu.mrjuly.common.persistence.CrudDao;
+import com.chunqiu.mrjuly.modules.install.model.CouponInfo;
+import com.chunqiu.mrjuly.modules.install.model.CouponUserList;
+
+import java.util.List;
+
+/**
+ * 用户分配的优惠券
+ */
+public interface CouponUserListDao extends CrudDao<CouponUserList, Integer> {
+
+}

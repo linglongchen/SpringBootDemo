@@ -1,0 +1,71 @@
+package com.chunqiu.mrjuly.modules.shopinfo.model;
+
+import java.util.Date;
+
+/**
+ * 商场与商家绑定关系
+ * 
+ * @author wy
+ *
+ */
+public class LyHotelMarketBusinessRelation {
+	private Long id;// 主键ID
+
+	private Long marketId;// 商场ID
+
+	private Long businessId;// 商家ID
+
+	private Byte type;// 绑定状态：1-已绑定，2-解绑
+
+	private Date bindingDate;// 绑定时间
+
+	private Date untieDate;// 解绑时间
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Long getMarketId() {
+		return marketId;
+	}
+
+	public void setMarketId(Long marketId) {
+		this.marketId = marketId;
+	}
+
+	public Long getBusinessId() {
+		return businessId;
+	}
+
+	public void setBusinessId(Long businessId) {
+		this.businessId = businessId;
+	}
+
+	public Byte getType() {
+		return type;
+	}
+
+	public void setType(Byte type) {
+		this.type = type;
+	}
+
+	public Date getBindingDate() {
+		return bindingDate;
+	}
+
+	public void setBindingDate(Date bindingDate) {
+		this.bindingDate = bindingDate;
+	}
+
+	public Date getUntieDate() {
+		return untieDate;
+	}
+
+	public void setUntieDate(Date untieDate) {
+		this.untieDate = untieDate;
+	}
+}

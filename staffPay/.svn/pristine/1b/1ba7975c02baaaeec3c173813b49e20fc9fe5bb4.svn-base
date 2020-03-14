@@ -1,0 +1,24 @@
+package com.chunqiu.mrjuly.modules.install.dao;
+
+import com.chunqiu.mrjuly.common.persistence.CrudDao;
+import com.chunqiu.mrjuly.modules.install.model.Opinion;
+
+import java.util.List;
+
+/**
+ * 投诉意见
+ */
+public interface OpinionDao extends CrudDao<Opinion, Integer> {
+    /**
+     * 查找所有的数据
+     * @return
+     */
+    List<Opinion> getAll(Integer id);
+
+    /**
+     * 新增
+     * @param opinion
+     * @return
+     */
+    int insertInfo(Opinion opinion);
+}

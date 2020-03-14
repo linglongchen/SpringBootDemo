@@ -1,0 +1,207 @@
+package com.chunqiu.mrjuly.modules.record.model;
+
+import com.chunqiu.mrjuly.common.persistence.DataEntity;
+import com.chunqiu.mrjuly.modules.shophotel.model.ShopHotel;
+import com.chunqiu.mrjuly.modules.shopinfo.model.ShopInfo;
+
+/**
+ * 审核记录Entity
+ * @author chen
+ * @version 2019-03-06
+ */
+public class ShopRecord extends DataEntity<ShopRecord, Integer> {
+
+	private static final long serialVersionUID = 1L;
+	private Integer shopInfoId;		// 商家id
+	private Integer result;		// 审核结果   0.待审核 1.驳回 2.搁置 3.通过
+	private Integer userId;		// 审核人id
+	private String userName;
+	private ShopInfo shopInfo;
+//	private ShopInfo2 shopInfo;
+	private String shopTypeName;
+	private ShopHotel shopHotel;
+	private String shopName;
+	private String shopNumber;
+	private String systemNum;
+	private String businessLicensePeriod;
+	private String businessLicenseImg;
+	private String leaseTerm;
+	private String shopAddress;
+	private String shopTel;
+	private Integer shopTypeId;
+	private Integer hotelCodeId;
+	private String banReason;
+	private String resultReason;
+	private String createTime;
+
+
+	public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+
+	public String getResultReason() {
+		return resultReason;
+	}
+
+	public void setResultReason(String resultReason) {
+		this.resultReason = resultReason;
+	}
+
+	public String getBanReason() {
+		return banReason;
+	}
+
+	public void setBanReason(String banReason) {
+		this.banReason = banReason;
+	}
+
+	public Integer getHotelCodeId() {
+		return hotelCodeId;
+	}
+
+	public void setHotelCodeId(Integer hotelCodeId) {
+		this.hotelCodeId = hotelCodeId;
+	}
+
+	public Integer getShopTypeId() {
+		return shopTypeId;
+	}
+
+	public void setShopTypeId(Integer shopTypeId) {
+		this.shopTypeId = shopTypeId;
+	}
+
+	public String getShopTel() {
+		return shopTel;
+	}
+
+	public void setShopTel(String shopTel) {
+		this.shopTel = shopTel;
+	}
+
+	public String getShopAddress() {
+		return shopAddress;
+	}
+
+	public void setShopAddress(String shopAddress) {
+		this.shopAddress = shopAddress;
+	}
+
+	public String getShopName() {
+		return shopName;
+	}
+
+	public void setShopName(String shopName) {
+		this.shopName = shopName;
+	}
+
+	public String getShopNumber() {
+		return shopNumber;
+	}
+
+	public void setShopNumber(String shopNumber) {
+		this.shopNumber = shopNumber;
+	}
+
+	public String getSystemNum() {
+		return systemNum;
+	}
+
+	public void setSystemNum(String systemNum) {
+		this.systemNum = systemNum;
+	}
+
+	public String getBusinessLicensePeriod() {
+		return businessLicensePeriod;
+	}
+
+	public void setBusinessLicensePeriod(String businessLicensePeriod) {
+		this.businessLicensePeriod = businessLicensePeriod;
+	}
+
+	public String getBusinessLicenseImg() {
+		return businessLicenseImg;
+	}
+
+	public void setBusinessLicenseImg(String businessLicenseImg) {
+		this.businessLicenseImg = businessLicenseImg;
+	}
+
+	public String getLeaseTerm() {
+		return leaseTerm;
+	}
+
+	public void setLeaseTerm(String leaseTerm) {
+		this.leaseTerm = leaseTerm;
+	}
+
+	public ShopHotel getShopHotel() {
+		return shopHotel;
+	}
+
+	public void setShopHotel(ShopHotel shopHotel) {
+		this.shopHotel = shopHotel;
+	}
+
+	public String getShopTypeName() {
+		return shopTypeName;
+	}
+
+	public void setShopTypeName(String shopTypeName) {
+		this.shopTypeName = shopTypeName;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+
+	public ShopInfo getShopInfo() {
+		return shopInfo;
+	}
+
+	public void setShopInfo(ShopInfo shopInfo) {
+		this.shopInfo = shopInfo;
+	}
+
+	public ShopRecord() {
+		super();
+	}
+
+	public ShopRecord(Integer id){
+		super(id);
+	}
+
+	public Integer getShopInfoId() {
+		return shopInfoId;
+	}
+
+	public void setShopInfoId(Integer shopInfoId) {
+		this.shopInfoId = shopInfoId;
+	}
+
+	public Integer getResult() {
+		return result;
+	}
+
+	public void setResult(Integer result) {
+		this.result = result;
+	}
+
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
+
+}

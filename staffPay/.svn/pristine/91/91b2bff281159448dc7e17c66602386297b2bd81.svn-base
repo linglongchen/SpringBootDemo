@@ -1,0 +1,28 @@
+package com.chunqiu.mrjuly.modules.install.model;
+
+import com.chunqiu.mrjuly.common.persistence.DataEntity;
+
+public class Bank extends DataEntity<Bank, Integer> {
+
+    private static final long serialVersionUID = 1L;
+    private Integer id;
+    private String bankName;
+
+    @Override
+    public Integer getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getBankName() {
+        return bankName;
+    }
+
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
+    }
+}

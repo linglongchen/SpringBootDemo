@@ -1,0 +1,209 @@
+package com.chunqiu.mrjuly.modules.mybill.model;
+
+import com.chunqiu.mrjuly.common.persistence.DataEntity;
+import com.chunqiu.mrjuly.common.utils.excel.annotation.ExcelField;
+
+import javax.validation.constraints.NotEmpty;
+
+/**
+ * 我的账单Entity
+ * @author chen
+ * @version 2019-03-14
+ */
+public class MyBillInfo extends DataEntity<MyBillInfo, Integer> {
+
+	private static final long serialVersionUID = 1L;
+	private String billOfOriginId;		// 所属账单信息的id
+	private Integer status;		// 1.广告投放 2.退款 3.充值 4.租金
+	private Integer type;		// 1.在线商家 2.广告商
+	private String startTime;
+	private String advertiserNumber;
+	private String remittanceFlowNumber;
+	private Integer timeStatus;				//时间状态  0：降序  1：升序
+	private String createByName;			//操作人姓名
+	private String userName;
+	private Integer shopId;
+	private Integer objectId;
+	private Float countPrice;
+	private String ordernumber;		//订单号
+	@ExcelField(title = "数量", type = 0, align = 2, sort = 0)
+	@NotEmpty
+	private Integer shopNum;
+	@ExcelField(title = "商家名称", type = 0, align = 2, sort = 0)
+	@NotEmpty
+	private String shopName;
+	@ExcelField(title = "商家类别", type = 0, align = 2, sort = 0)
+	@NotEmpty
+	private String shopType;
+	@ExcelField(title = "单价", type = 0, align = 2, sort = 0)
+	@NotEmpty
+	private Float price;
+
+
+	public Float getPrice() {
+		return price;
+	}
+
+	public void setPrice(Float price) {
+		this.price = price;
+	}
+
+	public String getShopName() {
+		return shopName;
+	}
+
+	public void setShopName(String shopName) {
+		this.shopName = shopName;
+	}
+
+	public String getShopType() {
+		return shopType;
+	}
+
+	public void setShopType(String shopType) {
+		this.shopType = shopType;
+	}
+
+	public Integer getShopNum() {
+		return shopNum;
+	}
+
+	public void setShopNum(Integer shopNum) {
+		this.shopNum = shopNum;
+	}
+
+	public String getOrdernumber() {
+		return ordernumber;
+	}
+
+	public void setOrdernumber(String ordernumber) {
+		this.ordernumber = ordernumber;
+	}
+
+	@ExcelField(title = "收入金额", type = 0, align = 2, sort = 0)
+	@NotEmpty
+	private Float amountPrice;		// 账单金额
+	@ExcelField(title = "日期", type = 0, align = 2, sort = 0)
+	@NotEmpty
+	private String time;
+
+	public String getTime() {
+		return time;
+	}
+
+	public void setTime(String time) {
+		this.time = time;
+	}
+
+	public Float getCountPrice() {
+		return countPrice;
+	}
+
+	public void setCountPrice(Float countPrice) {
+		this.countPrice = countPrice;
+	}
+
+	public Integer getObjectId() {
+		return objectId;
+	}
+
+	public void setObjectId(Integer objectId) {
+		this.objectId = objectId;
+	}
+
+	public Integer getShopId() {
+		return shopId;
+	}
+
+	public void setShopId(Integer shopId) {
+		this.shopId = shopId;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getCreateByName() {
+		return createByName;
+	}
+
+	public void setCreateByName(String createByName) {
+		this.createByName = createByName;
+	}
+
+	public Integer getTimeStatus() {
+		return timeStatus;
+	}
+
+	public void setTimeStatus(Integer timeStatus) {
+		this.timeStatus = timeStatus;
+	}
+
+	public String getRemittanceFlowNumber() {
+		return remittanceFlowNumber;
+	}
+
+	public void setRemittanceFlowNumber(String remittanceFlowNumber) {
+		this.remittanceFlowNumber = remittanceFlowNumber;
+	}
+
+	public String getAdvertiserNumber() {
+		return advertiserNumber;
+	}
+
+	public void setAdvertiserNumber(String advertiserNumber) {
+		this.advertiserNumber = advertiserNumber;
+	}
+
+	public String getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+
+	public MyBillInfo() {
+		super();
+	}
+
+	public MyBillInfo(Integer id){
+		super(id);
+	}
+
+	public String getBillOfOriginId() {
+		return billOfOriginId;
+	}
+
+	public void setBillOfOriginId(String billOfOriginId) {
+		this.billOfOriginId = billOfOriginId;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
+	}
+
+	public Float getAmountPrice() {
+		return amountPrice;
+	}
+
+	public void setAmountPrice(Float amountPrice) {
+		this.amountPrice = amountPrice;
+	}
+}

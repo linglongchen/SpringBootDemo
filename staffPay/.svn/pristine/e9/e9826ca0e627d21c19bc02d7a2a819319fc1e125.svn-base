@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+
+	<title>导航公司管理</title>
+
+	<head th:include="init :: init"></head>
+
+	<script type="text/javascript">
+
+		 //提交表单
+		   function editDict(){
+		  	$('#signupForm').validate({
+		           submitHandler:function(form){
+		               loading();
+		               form.action = '[[${ctx}]]/install/companyInfo/saveCompanyInfo';
+		   			form.submit();
+		           }
+		   	});
+
+		      $('#signupForm').submit();
+				closeLoading();
+           }
+
+	</script>
+</head>
+<body class="gray-bg">
+	<div class="wrapper animated fadeInRight">
+    	<div class="ibox-content">
+    		<div class="row">
+				<form id="signupForm" class="layui-form form-horizontal m-t">
+					<input type="hidden" name="id" th:value="${companyInfo?.id}">
+					<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12" style="margin-left: 26%">
+						<label class="col-xs-3 layui-form-label"><i class="required">*</i>公司名称：</label>
+						<div class="col-xs-6">
+							<input name="name" id="name"class="layui-input" th:value="${companyInfo?.name }" placeholder="请输入公司名称" autocomplete="off" type="text" required  maxlength="100">
+						</div>
+					</div>
+					<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12" style="margin-left: 26%">
+						<label style="font-size: 15px" class="col-xs-3 layui-form-label"><i class="required">*</i>公司链接：</label>
+						<div class="col-xs-6">
+							<input  name="urlLink" id="urlLink" class="layui-input" th:value="${companyInfo?.urlLink }" placeholder="请输入公司链接" autocomplete="off" type="text" required  maxlength="100">
+						</div>
+					</div>
+					<div style="padding-bottom: 10px;margin-left: 41%">
+						<button class="btn btn-primary " id="btn" style="margin-left: -37.5%;margin-top: 15%" type="button" data-toggle="modal" onclick="editDict()"> <i class="fa fa-save"></i>&nbsp;保存</button>
+					</div>
+				</form>
+
+    		</div>
+    	</div>
+    </div>
+</body>
+</html>

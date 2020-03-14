@@ -1,0 +1,200 @@
+package com.chunqiu.mrjuly.modules.getaccommodation.model;
+
+import com.chunqiu.mrjuly.common.persistence.DataEntity;
+import com.chunqiu.mrjuly.common.utils.excel.annotation.ExcelField;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.NotEmpty;
+import java.util.Date;
+
+/**
+ * 酒店激活号统计Entity
+ * @author zt
+ * @version 2019-03-26
+ */
+public class GetAccommodation extends DataEntity<GetAccommodation, Integer> {
+
+	private static final long serialVersionUID = 1L;
+	@ExcelField(title = "激活号（服务单号）", type = 0, align = 60 , sort = 2)
+	@NotEmpty
+	private String serviceNumber;		// 服务单号
+	private Integer employeeId;		// 员工id
+	private Integer roomId;		// 绑定客户端设备id（房间号）
+	@ExcelField(title = "住客姓名）", type = 0, align = 20 , sort = 2)
+	@NotEmpty
+	private String name;		// 住客姓名
+	private Integer gender;		// 1.先生 2.女士
+	@ExcelField(title = "入住日期", type = 0, align = 20 , sort = 2)
+	@NotEmpty
+	private Date checkInTime;		// 入住时间
+	@ExcelField(title = "离店日期", type = 0, align = 20 , sort = 2)
+	@NotEmpty
+	private Date departureTime;		// 离店时间
+	private Integer hotelCodeId;		// 酒店前缀编码id
+	private Integer derpartmentId;		// 部门id
+	@ExcelField(title = "休眠时间", type = 0, align = 20 , sort = 2)
+	@NotEmpty
+	private Date dormantTime;		// 休眠时间
+
+	@ExcelField(title = "登记房间", type = 0, align = 20 , sort = 2)
+	@NotEmpty
+	private String roomName;    //登记客房
+
+	@ExcelField(title = "激活/休眠客户端编号", type = 0, align = 60 , sort = 2)
+	@NotEmpty
+	private String customerNum;  //客户端编号
+	@ExcelField(title = "激活操作员工）", type = 0, align = 20 , sort = 2)
+	@NotEmpty
+	private String employeeName;  //员工名字
+
+	private String beginDate;    //查询开始日期
+	private String endDate;      //查询结束日期
+
+	@ExcelField(title = "激活时间）", type = 0, align = 20 , sort = 2)
+	@NotEmpty
+	private Date createDate;
+
+	@Override
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	@Override
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+
+	public GetAccommodation() {
+		super();
+	}
+
+	public GetAccommodation(Integer id){
+		super(id);
+	}
+
+	@Length(min=0, max=255, message="服务单号长度必须介于 0 和 255 之间")
+	public String getServiceNumber() {
+		return serviceNumber;
+	}
+
+	public void setServiceNumber(String serviceNumber) {
+		this.serviceNumber = serviceNumber;
+	}
+
+	public Integer getEmployeeId() {
+		return employeeId;
+	}
+
+	public void setEmployeeId(Integer employeeId) {
+		this.employeeId = employeeId;
+	}
+
+	public Integer getRoomId() {
+		return roomId;
+	}
+
+	public void setRoomId(Integer roomId) {
+		this.roomId = roomId;
+	}
+
+	@Length(min=0, max=255, message="住客姓名长度必须介于 0 和 255 之间")
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Integer getGender() {
+		return gender;
+	}
+
+	public void setGender(Integer gender) {
+		this.gender = gender;
+	}
+
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	public Date getCheckInTime() {
+		return checkInTime;
+	}
+
+	public void setCheckInTime(Date checkInTime) {
+		this.checkInTime = checkInTime;
+	}
+
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	public Date getDepartureTime() {
+		return departureTime;
+	}
+
+	public void setDepartureTime(Date departureTime) {
+		this.departureTime = departureTime;
+	}
+
+	public Integer getHotelCodeId() {
+		return hotelCodeId;
+	}
+
+	public void setHotelCodeId(Integer hotelCodeId) {
+		this.hotelCodeId = hotelCodeId;
+	}
+
+	public Integer getDerpartmentId() {
+		return derpartmentId;
+	}
+
+	public void setDerpartmentId(Integer derpartmentId) {
+		this.derpartmentId = derpartmentId;
+	}
+
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	public Date getDormantTime() {
+		return dormantTime;
+	}
+
+	public void setDormantTime(Date dormantTime) {
+		this.dormantTime = dormantTime;
+	}
+
+	public String getRoomName() {
+		return roomName;
+	}
+
+	public void setRoomName(String roomName) {
+		this.roomName = roomName;
+	}
+
+	public String getCustomerNum() {
+		return customerNum;
+	}
+
+	public void setCustomerNum(String customerNum) {
+		this.customerNum = customerNum;
+	}
+
+	public String getEmployeeName() {
+		return employeeName;
+	}
+
+	public void setEmployeeName(String employeeName) {
+		this.employeeName = employeeName;
+	}
+
+	public String getBeginDate() {
+		return beginDate;
+	}
+
+	public void setBeginDate(String beginDate) {
+		this.beginDate = beginDate;
+	}
+
+	public String getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
+}

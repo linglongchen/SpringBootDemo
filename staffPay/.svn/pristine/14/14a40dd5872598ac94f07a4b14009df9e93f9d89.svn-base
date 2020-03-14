@@ -1,0 +1,39 @@
+package com.chunqiu.mrjuly.modules.mine.service;
+
+import com.chunqiu.mrjuly.common.persistence.CrudService;
+import com.chunqiu.mrjuly.common.vo.Grid;
+import com.chunqiu.mrjuly.common.vo.GridParam;
+import com.chunqiu.mrjuly.modules.install.dao.NotificationDao;
+import com.chunqiu.mrjuly.modules.install.model.Notification;
+import com.chunqiu.mrjuly.modules.mine.dao.NewsDao;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.List;
+
+/**
+ * 平台消息
+ */
+@Service
+public class NewsService extends CrudService<NewsDao, Notification, Integer> {
+
+    @Resource
+    private NewsDao newsDao;
+
+    /**
+     * 查询平台消息
+     * @param entity
+     * @param param
+     * @return
+     */
+    public Grid findPage1(Notification entity, GridParam param) {
+        Grid grid = new Grid();
+        Page page = PageHelper.offsetPage(param.getOffset(), param.getLimit(), true);
+        dao.findList1(entity);
+        grid.setRows(page.getResult());
+        grid.setTotal(page.getTotal());
+        return grid;
+    }
+}

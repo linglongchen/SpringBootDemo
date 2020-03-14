@@ -1,0 +1,68 @@
+package com.chunqiu.mrjuly.modules.install.controller;
+
+import com.chunqiu.mrjuly.common.annotation.Log;
+import com.chunqiu.mrjuly.common.persistence.BaseController;
+import com.chunqiu.mrjuly.modules.install.model.LotteryRules;
+import com.chunqiu.mrjuly.modules.install.service.LotteryRulesService;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
+
+/**
+ * 抽奖规则预设
+ */
+@Slf4j
+@Controller
+@RequestMapping(value = "${adminPath}/install/lotteryRules")
+public class LotteryRulesController extends BaseController{
+
+    @Autowired
+    private LotteryRulesService lotteryRulesService;
+
+    /**
+     * 初始化抽奖规则预设页面
+     * @param lotteryRules
+     * @param model
+     * @return
+     */
+    @Log("登陆到抽奖规则预设")
+    @RequestMapping("index")
+    @RequiresPermissions("install:lotteryRules:view")
+    public String form(LotteryRules lotteryRules, ModelMap model) {
+        List<LotteryRules> list = lotteryRulesService.getAll(lotteryRules.getId());
+        if(list.size() == 0) {
+            model.addAttribute("prizeContent","");
+            model.addAttribute("ruleContent","");
+        }else {
+            model.addAttribute("id", list.get(0).getId());
+            model.addAttribute("prizeContent",list.get(0).getPrizeContent());
+            model.addAttribute("ruleContent",list.get(0).getRuleContent());
+        }
+        return "install/lotteryRules";
+    }
+
+    /**
+     * 抽奖规则预设页面保存
+     * @param lotteryRules
+     * @param model
+     * @return
+     */
+    @Log("保存更改设置")
+    @RequestMapping("save")
+    @RequiresPermissions("install:lotteryRules:edit")
+    public String save(LotteryRules lotteryRules, ModelMap model){
+        try{
+            lotteryRulesService.saveList1(lotteryRules);
+        }catch(Exception e){
+            model.addAttribute("error", "保存失败！");
+            return form(lotteryRules, model);
+        }
+        return form(lotteryRules, model);
+    }
+
+}

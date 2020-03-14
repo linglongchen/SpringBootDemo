@@ -1,0 +1,13 @@
+package com.chunqiu.mrjuly.modules.install.dao;
+
+import com.chunqiu.mrjuly.common.persistence.CrudDao;
+import com.chunqiu.mrjuly.modules.install.model.Notice;
+
+import java.util.List;
+
+/**
+ * 通知管理
+ */
+public interface NoticeDao extends CrudDao<Notice, Integer> {
+    List<Notice> noticeById(Notice notice);
+}

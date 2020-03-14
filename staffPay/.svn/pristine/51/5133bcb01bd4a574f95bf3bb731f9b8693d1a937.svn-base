@@ -1,0 +1,53 @@
+package com.chunqiu.mrjuly.modules.shopinfo.dao;
+
+import com.chunqiu.mrjuly.common.persistence.CrudDao;
+import com.chunqiu.mrjuly.modules.advertiserinfo.model.FlowSheetInfo2;
+import com.chunqiu.mrjuly.modules.install.model.ServiceMode;
+import com.chunqiu.mrjuly.modules.mybill.model.MyBillInfo;
+import com.chunqiu.mrjuly.modules.shophotel.model.ShopHotel;
+import com.chunqiu.mrjuly.modules.shopinfo.model.ShopInfo;
+import com.chunqiu.mrjuly.modules.system.model.User;
+
+import java.util.List;
+
+/**
+ * 商家信息DAO接口
+ * @author chen
+ * @version 2019-03-05
+ */
+public interface ShopInfoDao extends CrudDao<ShopInfo, Integer> {
+    int saveReject(ShopInfo shopInfo);
+
+    int freezeAllShop(List<ShopInfo> list);
+
+    int freezeAllShop2(List<ShopInfo> list);
+
+    int updateId(User user);
+    int insertMyBill(MyBillInfo myBillInfo);
+    int insertMyBill2(MyBillInfo myBillInfo);
+
+    int insertFlow(FlowSheetInfo2 flowSheetInfo2);
+
+    int insertId(ShopHotel shopHotel);
+
+    List<ShopHotel> shopLeaseList(ShopHotel shopHotel);
+
+    int serviceMode(List<ServiceMode> serviceModes);
+    int checkShopId(ShopInfo shopInfo);
+    int shopCreate(ShopInfo shopInfo);
+    int updateShopCreate(ShopInfo shopInfo);
+    List<ShopHotel> selCode(Integer hotelCodeId);
+    List<ServiceMode> selService(Integer objectId);
+    
+    /**
+     * 更新广告商星级
+     * @param advertiserInfo 
+     * @return 更新的行数
+     * @author wy
+     */
+    int updateStar(ShopInfo shopInfo);
+    
+    int insertSelective(ShopInfo shopInfo);
+    
+    int updateByPrimaryKeySelective(ShopInfo shopInfo);
+}

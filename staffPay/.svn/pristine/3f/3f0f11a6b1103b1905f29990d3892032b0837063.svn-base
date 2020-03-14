@@ -1,0 +1,161 @@
+package com.chunqiu.mrjuly.modules.install.service;
+
+import com.chunqiu.mrjuly.common.persistence.CrudService;
+import com.chunqiu.mrjuly.common.vo.Grid;
+import com.chunqiu.mrjuly.common.vo.GridParam;
+import com.chunqiu.mrjuly.modules.install.dao.CustomerOrderDao;
+import com.chunqiu.mrjuly.modules.install.model.CustomerOrder;
+import com.chunqiu.mrjuly.modules.install.model.ServiceMode;
+import com.chunqiu.mrjuly.modules.platform.model.LocalNotice;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.List;
+
+
+/**
+ * 我的-订单数据统计
+ */
+@Service
+public class CustomerOrderService extends CrudService<CustomerOrderDao, CustomerOrder, Integer> {
+    @Resource
+    private CustomerOrderDao customerOrderDao;
+
+    /*查询部门所有的信息*/
+    public List<CustomerOrder> findAll(CustomerOrder customerOrder) {
+        return dao.findAll(customerOrder);
+    }
+
+    /*初始化部门所有的信息*/
+    public Grid findPageList(CustomerOrder customerOrder, GridParam param){
+        Grid grid = new Grid();
+        Page page = PageHelper.offsetPage(param.getOffset(), param.getLimit(), true);
+        dao.findAll(customerOrder);
+        grid.setRows(page.getResult());
+        grid.setTotal(page.getTotal());
+        return grid;
+    }
+
+    /**
+     * 查找所有的时间
+     * @param customerOrder
+     * @return
+     */
+    public CustomerOrder selectTotal(CustomerOrder customerOrder){
+        return dao.selectTotal(customerOrder);
+    }
+
+    /**
+     * 查找所有服务内容
+     * @param serviceMode
+     * @return
+     */
+    public List<ServiceMode> selMode(ServiceMode serviceMode){
+        return  dao.selMode(serviceMode);
+    }
+
+    /**
+     * 查询所有数据
+     * @param entity
+     * @param param
+     * @return
+     */
+    public Grid findPage2(CustomerOrder entity, GridParam param){
+        Grid grid = new Grid();
+        Page page = PageHelper.offsetPage(param.getOffset(), param.getLimit(), true);
+        dao.findList2(entity);
+        grid.setRows(page.getResult());
+        grid.setTotal(page.getTotal());
+        return grid;
+    }
+
+    /**
+     * 导出 所有的数据
+     * @param customerOrder
+     * @return
+     */
+    public List<CustomerOrder> getList2(CustomerOrder customerOrder){
+        return dao.getList(customerOrder);
+    }
+
+    /**
+     * 查询所有订单
+     * @param entity
+     * @param param
+     * @return
+     */
+    public Grid getList(CustomerOrder entity, GridParam param){
+        Grid grid = new Grid();
+        Page page = PageHelper.offsetPage(param.getOffset(), param.getLimit(), true);
+        dao.getList(entity);
+        grid.setRows(page.getResult());
+        grid.setTotal(page.getTotal());
+        return grid;
+    }
+
+
+    /**
+     * 查询我的-订单数据统计列表
+     * @param customerOrder3
+     * @param param
+     * @return
+     */
+    public Grid findPageShopOrder(CustomerOrder customerOrder3, GridParam param){
+        Grid grid = new Grid();
+        Page page = PageHelper.offsetPage(param.getOffset(), param.getLimit(), true);
+        customerOrderDao.findPageShopOrder(customerOrder3);
+        grid.setRows(page.getResult());
+        grid.setTotal(page.getTotal());
+        return grid;
+    }
+
+    /**
+     * 商家订单
+     * @param customerOrder
+     * @return
+     */
+    public List<CustomerOrder> findPageShopOrder11(CustomerOrder customerOrder){
+        return dao.findPageShopOrder(customerOrder);
+    }
+
+    /**
+     * 查询订单数据
+     * @param serviceMode
+     * @return
+     */
+    public List<ServiceMode> getMode(ServiceMode serviceMode){
+        return dao.getMode(serviceMode);
+    }
+
+
+    /**
+     * 查询数据统计
+     * @param customerOrder
+     * @return
+     */
+    public CustomerOrder customerOrderInfo(CustomerOrder customerOrder){
+        return customerOrderDao.customerOrderInfo(customerOrder);
+    }
+
+    /**
+     * 给房间号发送推送
+     * @param customerOrder
+     * @return
+     */
+    public CustomerOrder customerOrderRoom(CustomerOrder customerOrder){
+        return customerOrderDao.customerOrderRoom(customerOrder);
+    }
+
+    /**
+     * 新增一条我的消息
+     * @param localNotice
+     * @return
+     */
+    public int insertNotice(LocalNotice localNotice){
+        return customerOrderDao.insertNotice(localNotice);
+    }
+}
+
+

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>酒店激活号统计管理</title>
+
+	<head th:include="init :: init"></head>
+    <head th:include="init_bootstrap_table :: bootstrap_table"></head>
+
+	<script type="text/javascript">
+		$(function(){
+			$('#table').bootstrapTable({
+				undefinedText : '',//defined的默认显示文本
+				striped : true,//条纹
+				method : 'get',
+				url : '[[${ctx}]]/getaccommodation/getAccommodation/list',
+				pagination : true,//显示分页
+				sidePagination : 'server',//定义分页为服务器端分页
+				pageNumber : 1,//起始页数
+				pageSize : 20,//默认显示行数
+				pageList : [20, 50, 100 ,200],//可选分页数
+				singleSelect : false,//多选
+				//toolbar : '#toolbar',
+				height : 'auto',
+			    columns: [
+				{
+					field: 'serviceNumber',
+					title: '激活号（服务单号）',
+					halign : 'center',
+					align : 'center'
+				},{
+                	field: 'roomName',
+                    title: '登记房间',
+                    halign : 'center',
+                    align : 'center'
+				},{
+			        field: 'name',
+			        title: '住客姓名',
+			        halign : 'center',
+			        align : 'center',
+					formatter : function(value, row, index){
+			            var customerName=""
+						if(1 == row.gender){
+                            customerName=row.name+"先生";
+						}else{
+                            customerName=row.name+"女士";
+						}
+						return customerName;
+					}
+			    },{
+					field: 'checkInTime',
+					title: '入住日期',
+					halign : 'center',
+					align : 'center'
+				},{
+					field: 'departureTime',
+					title: '离店日期',
+					halign : 'center',
+					align : 'center'
+				},{
+					field: 'customerNum',
+					title: '激活/休眠客户端编号',
+					halign : 'center',
+					align : 'center'
+				},{
+					field: 'createDate',
+					title: '激活时间',
+					halign : 'center',
+					align : 'center'
+				},{
+					field: 'employeeName',
+					title: '激活操作员工',
+					halign : 'center',
+					align : 'center'
+				},{
+					field: 'dormantTime',
+					title: '休眠时间',
+					halign : 'center',
+					align : 'center'
+				}],
+			    onLoadSuccess : function(data){
+			    	if(data.total == 0){
+			    		$('#table').bootstrapTable('removeAll');
+			    	}
+			    }
+			});
+		});
+
+		//查询
+		function search(){
+			var param = $('#searchForm').serialize();
+			$('#table').bootstrapTable('refresh', {url : '[[${ctx}]]/getaccommodation/getAccommodation/list?' + param});
+		}
+
+		//导出
+		function exportActivationList(){
+            var param = $('#searchForm').serialize();
+            var url = '[[${ctx}]]/getaccommodation/getAccommodation/export?'+ param;
+            $('<form method="post" action="' + url + '"></form>').appendTo('body').submit().remove();
+		}
+	</script>
+</head>
+<body layadmin-themealias="default">
+	<div class="layui-fluid animated fadeInRight">
+        <div class="layui-card">
+        	<div class="layui-form layui-card-header layuiadmin-card-header-auto">
+                <div class="layui-form-item form-head">
+					<form id="searchForm" class="layui-form">
+						<div class="layui-inline">
+							<div class="layui-input-inline">
+								<!--
+                                    data-value : 数据加载完成的默认的key值
+                                    data-url ：加载数据的url地址
+                                    data-key : option的value值对应的字段
+                                    data-label ： option的name值对应的字段
+                                 -->
+								<select class="chosen-select-deselect form-control layui-input" data-placeholder="请选择酒店" data-value=""
+										th:data-url="${ctx} + '/hotelinfo/hotelInfo/getHotelSelect'" data-key="id" data-label="name" name="hotelCodeId">
+								</select>
+							</div>
+						</div>
+						<div class="layui-inline">
+							<div class="layui-input-inline">
+								<input type="text" name="beginDate" id="beginDate" placeholder="请选择激活时间开始日期" autocomplete="off" class="layui-input" lay-date="date" lay-format="yyyy-MM-dd" readonly>
+							</div>
+							<div class="layui-form-mid layui-word-aux" style="float: left"> -</div>
+							<div class="layui-input-inline">
+								<input type="text" name="endDate" id="endDate" placeholder="请选择激活时间结束日期" autocomplete="off" class="layui-input" lay-date="date" lay-format="yyyy-MM-dd" readonly>
+							</div>
+						</div>
+						<div class="layui-inline">
+							<button class="btn btn-primary " type="button" onclick="search()"><i class="fa fa-search"></i>&nbsp;查询</button>
+							<button class="btn btn-primary " type="button" onclick="exportActivationList()">导出</button>
+						</div>
+					</form>
+				</div>
+				<table id="table">
+
+				</table>
+	        </div>
+		</div>
+    </div>
+</body>
+</html>

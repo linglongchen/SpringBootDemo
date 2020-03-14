@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <title>公告管理</title>
+
+    <head th:include="init :: init"></head>
+
+    <script type="text/javascript">
+        //提交表单
+        function validForm1(){
+            $('#signupForm').validate({
+                submitHandler:function(form){
+                    loading();
+                    form.action = '[[${ctx}]]/platform/notice/saveMessage';
+                    form.submit();
+                }
+            });
+            $('#signupForm').submit();
+
+        }
+
+        function demo1(){
+            $('#signupForm１').validate({
+                submitHandler:function(form){
+                    loading();
+                    form.action = '[[${ctx}]]/platform/notice/saveText';
+                    form.submit();
+                }
+            });
+            $('#signupForm１').submit();
+
+        }
+
+
+        //触发事件
+        layui.use(['form'], function(){
+            var form = layui.form;
+            form.on('radio(formDemo)', function(value) {
+                document.getElementById("dt").style.display = "block";
+
+            });
+            form.on('radio(formDemo1)', function(value) {
+                document.getElementById("dt").style.display = "none";
+            });
+
+        })
+
+        function demo() {
+            showMsgSuccess('进入预览');
+            document.getElementById("roomNumber").disabled = true;
+            document.getElementById("noticeContent").disabled = true;
+        }
+    </script>
+
+</head>
+<body class="gray-bg">
+<div class="wrapper animated fadeInRight">
+    <div class="ibox-content">
+        <div class="row">
+
+                <input type="hidden" name="id" th:value="${localNotice.id}">
+                <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+                    <ul class="layui-tab-title">
+                        <li class="layui-this">内容</li>
+                        <li>选择常用消息</li>
+                    </ul>
+                    <div class="layui-tab-content" style="height: 100px;">
+                        <div class="layui-tab-item layui-show">
+                            <form id="signupForm１" class="layui-form form-horizontal m-t" action="">
+                                <div id="saveText" class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+                                    <input type="hidden" name="id" th:value="${localNotice.id}">
+                                    <label class="col-xs-3 layui-form-label">输入内容</label>
+                                    <div class="col-xs-6">
+                                        <textarea id="messageContent" name="messageContent" th:text="${localNotice.noticeContent}" placeholder="请输入内容" required class="layui-textarea"></textarea>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item col-lg-6 col-sm-12 col-xs-12" style="margin-left: 250px;">
+                                    <input th:onclick="'demo1()'" class="btn btn-primary " type="button" value="保存为常用消息模板">
+                                </div>
+                            </form>
+
+                            <div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+                                <label class="col-xs-3 layui-form-label">选择房间号</label>
+                                <div class="col-xs-6">
+                                    <select name="roomNumber"  data-placeholder="请选择房间号" class="chosen-select form-control layui-input" multiple required>
+                                        <option></option>
+                                        <option id="roomNumber" th:each="clientBianmaInfoList:${clientBianmaInfoList }" th:value="${clientBianmaInfoList.code }" th:text="${clientBianmaInfoList.code }"></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-tab-item">
+                            <form id="signupForm" class="layui-form form-horizontal m-t" action="">
+                            <div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+                                <label class="col-xs-3 layui-form-label">选择内容</label>
+                                <div class="col-xs-6">
+                                    <select name="noticeContent"  data-placeholder="请选择内容" class="chosen-select form-control layui-input" multiple >
+                                        <option></option>
+                                        <option id="noticeContent1" th:each="messageTemplateList:${messageTemplateList }" th:value="${messageTemplateList.messageContent }" th:text="${messageTemplateList.messageContent }"></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+                                <label class="col-xs-3 layui-form-label">选择房间号</label>
+                                <div class="col-xs-6">
+                                    <select name="roomNumber"  data-placeholder="请选择房间号" class="chosen-select form-control layui-input" multiple required>
+                                        <option></option>
+                                        <option id="roomNumber1" th:each="clientBianmaInfoList:${clientBianmaInfoList }" th:value="${clientBianmaInfoList.code }" th:text="${clientBianmaInfoList.code }"></option>
+                                    </select>
+                                </div>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <input id="preview" style="display: none" th:onclick="'demo()'" class="btn btn-primary " type="button" value="预览">
+                </div>
+
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    layui.use('element', function(){
+        var $ = layui.jquery
+            ,element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
+    });
+</script>
+</html>

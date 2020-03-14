@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>奖品设置管理</title>
+
+	<head th:include="init :: init"></head>
+    <head th:include="init_bootstrap_table :: bootstrap_table"></head>
+	<script type="text/javascript">
+		$(function(){
+		    $("#type").val("[[${type}]]");
+			$('#table').bootstrapTable({
+				undefinedText : '',//defined的默认显示文本
+				striped : true,//条纹
+				method : 'get',
+				url : '[[${ctx}]]/install/prizeInfo/list',
+				pagination : true,//显示分页
+				sidePagination : 'server',//定义分页为服务器端分页
+				pageNumber : 1,//起始页数
+				pageSize : 20,//默认显示行数
+				pageList : [20, 50, 100 ,200],//可选分页数
+				singleSelect : false,//多选
+				//toolbar : '#toolbar',
+				height : 'auto',
+			    columns: [
+			    {
+			        field: 'prize',
+			        title: '奖项',
+			        halign : 'center',
+			        align : 'center'
+			    },{
+					field: 'prizeName',
+					title: '奖项名称',
+					halign : 'center',
+					align : 'center'
+				}/*,{
+					field: 'prizeType',
+					title: '状态',
+					halign : 'center',
+					align : 'center',
+					formatter: function(value,row,index) {
+
+                        if (row.prizeType == 1) {
+                            return "已中奖 ";
+                        } else if (row.prizeType == 2) {
+                            return "暂停抽奖";
+                        } else if (row.prizeType == 3) {
+                            return "开始抽奖 ";
+                        }
+                    }
+				}*/,{
+					field: 'prizeImg',
+					title: '奖品图片',
+					halign : 'center',
+					align : 'center',
+					formatter :function (value, row, index) {
+						if(value != null && value != undefined && value != ''){
+							return '<img style="width:64px;height:64px;" src="' + value + '">';
+						}else{
+							return '';
+						}
+					}
+
+				},{
+			    	field : 'option',
+			    	title : '操作',
+			    	halign : 'center',
+			    	align : 'left',
+			    	formatter : function(value, row, index){
+			    		var _html = '<ul class="grid_btn_ul">';
+			    		_html += '<li><a href="javascript:editPrizeInfo(' + row.id + ')" class="btn btn-success btn-xs"><i class="fa fa-pencil"></i> 编辑 </a></li>';
+			    		_html += '</ul>';
+			    		return _html;
+			    	}
+			    }],
+			    onLoadSuccess : function(data){
+			    	if(data.total == 0){
+			    		$('#table').bootstrapTable('removeAll');
+			    	}
+			    }
+			});
+		});
+
+		//添加奖品设置
+		function addPrizeInfo(){
+			layer.open({
+			    type: 2,
+			    title : '新增奖品设置',
+				area: ['60%', '90%'],
+			    content: '[[${ctx}]]/install/prizeInfo/form?prizeType='+$("#type").val(), //这里content是一个DOM
+			    btn : ['保存', '关闭'],
+			    closeBtn : '1',
+			    shadeClose : false,//点击遮罩层关闭
+			    shade : [0.8, '#393D49'],
+			    yes : function(index, layero){
+			        var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+			        iframeWin.validForm();
+			    },btn2 : function(index, layero){
+					layer.confirm('关闭或退出不会对您的编辑操作进行保存！',{icon:"3",title:"提示"},function(index1){
+						layer.close(index1);
+						layer.close(index);
+						var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+						iframeWin.btn2From();
+						return true;
+					});
+					return false;
+				},cancel : function(index, layero) {
+					layer.confirm('关闭或退出不会对您的编辑操作进行保存！',{icon:"3",title:"提示"},function(index1){
+						layer.close(index1);
+						layer.close(index);
+						var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+						iframeWin.cancelFrom();
+						return true;
+					});
+					return false;
+				}
+			});
+		}
+
+		//编辑奖品设置
+		function editPrizeInfo(id){
+			layer.open({
+			    type: 2,
+			    title : '编辑奖品设置',
+				area: ['60%', '90%'],
+			    content: '[[${ctx}]]/install/prizeInfo/form?id=' + id, //这里content是一个DOM
+			    btn : ['保存', '关闭'],
+			    closeBtn : '1',
+			    shadeClose : false,//点击遮罩层关闭
+			    shade : [0.8, '#393D49'],
+			    yes : function(index, layero){
+			        var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+			        iframeWin.validForm();
+			    },btn2 : function(index, layero){
+					layer.confirm('关闭或退出不会对您的编辑操作进行保存！',{icon:"3",title:"提示"},function(index1){
+						layer.close(index1);
+						layer.close(index);
+						var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+						iframeWin.btn2From();
+						return true;
+					});
+					return false;
+				},cancel : function(index, layero) {
+					layer.confirm('关闭或退出不会对您的编辑操作进行保存！',{icon:"3",title:"提示"},function(index1){
+						layer.close(index1);
+						layer.close(index);
+						var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+						iframeWin.cancelFrom();
+						return true;
+					});
+					return false;
+				}
+			});
+		}
+
+		//改变抽奖的状态
+        onload=function(){
+            btn.onclick=function(){
+                this.value = this.value=="暂停抽奖" ? "开始抽奖" : "暂停抽奖";
+
+             var status  = 0;
+             var  text = $("#btn").val();
+             if (text == "暂停抽奖"){
+                 status = 3;
+			 }else if (text == "开始抽奖"){
+                 status = 2;
+			 }
+                $.post('[[${ctx}]]/install/prizeInfo/isPut',
+                    {
+                        prizeType: status
+                    },
+                    function(prizeType){
+						$("#type").val(status);
+                    });
+            }
+        }
+
+	</script>
+</head>
+<body layadmin-themealias="default">
+	<div class="layui-fluid animated fadeInRight">
+        <div class="layui-card">
+        	<div class="layui-form layui-card-header layuiadmin-card-header-auto">
+				<div class="layui-card-body">
+					<div style="padding-bottom: 10px;">
+						<input type="hidden" id="type">
+						<input type="button" class="btn btn-primary "  th:value="${prizeType}" id="btn" onclick="updateType()" />
+						<button class="btn btn-primary " type="button" data-toggle="modal" onclick="addPrizeInfo()"><i class="fa fa-plus"></i>&nbsp;新增奖项</button>
+					</div>
+				</div>
+				<table id="table">
+
+				</table>
+	        </div>
+		</div>
+    </div>
+</body>
+</html>

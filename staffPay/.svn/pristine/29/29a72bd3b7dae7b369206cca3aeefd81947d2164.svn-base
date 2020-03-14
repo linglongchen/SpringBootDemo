@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>酒店信息管理</title>
+
+	<head th:include="init :: init"></head>
+
+	<script type="text/javascript">
+
+		//提交表单
+		function validForm(){
+			$('#signupForm').validate({
+		        submitHandler:function(form){
+		            loading();
+		            form.action = '[[${ctx}]]/hotelinfo/hotelInfo/saveHotelInfo';
+					form.submit();
+		        }
+			});
+		    $('#signupForm').submit();
+		}
+		$(function () {
+			$('input').attr("readonly","readonly");
+        })
+	</script>
+</head>
+<body class="gray-bg">
+	<div class="wrapper animated fadeInRight">
+    	<div class="ibox-content">
+    		<div class="row">
+    			<form id="signupForm" class="layui-form form-horizontal m-t">
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">酒店集团：</label>
+				        <div class="col-xs-6">
+    						<input name="hotelGroups" class="layui-input" th:value="${hotelInfo.hotelGroups }" placeholder="请输入酒店集团" autocomplete="off" type="text"  maxlength="50">
+    					</div>
+				    </div>
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">酒店名称：</label>
+				        <div class="col-xs-6">
+    						<input name="hotelName" class="layui-input" th:value="${hotelInfo.hotelName }" placeholder="请输入酒店名称" autocomplete="off" type="text"  maxlength="50">
+    					</div>
+				    </div>
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">酒店类型：</label>
+				        <div class="col-xs-6">
+    						<input name="hotelType" class="layui-input" th:value="${hotelInfo.hotelType }" placeholder="请输入酒店类型" autocomplete="off" type="text"  maxlength="50">
+    					</div>
+				    </div>
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">酒店地址：</label>
+				        <div class="col-xs-6">
+    						<input name="hotelAddress" class="layui-input" th:value="${hotelInfo.hotelAddress }" placeholder="请输入酒店地址" autocomplete="off" type="text"  maxlength="50">
+    					</div>
+				    </div>
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">客房数量：</label>
+				        <div class="col-xs-6">
+    						<input name="hotelNumber" class="layui-input digits" th:value="${hotelInfo.hotelNumber }" placeholder="请输入客房数量" autocomplete="off" type="text"  maxlength="11">
+    					</div>
+				    </div>
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">客房平均面积  单位：m2：</label>
+				        <div class="col-xs-6">
+    						<input name="hotelAcreage" class="layui-input digits" th:value="${hotelInfo.hotelAcreage }" placeholder="请输入客房平均面积  单位：m2" autocomplete="off" type="text"  maxlength="11">
+    					</div>
+				    </div>
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">客房均价   单位：元：</label>
+				        <div class="col-xs-6">
+    						<input name="hotelPrice" class="layui-input" th:value="${hotelInfo.hotelPrice }" placeholder="请输入客房均价   单位：元" autocomplete="off" type="text" >
+    					</div>
+				    </div>
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">个性化服务：</label>
+				        <div class="col-xs-6">
+    						<input name="hotelService" class="layui-input" th:value="${hotelInfo.hotelService }" placeholder="请输入个性化服务" autocomplete="off" type="text" >
+    					</div>
+				    </div>
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">广告播放审核标准限制：</label>
+				        <div class="col-xs-6">
+    						<input name="hotelAdStandard" class="layui-input" th:value="${hotelInfo.hotelAdStandard }" placeholder="请输入广告播放审核标准限制" autocomplete="off" type="text" >
+    					</div>
+				    </div>
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">2km内大型购物商场或生活广场：</label>
+				        <div class="col-xs-6">
+    						<input name="hotelMall" class="layui-input" th:value="${hotelInfo.hotelMall }" placeholder="请输入2km内大型购物商场或生活广场" autocomplete="off" type="text" >
+    					</div>
+				    </div>
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">交通情况：</label>
+				        <div class="col-xs-6">
+    						<input name="hotelTraffic" class="layui-input" th:value="${hotelInfo.hotelTraffic }" placeholder="请输入交通情况" autocomplete="off" type="text" >
+    					</div>
+				    </div>
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">酒店外立面图：</label>
+				        <div class="col-xs-6">
+							<img style="width:300px;height:200px;"
+								 id="hotelImg" th:src="${hotelInfo.hotelImg }">
+    					</div>
+				    </div>
+    			</form>
+    		</div>
+    	</div>
+    </div>
+</body>
+</html>

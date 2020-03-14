@@ -1,0 +1,70 @@
+package com.chunqiu.mrjuly.modules.install.controller;
+
+import com.chunqiu.mrjuly.common.annotation.Log;
+import com.chunqiu.mrjuly.common.persistence.BaseController;
+import com.chunqiu.mrjuly.modules.install.model.FeedbackType;
+import com.chunqiu.mrjuly.modules.install.model.Opinion;
+import com.chunqiu.mrjuly.modules.install.service.FeedbackTypeService;
+import com.chunqiu.mrjuly.modules.install.service.OpinionService;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.Date;
+import java.util.List;
+
+
+/**
+ * 投诉意见
+ */
+@Slf4j
+@Controller
+@RequestMapping(value = "${adminPath}/install/opinion")
+public class OpinionController extends BaseController{
+
+    @Autowired
+    private OpinionService opinionService;
+    @Autowired
+    private FeedbackTypeService feedbackTypeService;
+
+
+    /**
+     * 初始化投诉意见列表信息
+     *
+     * @param feedbackType
+     * @param model
+     * @return
+     */
+    @Log("登陆到投诉意见")
+    @RequestMapping("index")
+    @RequiresPermissions("install:opinion:view")
+    public String index( FeedbackType feedbackType, ModelMap model) {
+        List<FeedbackType> list = feedbackTypeService.findList(feedbackType);
+        model.addAttribute("list",list);
+        return "install/opinionList";
+    }
+
+    /**
+     * 保存投诉意见方法
+     * @param opinion
+     * @param model
+     * @return
+     */
+    @Log("保存投诉意见")
+    @RequestMapping("save")
+    @RequiresPermissions("install:opinion:edit")
+    public String saveInfo(Opinion opinion, FeedbackType feedbackType, ModelMap model){
+        opinion.setCreateDate(new Date());
+        try{
+            opinionService.saveInfo(opinion);
+        }catch(Exception e){
+            e.printStackTrace();
+            model.addAttribute("error", "提交失败！");
+
+        }
+        return index(feedbackType, model);
+    }
+}

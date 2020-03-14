@@ -1,0 +1,15 @@
+package com.chunqiu.mrjuly.modules.version.dao;
+
+import com.chunqiu.mrjuly.common.persistence.CrudDao;
+import com.chunqiu.mrjuly.modules.version.model.Version;
+
+import java.util.List;
+
+/**
+ * 版本管理DAO接口
+ * @author chen
+ * @version 2019-04-19
+ */
+public interface VersionDao extends CrudDao<Version, Integer> {
+    List<Version> versionList (Version version);
+}

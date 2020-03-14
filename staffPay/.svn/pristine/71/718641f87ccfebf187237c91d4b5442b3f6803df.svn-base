@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>营收详情</title>
+
+    <head th:include="init :: init"></head>
+    <head th:include="init_bootstrap_table :: bootstrap_table"></head>
+
+    <script type="text/javascript">
+        $(function () {
+            $('#status').val(4);
+            $('#table').bootstrapTable({
+                undefinedText: '',//defined的默认显示文本
+                striped: true,//条纹
+                method: 'get',
+                url: '[[${ctx}]]/hotelinfo/hotelInfo/getMyBill2?hotelCodeId='+$('#hotelCodeId').val()+'&status='+4+'&time='+$('#createDate').val()+'',
+                pagination: true,//显示分页
+                sidePagination: 'server',//定义分页为服务器端分页
+                pageNumber: 1,//起始页数
+                pageSize: 20,//默认显示行数
+                pageList: [20, 50, 100, 200],//可选分页数
+                singleSelect: false,//多选
+                //toolbar : '#toolbar',
+                height: 'auto',
+                columns: [
+                    {
+                        field: 'createDate',
+                        title: '日期',
+                        halign: 'center',
+                        align: 'center',
+                        formatter:function (value,row,index) {
+                            var date =  new Date(value).toLocaleDateString().replace(new RegExp("/","g"),"-");
+                            return date;
+                        }
+                    }, {
+                        field: 'shopName',
+                        title: '商家名称',
+                        halign: 'center',
+                        align: 'center'
+                    },
+                    {
+                        field: 'shopType',
+                        title: '商家类别',
+                        halign: 'center',
+                        align: 'center'
+                    },{
+                        field: 'amountPrice',
+                        title: '收入',
+                        halign: 'center',
+                        align: 'center'
+                    }],
+                onLoadSuccess: function (data) {
+                    if (data.total == 0) {
+                        $('#table').bootstrapTable('removeAll');
+                    }
+                }
+            });
+        });
+        //查询
+        function search() {
+            $('#dateTime').val($('#date').val() + '-' + $('#date2').val());
+            var param = $('#searchForm').serialize();
+            $('#table').bootstrapTable('refresh', {url: '[[${ctx}]]/hotelinfo/hotelInfo/getMyBill2?' + param});
+        }
+
+        function exportExcel() {
+            var url = '[[${ctx}]]/hotelinfo/hotelInfo/export5';
+            $('#searchForm').attr("action", url).submit();
+        }
+
+
+
+        function setCharts() {
+            layer.open({
+                type: 2,
+                title: '折线图',
+                area: ['90%', '80%'],
+                content: '[[${ctx}]]/hotelinfo/hotelInfo/setCharts?id=' + $('#id').val() + '&status=' + $('#status').val() + '&startDate=' + $('#date').val() + '&endDate=' + $('#date2').val() + '', //这里content是一个DOM
+                btn: ['关闭'],
+                closeBtn: '1',
+                shadeClose: true,//点击遮罩层关闭
+                shade: [0.8, '#393D49']
+            });
+
+        }
+    </script>
+</head>
+<body layadmin-themealias="default">
+<div class="layui-fluid animated fadeInRight">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+            <!--<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">-->
+                <!--<ul id="myTab" class="nav nav-tabs">-->
+                    <!--<li id="order1"  onclick="searchOrder(4)" class="active"><a href="" data-toggle="tab">商家入驻收入</a></li>-->
+                    <!--<li id="order2"  onclick="searchOrder2(1)"><a href="" data-toggle="tab">滚屏广告收入</a></li>-->
+                <!--</ul>-->
+            <!--</div>-->
+            <div class="layui-form-item form-head">
+                <form id="searchForm" class="layui-form">
+                    <input type="hidden" name="status" id="status" th:value="4">
+                    <input type="hidden" th:value="${hotelInfo?.id}" id="id" name="id">
+                    <input type="hidden" th:value="${hotelInfo?.hotelCodeId}" id="hotelCodeId" name="hotelCodeId">
+                    <input type="hidden" th:value="${hotelInfo?.time}" id="createDate" name="time">
+                    <!--<input type="hidden" th:value="${hotelInfo.hotelCodeId}" name="hotelCodeId" id="hotelCodeId">-->
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <input type="text" name="startDate" id="date" placeholder="请选择日期" autocomplete="off"
+                                   class="layui-input" lay-date="date" lay-format="yyyy-MM-dd">
+                        </div>
+                        <div class="layui-input-inline">
+                            <input type="text" name="endDate" id="date2" placeholder="请选择日期" autocomplete="off"
+                                   class="layui-input" lay-date="date" lay-format="yyyy-MM-dd">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <button class="btn btn-primary " type="button" onclick="search()"><i class="fa fa-search"></i>&nbsp;查询
+                        </button>
+                        <!--<button class="btn btn-primary " type="button" onclick="setCharts()"><i-->
+                                <!--class="fa fa-pencil"></i>&nbsp;查看曲线图-->
+                        <!--</button>-->
+                    </div>
+                    <!--<div class="layui-inline">-->
+                        <!--<input th:value="${hotelInfo?.hotelName+'-'+hotelInfo?.hotelGroups}"-->
+                               <!--style="font-size: 18px;border: none">-->
+                    <!--</div>-->
+                </form>
+            </div>
+            <table id="table">
+
+            </table>
+            <table id="table2">
+
+            </table>
+            <!--<div class="layui-inline">-->
+                <!--<div class="layui-input-inline">-->
+                    <!--<label class="layui-form-label">总计：</label>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="layui-inline">-->
+                <!--<div class="layui-input-inline">-->
+                    <!--<label class="layui-form-label">日期：</label>-->
+                    <!--<input id="dateTime" style="border: none">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="layui-inline">-->
+                <!--<div class="layui-input-inline">-->
+                    <!--<label class="layui-form-label">总收入：</label>-->
+                    <!--<input style="border: none" id="count">-->
+                <!--</div>-->
+            <!--</div>-->
+            <div class="layui-inline">
+                <button class="btn btn-primary " type="button" onclick="exportExcel()"><i
+                        class="fa fa-file-excel-o"></i>&nbsp;导出
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

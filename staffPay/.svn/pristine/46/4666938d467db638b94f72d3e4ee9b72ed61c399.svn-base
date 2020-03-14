@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chunqiu.mrjuly.modules.communicationrecordinfo.dao.CommunicationRecordInfoDao">
+
+	<sql id="communicationRecordInfoColumns">
+		a.id AS "id",
+		a.type AS "type",
+		a.server_side_id AS "serverSideId",
+		a.client_id AS "clientId",
+		a.status AS "status",
+		a.create_date AS "createDate",
+		a.talk_time AS "talkTime"
+	</sql>
+
+	<sql id="communicationRecordInfoJoins">
+	</sql>
+
+	<select id="get" resultType="CommunicationRecordInfo">
+		SELECT
+			<include refid="communicationRecordInfoColumns"/>
+		FROM communication_record_info a
+		<include refid="communicationRecordInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="CommunicationRecordInfo">
+		SELECT
+		a.server_side_id AS serverSideId,
+		a.client_id AS clientId,
+		a.hotel_code_id as hotelCodeId,
+		a.type,
+		<if test="type == 1">
+			CONCAT(
+			c.device_coding,
+			d.hotel_code,
+			"C",
+			c.code
+			) AS codeName,
+			CONCAT(Substring(GROUP_CONCAT(
+			CONCAT(
+			c.device_coding,
+			d.hotel_code,
+			"C",
+			c.code,
+			" ",
+
+			IF (
+			a. STATUS = 1,
+			"呼入",
+			"呼出"
+			),
+			" ",
+			a.create_date,
+			" ",
+			a.talk_time
+			) SEPARATOR ','
+			),1,50),'.....') AS talkTime
+		</if>
+		<if test="type == 2">
+			CONCAT(
+			b.device_coding,
+			d.hotel_code,
+			"S",
+			b.department_id,
+			c.code
+			) AS codeName,
+			CONCAT(Substring(GROUP_CONCAT(
+			CONCAT(
+			b.device_coding,
+			d.hotel_code,
+			"S",
+			b.department_id,
+			c.code,
+			" ",
+
+			IF (
+			a. STATUS = 1,
+			"呼入",
+			"呼出"
+			),
+			" ",
+			a.create_date,
+			" ",
+			a.talk_time
+			) SEPARATOR ','
+			),1,50),'.....') AS talkTime
+		</if>
+		FROM
+		communication_record_info AS a
+			LEFT JOIN ly_hotel_device_relation AS b ON a.server_side_id = b.id
+		LEFT JOIN ly_hotel_device_relation AS c ON a.client_id = c.id
+		LEFT JOIN hotel_unique_code AS d ON d.id = a.hotel_code_id
+		WHERE
+		a.type = #{type}
+		AND a.hotel_code_id = #{hotelCodeId}
+		<if test="type == 1">
+			<if test="clientName != null and clientName != ''">
+				and
+				CONCAT(
+				c.device_coding,
+				d.hotel_code,
+				"C",
+				c.code
+				)
+				like concat(concat('%',#{clientName}),'%')
+			</if>
+		</if>
+		<if test="type == 2">
+			<if test="serverName != null and serverName != ''">
+				and
+				CONCAT(
+				b.device_coding,
+				d.hotel_code,
+				"S",
+				b.department_id,
+				c.code
+				)
+				like concat(concat('%',#{serverName}),'%')
+			</if>
+		</if>
+		GROUP BY
+		a.server_side_id,
+		a.client_id
+		<choose>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			order by a.id desc
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="CommunicationRecordInfo">
+		SELECT
+			<include refid="communicationRecordInfoColumns"/>
+		FROM communication_record_info a
+		<include refid="communicationRecordInfoJoins"/>
+		<where>
+
+		</where>
+		<choose>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			order by a.id desc
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO communication_record_info(
+						  type,
+						server_side_id,
+						client_id,
+						status,
+						create_date,
+						talk_time
+		) VALUES (
+								#{type},
+						#{serverSideId},
+						#{clientId},
+						#{status},
+						#{createDate},
+						#{talkTime}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE communication_record_info
+		<set>
+			<if test="type != null">
+				type = #{type},
+			</if>
+			<if test="serverSideId != null">
+				server_side_id = #{serverSideId},
+			</if>
+			<if test="clientId != null">
+				client_id = #{clientId},
+			</if>
+			<if test="status != null">
+				status = #{status},
+			</if>
+			<if test="createDate != null and createDate != ''">
+				create_date = #{createDate},
+			</if>
+			<if test="talkTime != null and talkTime != ''">
+				talk_time = #{talkTime},
+			</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		DELETE FROM communication_record_info
+		WHERE id = #{id}
+	</update>
+
+
+	<select id="communicationRecordInfoList" resultType="CommunicationRecordInfo">
+			SELECT
+		    a.id,
+			a.server_side_id AS serverSideId,
+			a.client_id AS clientId,
+			a.type,
+			<if test="type == 1">
+				CONCAT(
+				IF(a.status = 1,"呼入","呼出")," ",
+				c.device_coding,
+				d.hotel_code,
+				"C",
+				c.code
+				) AS codeName,
+				a.create_date as createDate,
+				a.talk_time as talkTime
+			</if>
+			<if test="type == 2">
+				CONCAT(
+				IF(a.status = 1,"呼入","呼出")," ",
+				b.device_coding,
+				d.hotel_code,
+				"S",
+				b.department_id,
+				c.code
+				) AS codeName,
+				a.create_date as createDate,
+				a.talk_time as talkTime
+			</if>
+
+		FROM
+			communication_record_info AS a
+		LEFT JOIN ly_hotel_device_relation AS b ON a.server_side_id = b.id
+		LEFT JOIN ly_hotel_device_relation AS c ON a.client_id = c.id
+		LEFT JOIN hotel_unique_code AS d ON d.id = a.hotel_code_id
+		WHERE
+		<if test="id != null and idList == null">
+			a.id = #{id}
+		</if>
+		<if test="id == null and idList == null">
+			a.type = #{type}
+			AND a.hotel_code_id = #{hotelCodeId}
+			AND	a.server_side_id  = #{serverSideId}
+			and a.client_id  = #{clientId}
+		</if>
+
+		<if test="idList != null ">
+			a.id in
+			(
+			<foreach collection="stringList" item="item" index="index" open="" close="" separator=",">
+				#{item}
+			</foreach>
+			)
+		</if>
+
+		<choose>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			order by a.id desc
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="exportList" resultType="CommunicationRecordInfo">
+			SELECT
+					a.id,
+					a.server_side_id AS serverSideId,
+					a.client_id AS clientId,
+					a.type,
+					<if test="type == 1">
+						CONCAT(
+						IF(a.status = 1,"呼入","呼出")," ",
+						c.device_coding,
+						d.hotel_code,
+						"C",
+						c.code
+						) AS callRecord,
+						a.create_date as createDate,
+						a.talk_time as talkTime,
+						CONCAT(
+						c.device_coding,
+						d.hotel_code,
+						"C",
+						c.code
+						) as codeName
+					</if>
+					<if test="type == 2">
+						CONCAT(
+						IF(a.status = 1,"呼入","呼出")," ",
+						b.device_coding,
+						d.hotel_code,
+						"S",
+						b.department_id,
+						c.code
+						) AS callRecord,
+						a.create_date as createDate,
+						a.talk_time as talkTime,
+						CONCAT(
+						b.device_coding,
+						d.hotel_code,
+						"S",
+						b.department_id,
+						c.code
+						) as codeName
+					</if>
+				FROM
+					communication_record_info AS a
+				LEFT JOIN ly_hotel_device_relation AS b ON a.server_side_id = b.id
+				LEFT JOIN ly_hotel_device_relation AS c ON a.client_id = c.id
+				LEFT JOIN hotel_unique_code AS d ON d.id = a.hotel_code_id
+				WHERE
+					a.type = #{type}
+					AND a.hotel_code_id = #{hotelCodeId}
+					AND	a.server_side_id  in
+					(
+					<foreach collection="serverSideIdStr" item="item" index="index" open="" close="" separator=",">
+						#{item}
+					</foreach>
+					)
+					and a.client_id  in
+					(
+					<foreach collection="clientIdStr" item="item" index="index" open="" close="" separator=",">
+						#{item}
+					</foreach>
+					)
+					order by a.id desc
+	</select>
+
+	<insert id="insertRecord">
+		INSERT INTO `communication_record_info` (
+			`type`,
+			`server_side_id`,
+			`client_id`,
+			`status`,
+			`create_date`,
+			`talk_time`,
+			`hotel_code_id`
+		)
+		VALUES
+			(
+				#{type},
+				(select id from client_bianma_info where unique_id = (select id from unique_encoding where unique_encoding = #{serverName})),
+				(select id from client_bianma_info where unique_id = (select id from unique_encoding where unique_encoding = #{clientName})),
+				#{status},
+				#{createDate},
+				#{talkTime},
+				#{hotelCodeId}
+			);
+	</insert>
+</mapper>

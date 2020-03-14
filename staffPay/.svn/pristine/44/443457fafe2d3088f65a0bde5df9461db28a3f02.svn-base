@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>广告管理管理</title>
+
+    <head th:include="init :: init"></head>
+    <head th:include="init_bootstrap_table :: bootstrap_table"></head>
+
+    <script type="text/javascript">
+        $(function () {
+            $('#table').bootstrapTable({
+                undefinedText: '',//defined的默认显示文本
+                striped: true,//条纹
+                method: 'get',
+                url: '[[${ctx}]]/adviertisement/adviertisementType/checkRecord',
+                pagination: true,//显示分页
+                sidePagination: 'server',//定义分页为服务器端分页
+                pageNumber: 1,//起始页数
+                pageSize: 20,//默认显示行数
+                pageList: [20, 50, 100, 200],//可选分页数
+                singleSelect: false,//多选
+                //toolbar : '#toolbar',
+                height: 'auto',
+                columns: [{
+                    field: 'updateTime',
+                    title: '审核日期',
+                    halign: 'center',
+                    align: 'center'
+                },
+                    {
+                        field: 'putInTime',
+                        title: '播放日期',
+                        halign: 'center',
+                        align: 'center',
+                        formatter:function (value,row,index) {
+                          return   value;
+                        }
+                    },{
+                        field: 'advertisingOrderId',
+                        title: '订单号',
+                        halign: 'center',
+                        align: 'center'
+                    }, {
+                        field: 'advertisementMark',
+                        title: '广告号',
+                        halign: 'center',
+                        align: 'center'
+                    }, {
+                        field: 'advertisingContent',
+                        title: '广告预览',
+                        halign: 'center',
+                        align: 'center',
+                        formatter: function (value, row, index) {
+                            if (value != null && value != '') {
+                                var extenstion = value.substring(value.lastIndexOf(".")).toLowerCase();
+                                if (extenstion == ".jpg" || extenstion == ".jpeg" || extenstion == ".bmp" || extenstion == ".png") {
+                                    //上传文件是图片
+                                    html = '<img src="' + value + '" style="width: 100px;height: 50px;cursor: pointer" id="img">';
+                                } else if (extenstion == ".rm" || extenstion == ".rmvb" || extenstion == ".mov" || extenstion == ".mtv" || extenstion == ".avi" || extenstion == ".3gp" || extenstion == ".amv" || extenstion == ".dmv" || extenstion == ".flv" || extenstion == ".mp4") {
+                                    //上传文件是视频
+                                    html = '<video  controls="controls" src="' + value + '"  style="max-width: 200px;max-height: 200px;">';
+                                }
+                                return html;
+                            }
+                        }
+                    },{
+                        field:'objectionContent',
+                        title: '广告异议类别',
+                        halign: 'center',
+                        align: 'center'
+                    }, {
+                        field: 'advertisingUrl',
+                        title: '跳转链接',
+                        halign: 'center',
+                        align: 'center'
+                    }, {
+                        field:'objectionUrl',
+                        title: '链接异议类别',
+                        halign: 'center',
+                        align: 'center'
+                    }, {
+                        field: 'advertisingOrderState',
+                        title: '审核结果',
+                        halign: 'center',
+                        align: 'center',
+                        formatter: function (value, row, index) {
+                            if (value == 1) {
+                                return "通过审核"
+                            } else {
+                                return '<p style="color: red">未通过</p>';
+                            }
+                        }
+                    }],
+                onLoadSuccess: function (data) {
+                    if (data.total == 0) {
+                        $('#table').bootstrapTable('removeAll');
+                    }
+                }
+            });
+        });
+
+        //查询
+        function search() {
+            var param = $('#searchForm').serialize();
+            $('#table').bootstrapTable('refresh', {url: '[[${ctx}]]/adviertisement/adviertisementType/checkRecord?' + param});
+        }
+    </script>
+</head>
+<body layadmin-themealias="default">
+<div class="layui-fluid animated fadeInRight">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+            <div class="layui-form-item form-head">
+                <form id="searchForm" class="layui-form">
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <input type="text" name="startTime" id="date" placeholder="请选择开始日期" autocomplete="off"
+                                   class="layui-input" lay-date="date" lay-format="yyyy-MM-dd">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <input type="text" name="endTime" id="date2" placeholder="请选择结束日期" autocomplete="off"
+                                   class="layui-input" lay-date="date" lay-format="yyyy-MM-dd">
+
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <input name="advertisementMark" class="layui-input digits" placeholder="广告号"
+                                   autocomplete="off" type="text" maxlength="255">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <select name="advertisingUploadState" data-placeholder="审核结果"
+                                    class="chosen-select form-control layui-input">
+                                <option value="">全部</option>
+                                <option value="1">通过</option>
+                                <option value="2">未通过</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <button class="btn btn-primary " type="button" onclick="search()"><i class="fa fa-search"></i>&nbsp;搜索
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <table id="table">
+
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,60 @@
+package com.chunqiu.mrjuly.modules.foregroundConfiguration.model;
+
+import com.chunqiu.mrjuly.common.persistence.DataEntity;
+
+/**
+ * 前台配置Entity
+ * @author chen
+ * @version 2019-03-15
+ */
+public class ReceptionInfo extends DataEntity<ReceptionInfo, Integer> {
+
+	private static final long serialVersionUID = 1L;
+	private Integer identity;//身份类型 1.广告公司 2.酒店业主 3.周边服务供应商 4.应用软件公司 5.广告大客户
+	private String name;//姓名
+	private String telephone;//联系电话
+	private String mailBox;//电子邮箱
+
+	private String video;//视频
+
+
+	public String getVideo() {
+		return video;
+	}
+
+	public void setVideo(String video) {
+		this.video = video;
+	}
+
+	public Integer getIdentity() {
+		return identity;
+	}
+
+	public void setIdentity(Integer identity) {
+		this.identity = identity;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getTelephone() {
+		return telephone;
+	}
+
+	public void setTelephone(String telephone) {
+		this.telephone = telephone;
+	}
+
+	public String getMailBox() {
+		return mailBox;
+	}
+
+	public void setMailBox(String mailBox) {
+		this.mailBox = mailBox;
+	}
+}

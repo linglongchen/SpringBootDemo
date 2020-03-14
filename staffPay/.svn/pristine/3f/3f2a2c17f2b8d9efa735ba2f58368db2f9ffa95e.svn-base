@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <title>公告管理</title>
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="0">
+
+    <head th:include="init :: init"></head>
+    <!--<script src="http://libs.baidu.com/jquery/1.10.2/jquery.min.js"></script>-->
+
+    <script type="text/javascript">
+        //提交表单
+        function validForm(){
+            $('#signupForm').validate({
+                submitHandler:function(form){
+                    loading();
+                    form.action = '[[${ctx}]]/platform/notice/save';
+                    form.submit();
+                }
+            });
+            $('#signupForm').submit();
+        }
+
+        //触发事件
+        layui.use(['form'], function(){
+            var form = layui.form;
+            form.on('radio(formDemo)', function(value) {
+                document.getElementById("dt").style.display = "block";
+
+            });
+            form.on('radio(formDemo1)', function(value) {
+                document.getElementById("dt").style.display = "none";
+            });
+
+        });
+
+        function demo() {
+            showMsgSuccess('进入预览');
+            document.getElementById("noticeTitle").disabled = true;
+            document.getElementById("noticeContent").disabled = true;
+            document.getElementById("createDate").disabled = true;
+            document.getElementById("noticeRoll1").disabled = true;
+            document.getElementById("noticeRoll2").disabled = true;
+            document.getElementById("noticeForm1").disabled = true;
+            document.getElementById("noticeForm2").disabled = true;
+        }
+    </script>
+
+</head>
+<body class="gray-bg">
+<div class="wrapper animated fadeInRight">
+    <div class="ibox-content">
+        <div class="row">
+            <form id="signupForm" class="layui-form form-horizontal m-t" action="">
+                <input type="hidden" name="id" th:value="${localNotice.id}">
+                <div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+                    <label class="col-xs-3 layui-form-label">标题</label>
+                    <div class="col-xs-6">
+                        <input type="text" id="noticeTitle" name="noticeTitle" th:value="${localNotice.noticeTitle}" autocomplete="off" placeholder="请输入标题" required class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+                    <label class="col-xs-3 layui-form-label">内容</label>
+                    <div class="col-xs-6">
+                        <textarea id="noticeContent" name="noticeContent" th:text="${localNotice.noticeContent}" placeholder="请输入内容" required class="layui-textarea"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+                    <label class="col-xs-3 layui-form-label">首页滚动</label>
+                    <div class="col-lg-5 col-xs-6">
+                        <!--
+                            cradio 的 required 表示必须选中一个
+                        -->
+                        <input type="radio" id="noticeRoll1" name="noticeRoll" value="1"  th:field="${localNotice.noticeRoll}" title="是" checked="" required>
+                        <input type="radio" id="noticeRoll2" name="noticeRoll" value="2" th:field="${localNotice.noticeRoll}" title="否" required>
+                    </div>
+                </div>
+                <div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+                    <label class="col-xs-3 layui-form-label">发布形式</label>
+                    <div class="col-lg-5 col-xs-6">
+                        <!--
+                            cradio 的 required 表示必须选中一个
+                        -->
+                        <input type="radio" id="noticeForm1" name="noticeForm" lay-filter="formDemo1" value="1" title="即时发布"  checked="" required>
+                        <input type="radio" id="noticeForm2" name="noticeForm" lay-filter="formDemo" value="2" title="定时发布" >
+                        <div class="layui-inline" id="dt" style="margin-top: 2rem;display: none">
+                            <label class="layui-form-label" style="margin-left: -9rem;width: 13rem;">选择发布时间日期：</label>
+                            <div class="layui-input-inline">
+                                <!--
+                                    日期下拉选择框，其中lay-date的取值范围是date和datetime，如果有其他需要可以参考官网后修改代码
+                                    lay-formatt表示显示的时间格式，当lay-date为date时，默认为yyyy-MM-dd，当lay-date为datetime时，默认为yyyy-MM-dd HH:mm:ss
+                                    注意：使用该空间需要包含id属性
+                                -->
+                                <input type="date" name="scheduledReleaseTime" id="scheduledReleaseTime" placeholder="请选择日期" th:value="${#dates.
+                            format(localNotice.scheduledReleaseTime, 'yyyy-MM-dd')}" autocomplete="off" class="layui-input" lay-date="date" lay-format="yyyy-MM-dd" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <input id="preview" style="display: none" th:onclick="'demo()'" class="btn btn-primary " type="button" value="预览">
+                </div>
+            </form>
+        </div>
+        <div id="previewbox" style="display:none;background-color:#ddd;height:300px;"></div>
+    </div>
+</div>
+</body>
+</html>

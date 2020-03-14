@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chunqiu.mrjuly.modules.advertisingorderday.dao.AdvertisingOrderDayDao">
+    
+	<sql id="advertisingOrderDayColumns">
+		a.id AS "id",
+		a.transactionodersn AS "transactionodersn",
+		a.ordernumber AS "ordernumber",
+		a.create_date AS "createDate",
+		a.put_in_time AS "putInTime",
+		a.payment_date AS "paymentDate",
+		a.create_by AS "createBy.id",
+		a.type AS "type",
+		a.hotel_code_id AS "hotelCodeId",
+		a.delivery_type AS "deliveryType",
+		a.delivery_type_starting_price AS "deliveryTypeStartingPrice",
+		a.quantity_delivered AS "quantityDelivered",
+		a.auction_amount AS "auctionAmount",
+		a.coupon_id AS "couponId",
+		a.auction_status AS "auctionStatus",
+		a.pay_status AS "payStatus",
+		a.price_type AS "priceType",
+		a.price_type_price AS "priceTypePrice",
+		a.object_id AS "objectId",
+		a.upload_id AS "uploadId",
+		a.total_order_price AS "totalOrderPrice",
+		a.upload_count AS "uploadCount",
+		a.advertising_content AS "advertisingContent",
+		a.advertising_description AS "advertisingDescription",
+		a.advertising_url AS "advertisingUrl",
+		a.url_description AS "urlDescription",
+		a.advertisement_mark AS "advertisementMark",
+		a.state AS "state",
+		a.objection_content AS "objectionContent",
+		a.objection_url AS "objectionUrl",
+		a.type3_id AS "type3Id",
+		a.scrolling_number AS "scrollingNumber",
+		a.radar_number AS "radarNumber",
+		a.click_number AS "clickNumber",
+		a.advertise_info_master_id AS "advertiseInfoMasterId",
+		a.is_frame AS "isFrame",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="advertisingOrderDayJoins">
+	</sql>
+    
+	<select id="get" resultType="AdvertisingOrderDay">
+		SELECT 
+			<include refid="advertisingOrderDayColumns"/>
+		FROM advertising_order_day a
+		<include refid="advertisingOrderDayJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="AdvertisingOrderDay">
+		SELECT 
+			<include refid="advertisingOrderDayColumns"/>
+		FROM advertising_order_day a
+		<include refid="advertisingOrderDayJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="transactionodersn != null and transactionodersn != ''">
+				AND a.transactionodersn = #{transactionodersn}
+			</if>
+			<if test="ordernumber != null and ordernumber != ''">
+				AND a.ordernumber = #{ordernumber}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date = #{createDate}
+			</if>
+			<if test="putInTime != null and putInTime != ''">
+				AND a.put_in_time = #{putInTime}
+			</if>
+			<if test="paymentDate != null and paymentDate != ''">
+				AND a.payment_date = #{paymentDate}
+			</if>
+			<if test="createBy != null and createBy.id != null and createBy.id != ''">
+				AND a.create_by = #{createBy.id}
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="hotelCodeId != null and hotelCodeId != ''">
+				AND a.hotel_code_id = #{hotelCodeId}
+			</if>
+			<if test="deliveryType != null and deliveryType != ''">
+				AND a.delivery_type = #{deliveryType}
+			</if>
+			<if test="deliveryTypeStartingPrice != null and deliveryTypeStartingPrice != ''">
+				AND a.delivery_type_starting_price = #{deliveryTypeStartingPrice}
+			</if>
+			<if test="quantityDelivered != null and quantityDelivered != ''">
+				AND a.quantity_delivered = #{quantityDelivered}
+			</if>
+			<if test="auctionAmount != null and auctionAmount != ''">
+				AND a.auction_amount = #{auctionAmount}
+			</if>
+			<if test="couponId != null and couponId != ''">
+				AND a.coupon_id = #{couponId}
+			</if>
+			<if test="auctionStatus != null and auctionStatus != ''">
+				AND a.auction_status = #{auctionStatus}
+			</if>
+			<if test="payStatus != null and payStatus != ''">
+				AND a.pay_status = #{payStatus}
+			</if>
+			<if test="priceType != null and priceType != ''">
+				AND a.price_type = #{priceType}
+			</if>
+			<if test="priceTypePrice != null and priceTypePrice != ''">
+				AND a.price_type_price = #{priceTypePrice}
+			</if>
+			<if test="objectId != null and objectId != ''">
+				AND a.object_id = #{objectId}
+			</if>
+			<if test="uploadId != null and uploadId != ''">
+				AND a.upload_id = #{uploadId}
+			</if>
+			<if test="totalOrderPrice != null and totalOrderPrice != ''">
+				AND a.total_order_price = #{totalOrderPrice}
+			</if>
+			<if test="uploadCount != null and uploadCount != ''">
+				AND a.upload_count = #{uploadCount}
+			</if>
+			<if test="advertisingContent != null and advertisingContent != ''">
+				AND a.advertising_content = #{advertisingContent}
+			</if>
+			<if test="advertisingDescription != null and advertisingDescription != ''">
+				AND a.advertising_description = #{advertisingDescription}
+			</if>
+			<if test="advertisingUrl != null and advertisingUrl != ''">
+				AND a.advertising_url = #{advertisingUrl}
+			</if>
+			<if test="urlDescription != null and urlDescription != ''">
+				AND a.url_description = #{urlDescription}
+			</if>
+			<if test="advertisementMark != null and advertisementMark != ''">
+				AND a.advertisement_mark = #{advertisementMark}
+			</if>
+			<if test="state != null and state != ''">
+				AND a.state = #{state}
+			</if>
+			<if test="objectionContent != null and objectionContent != ''">
+				AND a.objection_content = #{objectionContent}
+			</if>
+			<if test="objectionUrl != null and objectionUrl != ''">
+				AND a.objection_url = #{objectionUrl}
+			</if>
+			<if test="type3Id != null and type3Id != ''">
+				AND a.type3_id = #{type3Id}
+			</if>
+			<if test="scrollingNumber != null and scrollingNumber != ''">
+				AND a.scrolling_number = #{scrollingNumber}
+			</if>
+			<if test="radarNumber != null and radarNumber != ''">
+				AND a.radar_number = #{radarNumber}
+			</if>
+			<if test="clickNumber != null and clickNumber != ''">
+				AND a.click_number = #{clickNumber}
+			</if>
+			<if test="advertiseInfoMasterId != null and advertiseInfoMasterId != ''">
+				AND a.advertise_info_master_id = #{advertiseInfoMasterId}
+			</if>
+			<if test="isFrame != null and isFrame != ''">
+				AND a.is_frame = #{isFrame}
+			</if>
+			<if test="delFlag != null and delFlag != ''">
+				AND a.del_flag = #{delFlag}
+			</if>
+		</where>
+		<choose>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AdvertisingOrderDay">
+		SELECT 
+			<include refid="advertisingOrderDayColumns"/>
+		FROM advertising_order_day a
+		<include refid="advertisingOrderDayJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO advertising_order_day(
+								transactionodersn,
+						ordernumber,
+						create_date,
+						put_in_time,
+						payment_date,
+						create_by,
+						type,
+						hotel_code_id,
+						delivery_type,
+						delivery_type_starting_price,
+						quantity_delivered,
+						auction_amount,
+						coupon_id,
+						auction_status,
+						pay_status,
+						price_type,
+						price_type_price,
+						object_id,
+						upload_id,
+						total_order_price,
+						upload_count,
+						advertising_content,
+						advertising_description,
+						advertising_url,
+						url_description,
+						advertisement_mark,
+						state,
+						objection_content,
+						objection_url,
+						type3_id,
+						scrolling_number,
+						radar_number,
+						click_number,
+						advertise_info_master_id,
+						is_frame,
+						del_flag
+		) VALUES (
+								#{transactionodersn},
+						#{ordernumber},
+						#{createDate},
+						#{putInTime},
+						#{paymentDate},
+						#{createBy.id},
+						#{type},
+						#{hotelCodeId},
+						#{deliveryType},
+						#{deliveryTypeStartingPrice},
+						#{quantityDelivered},
+						#{auctionAmount},
+						#{couponId},
+						#{auctionStatus},
+						#{payStatus},
+						#{priceType},
+						#{priceTypePrice},
+						#{objectId},
+						#{uploadId},
+						#{totalOrderPrice},
+						#{uploadCount},
+						#{advertisingContent},
+						#{advertisingDescription},
+						#{advertisingUrl},
+						#{urlDescription},
+						#{advertisementMark},
+						#{state},
+						#{objectionContent},
+						#{objectionUrl},
+						#{type3Id},
+						#{scrollingNumber},
+						#{radarNumber},
+						#{clickNumber},
+						#{advertiseInfoMasterId},
+						#{isFrame},
+						#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE advertising_order_day 
+		<set> 	
+			<if test="transactionodersn != null and transactionodersn != ''">
+				transactionodersn = #{transactionodersn},
+			</if>
+			<if test="ordernumber != null and ordernumber != ''">
+				ordernumber = #{ordernumber},
+			</if>
+			<if test="createDate != null and createDate != ''">
+				create_date = #{createDate},
+			</if>
+			<if test="putInTime != null and putInTime != ''">
+				put_in_time = #{putInTime},
+			</if>
+			<if test="paymentDate != null and paymentDate != ''">
+				payment_date = #{paymentDate},
+			</if>
+			<if test="createBy.id != null">
+				create_by = #{createBy.id},
+			</if>
+			<if test="type != null">
+				type = #{type},
+			</if>
+			<if test="hotelCodeId != null">
+				hotel_code_id = #{hotelCodeId},
+			</if>
+			<if test="deliveryType != null">
+				delivery_type = #{deliveryType},
+			</if>
+			<if test="deliveryTypeStartingPrice != null and deliveryTypeStartingPrice != ''">
+				delivery_type_starting_price = #{deliveryTypeStartingPrice},
+			</if>
+			<if test="quantityDelivered != null">
+				quantity_delivered = #{quantityDelivered},
+			</if>
+			<if test="auctionAmount != null and auctionAmount != ''">
+				auction_amount = #{auctionAmount},
+			</if>
+			<if test="couponId != null">
+				coupon_id = #{couponId},
+			</if>
+			<if test="auctionStatus != null">
+				auction_status = #{auctionStatus},
+			</if>
+			<if test="payStatus != null">
+				pay_status = #{payStatus},
+			</if>
+			<if test="priceType != null">
+				price_type = #{priceType},
+			</if>
+			<if test="priceTypePrice != null and priceTypePrice != ''">
+				price_type_price = #{priceTypePrice},
+			</if>
+			<if test="objectId != null">
+				object_id = #{objectId},
+			</if>
+			<if test="uploadId != null">
+				upload_id = #{uploadId},
+			</if>
+			<if test="totalOrderPrice != null and totalOrderPrice != ''">
+				total_order_price = #{totalOrderPrice},
+			</if>
+			<if test="uploadCount != null">
+				upload_count = #{uploadCount},
+			</if>
+			<if test="advertisingContent != null and advertisingContent != ''">
+				advertising_content = #{advertisingContent},
+			</if>
+			<if test="advertisingDescription != null and advertisingDescription != ''">
+				advertising_description = #{advertisingDescription},
+			</if>
+			<if test="advertisingUrl != null and advertisingUrl != ''">
+				advertising_url = #{advertisingUrl},
+			</if>
+			<if test="urlDescription != null and urlDescription != ''">
+				url_description = #{urlDescription},
+			</if>
+			<if test="advertisementMark != null and advertisementMark != ''">
+				advertisement_mark = #{advertisementMark},
+			</if>
+			<if test="state != null and state != ''">
+				state = #{state},
+			</if>
+			<if test="objectionContent != null and objectionContent != ''">
+				objection_content = #{objectionContent},
+			</if>
+			<if test="objectionUrl != null and objectionUrl != ''">
+				objection_url = #{objectionUrl},
+			</if>
+			<if test="type3Id != null">
+				type3_id = #{type3Id},
+			</if>
+			<if test="scrollingNumber != null">
+				scrolling_number = #{scrollingNumber},
+			</if>
+			<if test="radarNumber != null">
+				radar_number = #{radarNumber},
+			</if>
+			<if test="clickNumber != null">
+				click_number = #{clickNumber},
+			</if>
+			<if test="advertiseInfoMasterId != null">
+				advertise_info_master_id = #{advertiseInfoMasterId},
+			</if>
+			<if test="isFrame != null">
+				is_frame = #{isFrame},
+			</if>
+			<if test="delFlag != null and delFlag != ''">
+				del_flag = #{delFlag},
+			</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE advertising_order_day SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

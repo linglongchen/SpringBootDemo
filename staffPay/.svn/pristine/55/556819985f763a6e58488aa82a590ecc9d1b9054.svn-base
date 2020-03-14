@@ -1,0 +1,58 @@
+package com.chunqiu.mrjuly.modules.invoiceinfo.service;
+
+import com.chunqiu.mrjuly.common.persistence.CrudService;
+import com.chunqiu.mrjuly.common.vo.Grid;
+import com.chunqiu.mrjuly.common.vo.GridParam;
+import com.chunqiu.mrjuly.modules.accountrecharge.model.AccountRecharge;
+import com.chunqiu.mrjuly.modules.invoiceinfo.dao.InvoiceInfoDao;
+import com.chunqiu.mrjuly.modules.invoiceinfo.model.InvoiceInfo;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+
+/**
+ * 发票管理Service
+ * @author 周天
+ * @version 2019-03-15
+ */
+@Service
+public class InvoiceInfoService extends CrudService<InvoiceInfoDao, InvoiceInfo, Integer> {
+	@Resource
+	private InvoiceInfoDao dao;
+
+	/**
+	 * 更新发票号
+	 * @param invoiceInfo
+	 * @return
+	 */
+	public  int updateInvoiceNumber(InvoiceInfo invoiceInfo){
+		invoiceInfo.preUpdate();
+		return dao.updateInvoiceNumber(invoiceInfo);
+	}
+
+	/**
+	 * 在线商家/广告商财务管理
+	 * @param entity
+	 * @param param
+	 * @return
+	 */
+	public Grid accountRechargeList(AccountRecharge entity, GridParam param){
+		Grid grid = new Grid();
+		Page page = PageHelper.offsetPage(param.getOffset(), param.getLimit(), true);
+		dao.accountRechargelist(entity);
+		grid.setRows(page.getResult());
+		grid.setTotal(page.getTotal());
+		return grid;
+	}
+
+	/**
+	 * 更新审核状态
+	 * @param invoiceInfo
+	 * @return
+	 */
+	public int updateAudit(InvoiceInfo invoiceInfo){
+		return dao.updateAudit(invoiceInfo);
+	}
+}

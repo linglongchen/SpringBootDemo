@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>房源情况地图</title>
+    <head th:include="init :: init"></head>
+    <head th:include="init_bootstrap_table :: bootstrap_table"></head>
+</head>
+<body class="gray-bg">
+<div class="wrapper animated fadeInRight">
+    <div class="ibox-content">
+        <div class="row">
+            <div id="container" style="height: 900px"></div>
+            <script src="https://webapi.amap.com/maps?v=1.4.0&key=amapCN7SgLRMC&callback=init"></script>
+            <script>
+                function init(){
+                    var hotelLng = "[[${hotelInfo.hotelLng}]]";
+                    var hotelLat = "[[${hotelInfo.hotelLat}]]";
+                    var map = new AMap.Map('container', {
+                        center: [hotelLng, hotelLat],
+                        zoom: 6
+                    });
+                    map.plugin(["AMap.ToolBar"], function() {
+                        map.addControl(new AMap.ToolBar());
+                    });
+                    <!-- 上面是定位，下面是打上标记 -->
+                    var marker;
+                    var icon = new AMap.Icon({
+                        image: 'http://vdata.amap.com/icons/b18/1/2.png',
+                        size: new AMap.Size(24, 24)
+                    });
+                    marker = new AMap.Marker({
+                        offset: new AMap.Pixel(-12, -12),
+                        zIndex: 101,
+                        map: map
+                    });
+                }
+
+            </script>
+        </div>
+    </div>
+</div>
+</body>
+</html>

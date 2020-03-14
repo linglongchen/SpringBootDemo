@@ -1,0 +1,206 @@
+package com.chunqiu.mrjuly.modules.install.controller;
+
+import com.chunqiu.mrjuly.common.annotation.Log;
+import com.chunqiu.mrjuly.common.exception.ServiceException;
+import com.chunqiu.mrjuly.common.persistence.BaseController;
+import com.chunqiu.mrjuly.common.utils.UserUtils;
+import com.chunqiu.mrjuly.common.vo.Grid;
+import com.chunqiu.mrjuly.common.vo.GridParam;
+import com.chunqiu.mrjuly.common.vo.Json;
+import com.chunqiu.mrjuly.modules.install.model.FeedbackInfo;
+import com.chunqiu.mrjuly.modules.install.model.FeedbackType;
+import com.chunqiu.mrjuly.modules.install.service.FeedbackInfoService;
+import com.chunqiu.mrjuly.modules.install.service.FeedbackTypeService;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+
+@Slf4j
+@Controller
+@RequestMapping(value = "${adminPath}/install/feedback")
+public class FeedbackInfoController extends BaseController {
+    @Autowired
+    private FeedbackTypeService feedbackTypeService;
+    @Autowired
+    private FeedbackInfoService feedbackInfoService;
+
+    /**
+     * 登录反馈管理页面
+     *
+     * @return
+     */
+    @Log("登录反馈管理")
+    @RequestMapping("index")
+    @RequiresPermissions("install:feedback:view")
+    public String index() {
+        return "install/feedbackInfoList";
+    }
+
+    /**
+     * 初始化反馈管理列表信息
+     *
+     * @param feedbackInfo
+     * @param param
+     * @return
+     */
+    @Log("初始化反馈管理数据")
+    @ResponseBody
+    @RequestMapping("list")
+    @RequiresPermissions("install:feedback:view")
+    public Grid list(FeedbackInfo feedbackInfo, GridParam param){
+        return feedbackInfoService.findPage(feedbackInfo, param);
+    }
+
+    /**
+     * 查看反馈数据详情
+     *
+     * @param feedbackInfo
+     * @param model
+     * @return
+     */
+    @Log("查看详情")
+    @RequestMapping("form1")
+    @RequiresPermissions("install:feedback:view")
+    public String form(FeedbackInfo feedbackInfo, ModelMap model) {
+        feedbackInfo = feedbackInfoService.get(feedbackInfo.getId());
+        model.addAttribute("feedbackInfo",feedbackInfo);
+        if(feedbackInfo.getFeebackPlatform()==1){
+            model.addAttribute("feebackPlatform", "酒店服务系统后台");
+        }else if(feedbackInfo.getFeebackPlatform()==2){
+            model.addAttribute("feebackPlatform", "在线商家系统后台");
+        }else if(feedbackInfo.getFeebackPlatform()==3){
+            model.addAttribute("feebackPlatform", "广告管理系统后台");
+        }
+        return "install/feedbackInfoFrom";
+    }
+
+    /**
+     * 登录平台投诉类别设置
+     *
+     * @return
+     */
+    @Log("登录反馈管理")
+    @RequestMapping("index1")
+    @RequiresPermissions("install:feedback:view")
+    public String index1() {
+        return "install/feedbackTypeForm";
+    }
+
+    /**
+     * 初始化平台类别列表
+     *
+     * @param feedbackType
+     * @param param
+     * @return
+     */
+
+    @Log("初始化平台投诉类别设置")
+    @ResponseBody
+    @RequestMapping("list1")
+    @RequiresPermissions("install:feedback:view")
+    public Grid list1(FeedbackType feedbackType, GridParam param) {
+        return feedbackTypeService.findPage(feedbackType, param);
+    }
+
+    /**
+     * 新增平台投诉类别方法
+     *
+     * @param feedbackType
+     * @param model
+     * @return
+     */
+    @Log("新增类别")
+    @RequestMapping("saveType")
+    @RequiresPermissions("install:feedback:edit")
+    public String saveType(FeedbackType feedbackType, ModelMap model) {
+        try {
+            feedbackTypeService.save(feedbackType);
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (e instanceof ServiceException) {
+                model.addAttribute("error", "该类别已存在！");
+            } else {
+                model.addAttribute("error", "保存失败！");
+            }
+        }
+        return "install/feedbackTypeForm";
+    }
+
+    /**
+     * 删除类别的方法
+     *
+     * @param feedbackType
+     * @return
+     */
+    @Log("删除类别信息")
+    @RequestMapping("delType")
+    @ResponseBody
+    @RequiresPermissions("install:feedback:edit")
+    public Json delType(FeedbackType feedbackType) {
+        Json json = new Json();
+        try {
+            feedbackTypeService.delete(feedbackType);
+            json.setSuccess(true);
+        } catch (Exception e) {
+
+            json.setSuccess(false);
+            json.setMsg("删除失败！");
+        }
+        return json;
+    }
+
+    /**
+     * 用户投诉类别设置的页面
+     * @return
+     */
+    @Log("登录反馈管理")
+    @RequestMapping("index2")
+    @RequiresPermissions("install:feedback:view")
+    public String index2() {
+        return "mine/feedbackType";
+    }
+
+    /**
+     * 初始化用户投诉类别数据
+     * @param feedbackType
+     * @param param
+     * @return
+     */
+    @Log("初始化用户投诉类别设置")
+    @ResponseBody
+    @RequestMapping("list2")
+    @RequiresPermissions("install:feedback:view")
+    public Grid list2(FeedbackType feedbackType, GridParam param) {
+        feedbackType.setHotelCodeId(UserUtils.getUser().getHotelCodeId());
+        return feedbackTypeService.findPageList(feedbackType, param);
+    }
+
+    /**
+     * 新增用户投诉类别
+     * @param feedbackType
+     * @param model
+     * @return
+     */
+    @Log("新增类别")
+    @RequestMapping("save")
+    @RequiresPermissions("install:feedback:edit")
+    public String save(FeedbackType feedbackType, ModelMap model) {
+        try {
+            feedbackType.setHotelCodeId(UserUtils.getUser().getHotelCodeId());
+            feedbackTypeService.saveType(feedbackType);
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (e instanceof ServiceException) {
+                model.addAttribute("error", "该类别已存在！");
+            } else {
+                model.addAttribute("error", "保存失败！");
+            }
+        }
+        return "mine/feedbackType";
+    }
+}

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chunqiu.mrjuly.modules.shopinfo.dao.ShopRenovationInfoDao">
+
+	<sql id="shopRenovationInfoColumns">
+		a.id as "id",
+		a.shop_id as"shopId",
+		a.business_logo as "businessLogo",
+		a.business_message as "businessMessage",
+		a.business_location as "businessLocation",
+		a.business_link as "businessLink",
+		a.business_code as "businessCode",
+		a.business_notes as "businessNotes",
+		a.create_date as "createDate",
+		a.create_by as "createBy",
+		a.update_date as "updateDate",
+		a.update_by as "updateBy",
+		a.shop_lng as "shopLng",
+		a.shop_lat as "shopLat"
+	</sql>
+
+	<sql id="shopRenovationInfoJoins">
+	</sql>
+
+	<select id="get" resultType="ShopRenovationInfo">
+		SELECT
+			<include refid="shopRenovationInfoColumns"/>
+		FROM shop_renovation_info a
+		<include refid="shopRenovationInfoJoins"/>
+		WHERE  a.shop_id = #{shopId}
+	</select>
+
+
+
+
+
+	<insert id="insert">
+		INSERT INTO shop_renovation_info(
+		business_logo,
+		business_message,
+		business_location,
+		business_link,
+		business_code,
+		business_notes,
+		shop_lat,
+		shop_lng,
+		create_date,
+		create_by,
+		shop_id
+		) VALUES (
+		#{businessLogo},
+		#{businessMessage},
+		#{businessLocation},
+		#{businessLink},
+		#{businessCode},
+		#{businessNotes},
+		#{shopLat},
+		#{shopLng},
+		now(),
+		#{createBy.id},
+		#{shopId}
+		)
+	</insert>
+
+
+
+	<update id="update">
+		UPDATE shop_renovation_info
+		<set>
+			<if test="businessLogo != null and businessLogo != ''">
+				business_logo = #{businessLogo},
+			</if>
+			<if test="businessMessage != null and businessMessage != null">
+				business_message = #{businessMessage},
+			</if>
+			<if test="businessLocation != null and businessLocation !=null">
+				business_location = #{businessLocation},
+			</if>
+			<if test="businessLink != null and businessLink != ''">
+				business_link = #{businessLink},
+			</if>
+			<if test="businessCode != null and businessCode != ''">
+				business_code = #{businessCode},
+			</if>
+			<if test="businessNotes != null and businessNotes != ''">
+				business_notes = #{businessNotes},
+			</if>
+				update_date = #{updateDate},
+				update_by = #{updateBy.id},
+
+			<if test="shopLat != null and shopLat != ''">
+				shop_lat = #{shopLat},
+			</if>
+			<if test="shopLng != null and shopLng != ''">
+				shop_lng = #{shopLng},
+			</if>
+			<if test="shopId != null">
+				shop_id = #{shopId},
+			</if>
+		</set>
+		WHERE id =#{id}
+	</update>
+
+
+
+</mapper>

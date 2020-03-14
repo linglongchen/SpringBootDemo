@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chunqiu.mrjuly.modules.system.dao.RoleDao">
+    
+	<sql id="roleColumns">
+		a.id AS "id",
+		a.parent_id AS "parentId",
+		a.parent_ids AS "parentIds",
+		a.parent_idss AS "parentIdss",
+		a.name AS "name",
+		a.comment AS "comment",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="roleJoins">
+	</sql>
+    
+	<select id="get" resultType="Role">
+		SELECT 
+			<include refid="roleColumns"/>
+		FROM admin_role a
+		<include refid="roleJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findByUserId" resultType="Role">
+		select <include refid="roleColumns" />
+		from admin_role a left join admin_user_role b on a.id=b.role_id
+		where b.uid=#{userId}
+	</select>
+	
+	<select id="findList" resultType="Role">
+		SELECT 
+			<include refid="roleColumns"/>
+		FROM admin_role a
+		<include refid="roleJoins"/>
+		<where>
+			a.del_flag = 0
+			AND a.id != #{id}
+			AND a.parent_ids LIKE
+			<if test="dbName == 'oracle'">'%'||#{id}||'%'</if>
+			<if test="dbName == 'mssql'">'%'+#{id}+'%'</if>
+			<if test="dbName == 'mysql'">concat('%',#{id},'%')</if>
+
+			<if test="comment != null and comment != ''">
+				AND a.comment LIKE 
+					<if test="dbName == 'oracle'">'%'||#{comment}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{comment}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{comment},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Role">
+		SELECT 
+			<include refid="roleColumns"/>
+		FROM admin_role a
+		<include refid="roleJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="parentId != null">
+				AND a.parent_id =#{parentId}
+			</if>
+		</where>		
+		<choose>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<!-- 检测角色名是否重复 -->
+	<select id="checkRoleName" resultType="int">
+		select count(1) from admin_role a
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="name != null and name != ''">
+				and a.name = #{name}
+			</if>
+			<if test="id != null">
+				and id != #{id}
+			</if>
+		</where>
+	</select>
+	
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		INSERT INTO admin_role(
+			parent_id,
+			parent_ids,
+			parent_idss,
+			name,
+			comment,
+			del_flag
+		) VALUES (
+			#{parentId},
+			#{parentIds},
+			#{parentIdss},
+			#{name},
+			#{comment},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE admin_role 
+		<set> 	
+			<if test="parentId != null">
+				parent_id = #{parentId},
+			</if>
+			<if test="parentIds != null and parentIds != ''">
+				parent_ids = #{parentIds},
+			</if>
+			<if test="parentIdss != null and parentIdss != ''">
+				parent_idss = #{parentIdss},
+			</if>
+			<if test="name != null and name != ''">
+				name = #{name},
+			</if>
+			<if test="comment != null and comment != ''">
+				comment = #{comment},
+			</if>
+			<if test="delFlag != null and delFlag != ''">
+				del_flag = #{delFlag},
+			</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE admin_role SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<delete id="delRoleMenu">
+		DELETE FROM admin_role_menu WHERE role_id = #{roleId} and menu_id in (${delMenus})
+	</delete>
+
+	<insert id="addRoleMenu" parameterType="list">
+		INSERT INTO admin_role_menu(role_id, menu_id) values
+		<foreach collection="list" item="item" separator=","  index="index">
+			(#{item.roleId}, #{item.menuId})
+		</foreach>
+	</insert>
+
+	<insert id="insertRoleMenuList">
+		INSERT INTO admin_role_menu(role_id, menu_id) values
+			(#{roleId}, #{menuId})
+	</insert>
+
+	<select id="findRoleByParentIdss" resultType="Role">
+		SELECT
+			id
+		FROM admin_role a
+		<where>
+			a.del_flag = 0
+			<if test="id != null">
+				AND a.parent_idss LIKE
+				<if test="dbName == 'oracle'">'%'||#{id}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{id}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{id},'%')</if>
+			</if>
+		</where>
+	</select>
+</mapper>

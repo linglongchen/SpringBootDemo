@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>首页</title>
+
+    <head th:include="init :: init"></head>
+    <head th:include="init_bootstrap_table :: bootstrap_table"></head>
+    <script src="/js/echarts.js" th:src="@{/js/echarts.js}"></script>
+    <script src="/js/china.js" th:src="@{/js/china.js}"></script>
+    <script>
+        layui.use('element', function(){
+            var element = layui.element;
+        });
+
+
+        function demo1() {
+
+        }
+
+    </script>
+
+
+    <link rel="stylesheet" href="http://cache.amap.com/lbs/static/main1119.css"/>
+    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key=1f7fe4000404ec56ddd2b2fc723b7e1d"></script>
+    <script type="text/javascript" src="http://cache.amap.com/lbs/static/addToolbar.js"></script>
+
+
+    <style>
+        #container{width: 52%;height: 59%;overflow: hidden;margin:0;font-family:"微软雅黑";margin-left: 46%;margin-top: 180px;}
+
+        #lay{
+            border-bottom: 1px solid #D1D1D1;
+            border-right: 1px solid #D1D1D1;
+            border-left: 1px solid #D1D1D1;
+            border-top: 1px solid #D1D1D1;
+        }
+    </style>
+</head>
+<body layadmin-themealias="default">
+<div th:replace="head :: myfooter"></div>
+<div class="layui-fluid animated fadeInRight">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+          <div>
+              <div class="layui-tab">
+                  <ul class="layui-tab-title">
+                      <li class="layui-this">今日投放</li>
+                      <li>竞拍成功</li>
+                      <li>今日到期</li>
+                      <li>审核驳回</li>
+
+                  </ul>
+                  <div class="layui-tab-content">
+                      <div class="layui-tab-item layui-show">
+                          <table class="layui-table">
+                          <colgroup>
+                              <col width="150">
+                              <col width="200">
+                              <col>
+                          </colgroup>
+                          <thead>
+                          <tr>
+                              <th>订单数量</th>
+                              <th>投放屏数量</th>
+                              <th>图文</th>
+                              <th>视频</th>
+                              <th>覆盖酒店</th>
+                              <th>下单总价</th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                          <tr>
+                              <td th:text="${deliverySituation?.orderQuantity}"></td>
+                              <td th:text="${deliverySituation?.projectionNumber}"></td>
+                              <td th:text="${deliverySituation?.imageNumber}"></td>
+                              <td th:text="${deliverySituation?.VideoNumber}"></td>
+                              <td th:text="${deliverySituation?.hotelNumber}"></td>
+                              <td th:text="${deliverySituation?.price}"></td>
+                          </tr>
+
+                          </tbody>
+                      </table>
+                      </div>
+                      <div class="layui-tab-item">
+                          <table class="layui-table">
+                              <colgroup>
+                                  <col width="150">
+                                  <col width="200">
+                                  <col>
+                              </colgroup>
+                              <thead>
+                              <tr>
+                                  <th>订单数量</th>
+                                  <th>投放屏数量</th>
+                                  <th>图文</th>
+                                  <th>视频</th>
+                                  <th>覆盖酒店</th>
+                                  <th>下单总价</th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <tr>
+                                  <td th:text="${deliverySituation1?.orderQuantity}"></td>
+                                  <td th:text="${deliverySituation1?.projectionNumber}"></td>
+                                  <td th:text="${deliverySituation1?.imageNumber}"></td>
+                                  <td th:text="${deliverySituation1?.VideoNumber}"></td>
+                                  <td th:text="${deliverySituation1?.hotelNumber}"></td>
+                                  <td th:text="${deliverySituation1?.price}"></td>
+                              </tr>
+
+                              </tbody>
+                          </table>
+                      </div>
+                      <div class="layui-tab-item">
+                          <table class="layui-table">
+                              <colgroup>
+                                  <col width="150">
+                                  <col width="200">
+                                  <col>
+                              </colgroup>
+                              <thead>
+                              <tr>
+                                  <th>订单数量</th>
+                                  <th>投放屏数量</th>
+                                  <th>图文</th>
+                                  <th>视频</th>
+                                  <th>覆盖酒店</th>
+                                  <th>下单总价</th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <tr>
+                                  <td th:text="${deliverySituation2?.orderQuantity}"></td>
+                                  <td th:text="${deliverySituation2?.projectionNumber}"></td>
+                                  <td th:text="${deliverySituation2?.imageNumber}"></td>
+                                  <td th:text="${deliverySituation2?.VideoNumber}"></td>
+                                  <td th:text="${deliverySituation2?.hotelNumber}"></td>
+                                  <td th:text="${deliverySituation2?.price}"></td>
+                              </tr>
+
+                              </tbody>
+                          </table>
+                      </div>
+                      <div class="layui-tab-item">
+                          <table class="layui-table">
+                              <colgroup>
+                                  <col width="150">
+                                  <col width="200">
+                                  <col>
+                              </colgroup>
+                              <thead>
+                              <tr>
+                                  <th>订单数量</th>
+                                  <th>投放屏数量</th>
+                                  <th>图文</th>
+                                  <th>视频</th>
+                                  <th>覆盖酒店</th>
+                                  <th>下单总价</th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <tr>
+                                  <td th:text="${deliverySituation3?.orderQuantity}"></td>
+                                  <td th:text="${deliverySituation3?.projectionNumber}"></td>
+                                  <td th:text="${deliverySituation3?.imageNumber}"></td>
+                                  <td th:text="${deliverySituation3?.VideoNumber}"></td>
+                                  <td th:text="${deliverySituation3?.hotelNumber}"></td>
+                                  <td th:text="${deliverySituation3?.price}"></td>
+                              </tr>
+
+                              </tbody>
+                          </table>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+            <div>
+                <div>
+                    <div class="layui-form-item col-lg-6 col-sm-12 col-xs-12" style="    margin-top: -51px">
+                        <label class="col-xs-3 layui-form-label">选择订单号</label>
+                        <div class="col-xs-6">
+                            <select th:onchange="'demo1()'" id="id" name="id" data-placeholder="请选择提单状态" class="chosen-select form-control layui-input" required>
+                                <option></option>
+                                <option  th:each="list:${list }" th:value="${list.ordernumber }" th:text="${list.ordernumber }"></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="width:34%;height: 400px;margin-top: 65px;margin-left: 34px">
+                            <table class="layui-table" id="lay" lay-skin="nob">
+                                <tr>
+                                    <th>下单日期</th>
+                                    <td id="createDate"></td>
+                                </tr>
+                                <tr>
+                                    <th>广告类型</th>
+                                    <td id="deliveryType"></td>
+                                </tr>
+                                <tr>
+                                    <th>广告属性</th>
+                                    <td id="typeName"></td>
+                                </tr>
+                                <tr>
+                                    <th>投放时段</th>
+                                    <td id="time"></td>
+                                </tr>
+                                <tr>
+                                    <th>投放天数</th>
+                                    <td id="dayBetween"></td>
+                                </tr>
+                                <tr>
+                                    <th>投放数量</th>
+                                    <td id="quantityDelivered"></td>
+                                </tr>
+                                <tr>
+                                    <th>下单总价</th>
+                                    <td id="auctionAmount"></td>
+                                </tr>
+                                <tr>
+                                    <th>覆盖酒店</th>
+                                    <td id="hotelName"></td>
+                                </tr>
+                            </table>
+                    </div>
+                    <input type="hidden" id="hotelLng">
+                    <input type="hidden" id="hotelLat">
+                    <div id="container"></div>
+                    <script src="https://webapi.amap.com/maps?v=1.4.0&key=amapCN7SgLRMC&callback=init"></script>
+                    <script>
+                        function demo1(){
+                            var id =  $("#id").val();
+                            $.ajax({
+                                type: "post",
+                                url: '[[${ctx}]]/advertisingorder/advertising/select1',
+                                data: {"ordernumber":id},
+                                cache: false,
+                                async: false,
+                                dataType: "json",
+                                success: function (data) {
+                                    data = data.advertisingOrder;
+                                    if(data.deliveryType=="1"){
+                                        $('#deliveryType').text("图文");
+                                    }else if(data.deliveryType=="2"){
+                                        $('#deliveryType').text("视频");
+                                    }
+                                    $('#createDate').text(data.createDate);
+                                    $('#quantityDelivered').text(data.quantityDelivered);
+                                    $('#auctionAmount').text(data.auctionAmount);
+                                    $('#time').text(data.putInTime);
+                                    $('#dayBetween').text(data.sum);
+                                    $('#typeName').text(data.typeName);
+                                    $('#hotelName').text(data.hotelName);
+                                    $('#hotelLat').val(data.hotelLat);
+                                    $('#hotelLng').val(data.hotelLng);
+                                }
+                            });
+
+                            var map = new AMap.Map('container', {
+                                center: [$("#hotelLng").val(), $("#hotelLat").val()],
+                                zoom: 15
+                            });
+                            map.plugin(["AMap.ToolBar"], function() {
+                                map.addControl(new AMap.ToolBar());
+                            });
+
+                            <!-- 上面是定位，下面是打上标记 -->
+
+                            var marker;
+                            var icon = new AMap.Icon({
+                                image: 'http://vdata.amap.com/icons/b18/1/2.png',
+                                size: new AMap.Size(24, 24)
+                            });
+                            marker = new AMap.Marker({
+                                offset: new AMap.Pixel(-12, -12),
+                                zIndex: 101,
+                                map: map
+                            });
+                        }
+                    </script>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+</div>
+</body>
+<script type="text/javascript">
+</script>
+</html>

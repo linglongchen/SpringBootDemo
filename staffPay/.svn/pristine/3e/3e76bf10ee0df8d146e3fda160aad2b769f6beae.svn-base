@@ -1,0 +1,184 @@
+package com.chunqiu.mrjuly.modules.platform.controller;
+
+import cn.jpush.api.JPushClient;
+import cn.jpush.api.push.PushResult;
+import cn.jpush.api.push.model.Message;
+import cn.jpush.api.push.model.Options;
+import cn.jpush.api.push.model.Platform;
+import cn.jpush.api.push.model.PushPayload;
+import cn.jpush.api.push.model.audience.Audience;
+import cn.jpush.api.push.model.notification.AndroidNotification;
+import cn.jpush.api.push.model.notification.IosAlert;
+import cn.jpush.api.push.model.notification.IosNotification;
+import cn.jpush.api.push.model.notification.Notification;
+
+import java.util.List;
+
+/**
+ * @Description: 极光推送工具类
+ * @Date: 2018/1/18
+ * @Author: wcf
+ */
+public class JPushUtil {
+    protected static final String APP_KEY ="f68bc1056fb9931fceb03590";
+    protected static final String MASTER_SECRET = "2f4eb8b7fb01f3525d6a1261";
+    protected static final String ALIAS_PREFIX = "ZERO_";
+
+    private static JPushClient jpushClient = new JPushClient(MASTER_SECRET, APP_KEY);
+
+    //是否是生产环境，true:生产环境，false:测试环境
+    private static boolean isApnsProduction = true;
+
+    public static void main(String[] args) {
+        //buildPushObject_android_and_ios();
+    }
+
+
+     /**
+      * @description 对用户发送通知-单个
+      * @param
+      * @author wcf
+      * @date 2018/1/18
+      * @return
+      */
+    public static boolean sendNotify2(String unicode, String content){
+        try{
+            PushPayload pushPayload = buildPushObject_android_and_ios2(new String[]{ALIAS_PREFIX + unicode}, content);
+            PushResult pushResult = jpushClient.sendPush(pushPayload);
+            if(pushResult.getResponseCode() == 200){
+                return true;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+     /**
+      * @description 对用户发送通知-多个
+      * @param
+      * @author wcf
+      * @date 2018/1/18
+      * @return
+      */
+    public static void sendNotify(List<String> ids, String content){
+        try{
+            int size = (int)Math.ceil((double) ids.size() / 1000);
+            for(int i = 0; i < size; i++){
+                int aSize = 1000;
+                if(i == size - 1){
+                    aSize = ids.size() - (size - 1) * 1000;
+                }
+                String[] alias = new String[aSize];
+                for(int j = 0; j < aSize; j++){
+                    alias[j] = ALIAS_PREFIX + ids.get(i * 1000 + j);
+                }
+                PushPayload pushPayload = buildPushObject_android_and_ios2(alias, content);
+                jpushClient.sendPush(pushPayload);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+     public static PushPayload buildPushObject_android_and_ios2(String[] alias, String content) {
+         return PushPayload.newBuilder()
+                 .setPlatform(Platform.android_ios())
+                 .setAudience(Audience.alias(alias))
+                 .setMessage(Message.newBuilder()
+                         .setMsgContent(content)
+                         .build())
+                 //使用通知，不用消息
+//                 .setMessage(Notification.newBuilder()
+//                         .addPlatformNotification(AndroidNotification.newBuilder()   //android
+//                                 .setAlert(content)      //通知内容
+//                                 .build())
+//                         .build())
+                 .setOptions(Options.newBuilder()
+                         //此字段的值是用来指定本推送要推送的apns环境，false表示开发，true表示生产；对android和自定义消息无意义
+                         .setApnsProduction(isApnsProduction)
+                         //此字段是给开发者自己给推送编号，方便推送者分辨推送记录
+                         .setSendno(1)
+                         //此字段的值是用来指定本推送的离线保存时长，如果不传此字段则默认保存一天，最多指定保留十天；
+                         .setTimeToLive(86400)
+                         .build())
+                 .build();
+     }
+
+
+
+    /**
+      * @description 通过别名发送通知
+      * @param
+      * @author wcf
+      * @date 2018/1/18
+      * @return
+      */
+    public static PushPayload buildPushObject_android_and_ios(String[] alias, String title, String content) {
+        return PushPayload.newBuilder()
+                .setPlatform(Platform.android_ios())
+                .setAudience(Audience.alias(alias))
+                //使用通知，不用消息
+                .setNotification(Notification.newBuilder()
+                        .addPlatformNotification(AndroidNotification.newBuilder()   //android
+                                .setTitle(title)        //标题
+                                .setAlert(content)      //通知内容
+                                .build())
+                        .addPlatformNotification(IosNotification.newBuilder()       //ios
+                                .setAlert(title + " : " + content)      //通知内容
+                                .incrBadge(1)   //应用角标+1
+                                .setSound("sound.caf")
+                                .build())
+                        .build())
+                .setOptions(Options.newBuilder()
+                        //此字段的值是用来指定本推送要推送的apns环境，false表示开发，true表示生产；对android和自定义消息无意义
+                        .setApnsProduction(isApnsProduction)
+                        //此字段是给开发者自己给推送编号，方便推送者分辨推送记录
+                        .setSendno(1)
+                        //此字段的值是用来指定本推送的离线保存时长，如果不传此字段则默认保存一天，最多指定保留十天；
+                        .setTimeToLive(86400)
+                        .build())
+                .build();
+    }
+
+    /**
+     * @description 通过别名发送通知
+     * @param
+     * @author wcf
+     * @date 2018/1/18
+     * @return
+     */
+    public static PushPayload buildPushObject_android_and_ios(String[] alias, String title, String content, Integer type, Integer itemId) {
+
+        return PushPayload.newBuilder()
+                .setPlatform(Platform.android_ios())
+                .setAudience(Audience.alias(alias))
+                //使用通知，不用消息
+                .setNotification(Notification.newBuilder()
+                        //.setAlert(alert)
+                        .addPlatformNotification(AndroidNotification.newBuilder()   //android
+                                .setTitle(title)
+                                .setAlert(content)
+                                .addExtra("type", type)
+                                .addExtra("itemId", itemId)
+                                .build())
+                        .addPlatformNotification(IosNotification.newBuilder()       //ios
+                                .setAlert(IosAlert.newBuilder().setTitleAndBody(title, null, content).setLaunchImage("http://img5.duitang.com/uploads/item/201506/07/20150607110911_kY5cP.jpeg").build())
+                                .incrBadge(1)   //应用角标+1
+                                .setSound("sound.caf")
+                                .addExtra("type", type)
+                                .addExtra("itemId", itemId)
+                                .build())
+                        .build())
+                .setOptions(Options.newBuilder()
+                        //此字段的值是用来指定本推送要推送的apns环境，false表示开发，true表示生产；对android和自定义消息无意义
+                        .setApnsProduction(isApnsProduction)
+                        //此字段是给开发者自己给推送编号，方便推送者分辨推送记录
+                        .setSendno(1)
+                        //此字段的值是用来指定本推送的离线保存时长，如果不传此字段则默认保存一天，最多指定保留十天；
+                        .setTimeToLive(86400)
+                        .build())
+                .build();
+    }
+}

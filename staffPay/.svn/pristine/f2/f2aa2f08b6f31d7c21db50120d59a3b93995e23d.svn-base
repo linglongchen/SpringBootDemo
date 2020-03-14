@@ -1,0 +1,259 @@
+package com.chunqiu.mrjuly.modules.advertisingcart.model;
+
+import com.chunqiu.mrjuly.common.persistence.DataEntity;
+import org.hibernate.validator.constraints.Length;
+
+/**
+ * 广告购物车Entity
+ * @author 周天
+ * @version 2019-03-20
+ */
+public class AdvertisingCart extends DataEntity<AdvertisingCart, Integer> {
+
+	private static final long serialVersionUID = 1L;
+	private Integer hotelCodeId;		// 酒店前缀编码id
+	private String putInTime;		// 投放时间
+	private Integer deliveryType;		// 投放类型 1.图文 2.视频
+	private Integer quantityDelivered;		// 投放数量
+	private double auctionAmount;		// 竞拍金额
+	private Integer auctionStatus;		// 竞拍状态 1.竞拍失败 2.竞拍中 3.竞拍成功
+	private Integer payStatus;		// 支付状态 1.待结算 2.支付成功
+	private Integer participationStatus;		// 参与竞拍状态 1.未参与 2.已参与
+	private Integer priceType;		// 价格类型 1.当前价 2.一口价
+	private Integer type;		// 1.在线商家 2.广告商
+	private Integer objectId;		// 广告商id/在线商家id
+	private String hotelName;
+	private Integer uploadId;
+	private double deliveryTypeStartingPrice;
+	private double priceTypePrice;
+	private String startTime;
+	private String endTime;
+	private Float nowPrice;
+	private Float nowPrice2;
+	private String list;
+	private String priceTypePriceArray;
+	private String timeArray;
+	private String nowPriceArray;
+	private String nowPrice2Array;
+	private String priceTypeArray;
+	private String date;
+
+
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
+	}
+
+	public String getPriceTypePriceArray() {
+		return priceTypePriceArray;
+	}
+
+	public void setPriceTypePriceArray(String priceTypePriceArray) {
+		this.priceTypePriceArray = priceTypePriceArray;
+	}
+
+	public String getTimeArray() {
+		return timeArray;
+	}
+
+	public void setTimeArray(String timeArray) {
+		this.timeArray = timeArray;
+	}
+
+	public String getNowPriceArray() {
+		return nowPriceArray;
+	}
+
+	public void setNowPriceArray(String nowPriceArray) {
+		this.nowPriceArray = nowPriceArray;
+	}
+
+	public String getNowPrice2Array() {
+		return nowPrice2Array;
+	}
+
+	public void setNowPrice2Array(String nowPrice2Array) {
+		this.nowPrice2Array = nowPrice2Array;
+	}
+
+	public String getPriceTypeArray() {
+		return priceTypeArray;
+	}
+
+	public void setPriceTypeArray(String priceTypeArray) {
+		this.priceTypeArray = priceTypeArray;
+	}
+
+	public Float getNowPrice() {
+		return nowPrice;
+	}
+
+	public void setNowPrice(Float nowPrice) {
+		this.nowPrice = nowPrice;
+	}
+
+	public Float getNowPrice2() {
+		return nowPrice2;
+	}
+
+	public void setNowPrice2(Float nowPrice2) {
+		this.nowPrice2 = nowPrice2;
+	}
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+
+	public String getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+
+	public Integer getUploadId() {
+		return uploadId;
+	}
+
+	public void setUploadId(Integer uploadId) {
+		this.uploadId = uploadId;
+	}
+
+	public String getList() {
+		return list;
+	}
+
+	public void setList(String list) {
+		this.list = list;
+	}
+
+	public double getDeliveryTypeStartingPrice() {
+		return deliveryTypeStartingPrice;
+	}
+
+	public void setDeliveryTypeStartingPrice(double deliveryTypeStartingPrice) {
+		this.deliveryTypeStartingPrice = deliveryTypeStartingPrice;
+	}
+
+	public double getPriceTypePrice() {
+		return priceTypePrice;
+	}
+
+	public void setPriceTypePrice(double priceTypePrice) {
+		this.priceTypePrice = priceTypePrice;
+	}
+
+	public String getHotelName() {
+		return hotelName;
+	}
+
+	public void setHotelName(String hotelName) {
+		this.hotelName = hotelName;
+	}
+
+	public AdvertisingCart() {
+		super();
+	}
+
+	public AdvertisingCart(Integer id){
+		super(id);
+	}
+
+	public Integer getHotelCodeId() {
+		return hotelCodeId;
+	}
+
+	public void setHotelCodeId(Integer hotelCodeId) {
+		this.hotelCodeId = hotelCodeId;
+	}
+
+	@Length(min=0, max=20, message="投放时间长度必须介于 0 和 20 之间")
+	public String getPutInTime() {
+		return putInTime;
+	}
+
+	public void setPutInTime(String putInTime) {
+		this.putInTime = putInTime;
+	}
+
+	public Integer getDeliveryType() {
+		return deliveryType;
+	}
+
+	public void setDeliveryType(Integer deliveryType) {
+		this.deliveryType = deliveryType;
+	}
+
+	public Integer getQuantityDelivered() {
+		return quantityDelivered;
+	}
+
+	public void setQuantityDelivered(Integer quantityDelivered) {
+		this.quantityDelivered = quantityDelivered;
+	}
+
+	public double getAuctionAmount() {
+		return auctionAmount;
+	}
+
+	public void setAuctionAmount(double auctionAmount) {
+		this.auctionAmount = auctionAmount;
+	}
+
+	public Integer getAuctionStatus() {
+		return auctionStatus;
+	}
+
+	public void setAuctionStatus(Integer auctionStatus) {
+		this.auctionStatus = auctionStatus;
+	}
+
+	public Integer getPayStatus() {
+		return payStatus;
+	}
+
+	public void setPayStatus(Integer payStatus) {
+		this.payStatus = payStatus;
+	}
+
+	public Integer getParticipationStatus() {
+		return participationStatus;
+	}
+
+	public void setParticipationStatus(Integer participationStatus) {
+		this.participationStatus = participationStatus;
+	}
+
+	public Integer getPriceType() {
+		return priceType;
+	}
+
+	public void setPriceType(Integer priceType) {
+		this.priceType = priceType;
+	}
+
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
+	}
+
+	public Integer getObjectId() {
+		return objectId;
+	}
+
+	public void setObjectId(Integer objectId) {
+		this.objectId = objectId;
+	}
+
+}

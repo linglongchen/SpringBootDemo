@@ -1,0 +1,70 @@
+package com.chunqiu.mrjuly.modules.communicationrecordinfo.service;
+
+import com.chunqiu.mrjuly.common.persistence.CrudService;
+import com.chunqiu.mrjuly.common.vo.Grid;
+import com.chunqiu.mrjuly.common.vo.GridParam;
+import com.chunqiu.mrjuly.modules.communicationrecordinfo.dao.CommunicationRecordInfoDao;
+import com.chunqiu.mrjuly.modules.communicationrecordinfo.model.CommunicationRecordInfo;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.List;
+
+/**
+ * 通讯记录Service
+ * @author 周天
+ * @version 2019-03-13
+ */
+@Service
+public class CommunicationRecordInfoService extends CrudService<CommunicationRecordInfoDao, CommunicationRecordInfo, Integer> {
+	@Resource
+	private CommunicationRecordInfoDao dao;
+
+
+	/**
+	 * 获取通讯记录列表详情数据
+	 * @param communicationRecordInfo
+	 * @param param
+	 * @return
+	 */
+	public Grid communicationRecordInfoList(CommunicationRecordInfo communicationRecordInfo, GridParam param){
+		Grid grid = new Grid();
+		Page page = PageHelper.offsetPage(param.getOffset(), param.getLimit(), true);
+		dao.communicationRecordInfoList(communicationRecordInfo);
+		grid.setRows(page.getResult());
+		grid.setTotal(page.getTotal());
+		return grid;
+	}
+
+	/**
+	 *
+	 * 查询所有通讯记录
+	 * @param communicationRecordInfo
+	 * @return
+	 */
+
+	public List<CommunicationRecordInfo> communicationRecordInfos(CommunicationRecordInfo communicationRecordInfo){
+		return dao.communicationRecordInfoList(communicationRecordInfo);
+	}
+
+
+	/**
+	 * 导出单条数据
+	 * @param communicationRecordInfo
+	 * @return
+	 */
+	public  List<CommunicationRecordInfo>exportList(CommunicationRecordInfo communicationRecordInfo){
+		return dao.exportList(communicationRecordInfo);
+	}
+
+	/**
+	 * 新增通讯记录
+	 * @param communicationRecordInfo
+	 * @return
+	 */
+	public  int insertRecord(CommunicationRecordInfo communicationRecordInfo){
+		return dao.insertRecord(communicationRecordInfo);
+	}
+}

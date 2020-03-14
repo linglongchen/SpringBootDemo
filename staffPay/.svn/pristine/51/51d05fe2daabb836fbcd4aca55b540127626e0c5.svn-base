@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>账号充值管理</title>
+
+	<head th:include="init :: init"></head>
+
+	<script type="text/javascript">
+
+		$(function () {
+			uploadImg1();
+		})
+
+		//提交表单
+		function validForm(){
+			$('#signupForm').validate({
+		        submitHandler:function(form){
+		            loading();
+		            form.action = '[[${ctx}]]/accountrecharge/accountRecharge/saveAccountRecharge';
+					form.submit();
+		        }
+			});
+		    $('#signupForm').submit();
+		}
+
+		function btn2From(){
+				if ($('input[name="voucher"]').val()!=""){
+					$.post('[[${ctx}]]/upload/deleteFile', {
+						file:$('input[name="voucher"]').val()
+					}, function (result) {
+					});
+				}
+		}
+
+		function cancelFrom(){
+				if ($('input[name="voucher"]').val()!=""){
+					$.post('[[${ctx}]]/upload/deleteFile', {
+						file: $('input[name="voucher"]').val()
+					}, function (result) {
+					});
+				}
+		}
+
+		//加载layui的upload模块，（图片上传）
+		function uploadImg1() {
+			layui.use(['upload'],function () {
+				var upload = layui.upload;
+				$('form img[lay-imgs]').each(function () {
+					var _this = this;
+					var _click = $(_this).attr('lay-imgs');
+					if(_click != null && _click != undefined && _click != ''){
+						var $id = $(_this).attr('id'), $name = _click;
+						//普通图片上传
+						upload.render({
+							elem: '#' + $id
+							,url: '[[${ctx}]]/upload/ossUploadImg'
+							,accept: 'images'
+							,done: function(res){
+								var headUrl = $('input[name="' + $id + '"]').val();
+								if (headUrl != ""){
+									$.post('[[${ctx}]]/upload/deleteFile', {
+										file: headUrl
+									}, function (result) {
+									});
+								}
+								//如果上传失败
+								if(res.success){
+									$('#' + $id).attr('src', res.data[0]);
+									$('input[name="' + $name + '"]').val(res.data[1]);
+								}else{
+									showMsgWarn(res.msg);
+								}
+							}
+						});
+					}
+				});
+			});
+		}
+	</script>
+
+	<style>
+		.class-bank{
+			padding-top: 6px;
+			height: 167px;
+			border: 1px solid whitesmoke;
+			background-color: whitesmoke;
+		}
+
+		.p-name{
+			margin-left: 20px;
+		}
+	</style>
+</head>
+<body class="gray-bg">
+	<div class="wrapper animated fadeInRight">
+    	<div class="ibox-content">
+    		<div class="row">
+				<div class="class-bank">
+					<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">收款人：</label>
+						<div class="col-xs-6">
+							<input  class="layui-input"  th:value="${bankInfo?.name}" disabled autocomplete="off" type="text" >
+						</div>
+					</div>
+					<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">银行卡号：</label>
+						<div class="col-xs-6">
+							<input  class="layui-input"  th:value="${bankInfo?.bankNumber}"  disabled autocomplete="off" type="text" >
+						</div>
+					</div>
+					<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">所属银行：</label>
+						<div class="col-xs-6">
+							<input  class="layui-input" th:value="${bankInfo?.bankName}"  disabled autocomplete="off" type="text" >
+						</div>
+					</div>
+				</div>
+
+    			<form id="signupForm" class="layui-form form-horizontal m-t">
+					<input type="hidden" name="type"  th:value="${accountRecharge?.type}">
+					<input type="hidden" id="payeeId" name="payeeId" th:value="${bankInfo?.bId}">
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">汇款金额：</label>
+				        <div class="col-xs-6">
+    						<input name="amount"required class="layui-input" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.]/g,'')"   placeholder="请输入汇款金额" autocomplete="off" type="text" >
+    					</div>
+				    </div>
+					<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">选择银行：</label>
+						<div class="col-xs-6">
+							<select id="statusLabel" required name="bankId" data-placeholder="请选择银行" class="chosen-select-deselect form-control layui-input">
+								<option></option>
+								<option th:each="bankList:${bankList}" th:value="${bankList.bId}" th:text="${bankList.bankName}"></option>
+							</select>
+						</div>
+					</div>
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">汇款人：</label>
+				        <div class="col-xs-6">
+    						<input name="remitter" class="layui-input"required  placeholder="请输入汇款人" autocomplete="off" type="text"  maxlength="255">
+    					</div>
+				    </div>
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">汇款账号：</label>
+				        <div class="col-xs-6">
+    						<input name="remittanceAccount"required class="layui-input"  placeholder="请输入汇款账号" autocomplete="off" type="text"  maxlength="255">
+    					</div>
+				    </div>
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12" >
+						<label class="col-xs-3 layui-form-label" style= "width: 130px">汇款流水单号：</label>
+				        <div class="col-xs-6">
+    						<input name="remittanceFlowNumber"required class="layui-input"  placeholder="请输入汇款流水单号" autocomplete="off" type="text"  maxlength="255">
+    					</div>
+				    </div>
+					<div class="div-hidden layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">凭证：</label>
+						<div class="col-xs-6">
+							<img alt="image"   title="点击上传图片" style="cursor:pointer;width:600px;height:300px;" id="voucher" class=""
+								 th:src="@{/images/pingzheng.png}" lay-imgs="voucher">
+							<input type="hidden" required  name="voucher">
+						</div>
+					</div>
+
+    			</form>
+    		</div>
+    	</div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chunqiu.mrjuly.modules.flowsheetinfo.dao.FlowSheetInfoDao">
+    
+	<sql id="flowSheetInfoColumns">
+		a.id AS "id",
+		a.flow_sheet_platform AS "flowSheetPlatform",
+		a.merchant_name AS "merchantName",
+		a.merchant_code AS "merchantCode",
+		a.operation_mode AS "operationMode",
+		a.operating_amount AS "operatingAmount",
+		a.account_amount AS "accountAmount",
+		a.create_date AS "createDate",
+		a.create_by AS "createBy.id",
+		a.remarks AS "remarks",
+		a.object_id AS "objectId"
+	</sql>
+	
+	<sql id="flowSheetInfoJoins">
+		left join admin_user u on u.id=a.create_by
+	</sql>
+    
+	<select id="get" resultType="FlowSheetInfo">
+		SELECT 
+			<include refid="flowSheetInfoColumns"/>
+		FROM flow_sheet_info a
+		<include refid="flowSheetInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="FlowSheetInfo">
+		SELECT 
+			<include refid="flowSheetInfoColumns"/>,u.name AS "userName"
+		FROM flow_sheet_info a
+		<include refid="flowSheetInfoJoins"/>
+		<where>
+			<if test="merchantName != null and merchantName != ''">
+				AND a.merchant_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{merchantName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{merchantName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{merchantName},'%')</if>
+			</if>
+			
+			<if test="flowSheetPlatform != null and flowSheetPlatform != ''">
+				AND a.flow_sheet_platform = #{flowSheetPlatform}
+			</if>
+			<if test="merchantCode != null and merchantCode != ''">
+				AND a.merchant_code = #{merchantCode}
+			</if>
+			<if test="operationMode != null and operationMode != ''">
+				AND a.operation_mode = #{operationMode}
+			</if>
+			<if test="operatingAmount != null and operatingAmount != ''">
+				AND a.operating_amount = #{operatingAmount}
+			</if>
+			<if test="accountAmount != null and accountAmount != ''">
+				AND a.account_amount = #{accountAmount}
+			</if>
+			<if test="date != null and date != ''">
+				AND date_format(a.create_date,'%Y-%m-%d') =#{date}
+			</if>
+			<if test="remarks != null and remarks != ''">
+				AND a.remarks = #{remarks}
+			</if>
+			<if test="objectId != null and objectId != ''">
+				AND a.object_id = #{objectId}
+			</if>
+		</where>
+		<choose>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				order by create_date desc 
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="FlowSheetInfo">
+		SELECT 
+			<include refid="flowSheetInfoColumns"/>
+		FROM flow_sheet_info a
+		<include refid="flowSheetInfoJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			order by a.id desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO flow_sheet_info(
+								flow_sheet_platform,
+						merchant_name,
+						merchant_code,
+						operation_mode,
+						operating_amount,
+						account_amount,
+						create_date,
+						create_by,
+						remarks,
+						object_id
+		) VALUES (
+								#{flowSheetPlatform},
+						#{merchantName},
+						#{merchantCode},
+						#{operationMode},
+						#{operatingAmount},
+						#{accountAmount},
+						#{createDate},
+						#{createBy.id},
+						#{remarks},
+						#{objectId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE flow_sheet_info 
+		<set> 	
+			<if test="flowSheetPlatform != null">
+				flow_sheet_platform = #{flowSheetPlatform},
+			</if>
+			<if test="merchantName != null and merchantName != ''">
+				merchant_name = #{merchantName},
+			</if>
+			<if test="merchantCode != null and merchantCode != ''">
+				merchant_code = #{merchantCode},
+			</if>
+			<if test="operationMode != null">
+				operation_mode = #{operationMode},
+			</if>
+			<if test="operatingAmount != null and operatingAmount != ''">
+				operating_amount = #{operatingAmount},
+			</if>
+			<if test="accountAmount != null and accountAmount != ''">
+				account_amount = #{accountAmount},
+			</if>
+			<if test="createDate != null and createDate != ''">
+				create_date = #{createDate},
+			</if>
+			<if test="createBy.id != null">
+				create_by = #{createBy.id},
+			</if>
+			<if test="remarks != null and remarks != ''">
+				remarks = #{remarks},
+			</if>
+			<if test="objectId != null">
+				object_id = #{objectId},
+			</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM flow_sheet_info
+		WHERE id = #{id}
+	</update>
+	<insert id="insertSelective" parameterType="com.chunqiu.mrjuly.modules.flowsheetinfo.model.FlowSheetInfo" >
+    insert into flow_sheet_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="flowSheetPlatform != null" >
+        flow_sheet_platform,
+      </if>
+      <if test="merchantName != null" >
+        merchant_name,
+      </if>
+      <if test="merchantCode != null" >
+        merchant_code,
+      </if>
+      <if test="operationMode != null" >
+        operation_mode,
+      </if>
+      <if test="operatingAmount != null" >
+        operating_amount,
+      </if>
+      <if test="accountAmount != null" >
+        account_amount,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="createBy != null" >
+        create_by,
+      </if>
+      <if test="remarks != null" >
+        remarks,
+      </if>
+      <if test="objectId != null" >
+        object_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="flowSheetPlatform != null" >
+        #{flowSheetPlatform,jdbcType=INTEGER},
+      </if>
+      <if test="merchantName != null" >
+        #{merchantName,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantCode != null" >
+        #{merchantCode,jdbcType=VARCHAR},
+      </if>
+      <if test="operationMode != null" >
+        #{operationMode,jdbcType=INTEGER},
+      </if>
+      <if test="operatingAmount != null" >
+        #{operatingAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="accountAmount != null" >
+        #{accountAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        #{createBy.id,jdbcType=INTEGER},
+      </if>
+      <if test="remarks != null" >
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="objectId != null" >
+        #{objectId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+</mapper>

@@ -1,0 +1,17 @@
+package com.chunqiu.mrjuly.modules.record.dao;
+
+import com.chunqiu.mrjuly.common.persistence.CrudDao;
+import com.chunqiu.mrjuly.modules.record.model.ShopRecord;
+import com.chunqiu.mrjuly.modules.system.model.User;
+
+import java.util.List;
+
+/**
+ * 审核记录DAO接口
+ * @author chen
+ * @version 2019-03-06
+ */
+public interface ShopRecordDao extends CrudDao<ShopRecord, Integer> {
+    List<User> recordPerson(Integer id);
+	
+}

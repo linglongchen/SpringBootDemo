@@ -1,0 +1,80 @@
+package com.chunqiu.mrjuly.modules.version.model;
+
+import org.hibernate.validator.constraints.Length;
+
+import com.chunqiu.mrjuly.common.persistence.DataEntity;
+
+/**
+ * 版本管理Entity
+ * @author chen
+ * @version 2019-04-19
+ */
+public class Version extends DataEntity<Version, Integer> {
+
+	private static final long serialVersionUID = 1L;
+	private String version;		// 版本号
+	private Integer type;		// 1：客户端  2：服务端
+	private String url;		// 链接
+	private Long hotelId;//酒店ID
+	private String hotelName;//酒店名称
+
+	private String uniqueEncoding;
+
+	public String getUniqueEncoding() {
+		return uniqueEncoding;
+	}
+
+	public void setUniqueEncoding(String uniqueEncoding) {
+		this.uniqueEncoding = uniqueEncoding;
+	}
+	public Version() {
+		super();
+	}
+
+	public Version(Integer id){
+		super(id);
+	}
+
+	@Length(min=0, max=255, message="版本号长度必须介于 0 和 255 之间")
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
+
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
+	}
+
+	@Length(min=0, max=255, message="链接长度必须介于 0 和 255 之间")
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public Long getHotelId() {
+		return hotelId;
+	}
+
+	public void setHotelId(Long hotelId) {
+		this.hotelId = hotelId;
+	}
+
+	public String getHotelName() {
+		return hotelName;
+	}
+
+	public void setHotelName(String hotelName) {
+		this.hotelName = hotelName;
+	}
+
+}

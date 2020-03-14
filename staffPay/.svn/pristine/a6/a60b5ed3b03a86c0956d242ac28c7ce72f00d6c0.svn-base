@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chunqiu.mrjuly.modules.install.dao.NoticeDao">
+
+	<sql id="noticeColumns">
+		a.id AS "id",
+		a.notice_title AS "noticeTitle",
+		a.notice_content AS "noticeContent",
+		a.notice_roll AS "noticeRoll",
+		a.notice_form AS "noticeForm",
+		a.target AS "target",
+		a.type AS "type",
+		a.scheduled_release_time AS "scheduledReleaseTime",
+		a.circular_endTime AS "circularEndTime",
+		a.room_number AS "roomNumber",
+		a.hotel_code_id AS "hotelCodeId",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.del_flag AS "delFlag",
+		a.timeSn
+	</sql>
+
+	<sql id="noticeJoins">
+	</sql>
+
+	<select id="get" resultType="Notice">
+		SELECT
+		<include refid="noticeColumns"/>
+		FROM notice_info a
+		<include refid="noticeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="Notice">
+		SELECT
+		<include refid="noticeColumns"/>
+		FROM notice_info a
+		<include refid="noticeJoins"/>
+		<where>
+			a.target!=4 AND
+			a.type=2
+			<if test="dateBegin!=null and dateBegin!=''">
+				AND a.create_date &gt;=#{dateBegin}
+			</if>
+			<if test="dateEnd!=null and dateEnd!=''">
+				AND a.create_date &lt;=#{dateEnd}
+			</if>
+		</where>
+		<choose>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				group by a.timeSn
+				ORDER BY a.create_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO notice_info(
+		notice_title,
+		notice_content,
+		notice_roll,
+		circular_endTime,
+		target,
+		type,
+		create_by,
+		create_date,
+		object_id,
+		timeSn
+		)
+		VALUES
+		<foreach collection="noticeList" item="item" index="index" separator=",">
+			(#{noticeTitle},
+			#{noticeContent},
+			#{noticeRoll},
+			#{circularEndTime},
+			#{target},
+			2,
+			#{createBy.id},
+			#{createDate},
+			#{item.id},
+			#{timeSn})
+		</foreach>
+
+	</insert>
+
+	<select id="noticeById" resultType="Notice">
+		<if test="target == 1">
+			  select hotel_code_id as "id" from hotel_info where is_freeze = 0;
+		</if>
+		<if test="target == 2">
+			select id from shop_info where status = 0;
+		</if>
+		<if test="target == 3">
+			select id from advertiser_info where status = 1;
+		</if>
+	</select>
+
+	<update id="update">
+		UPDATE notice_info
+		<set>
+			<if test="noticeTitle != null and noticeTitle != ''">
+				notice_title = #{noticeTitle},
+			</if>
+			<if test="noticeContent != null and noticeContent != ''">
+				notice_content = #{noticeContent},
+			</if>
+			<if test="noticeRoll != null and noticeRoll != ''">
+				notice_roll = #{noticeRoll},
+			</if>
+			<if test="noticeForm != null and noticeForm != ''">
+				notice_form = #{noticeForm},
+			</if>
+			<if test="target != null and target != ''">
+				target = #{target},
+			</if>
+			<if test="circularEndTime != null">
+				circular_endTime = #{circularEndTime},
+			</if>
+				update_by = #{updateBy.id},
+				update_date = #{updateDate},
+		</set>
+		WHERE target = #{targetId} and type = 2
+	</update>
+
+</mapper>

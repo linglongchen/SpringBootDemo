@@ -1,0 +1,30 @@
+package com.chunqiu.mrjuly.modules.shopinfo.model;
+
+/**
+ * 商场绑定商家条件
+ *
+ * @author wy
+ */
+public class MarketBindShopCondition {
+
+	private Long marketId;// 商场ID
+
+	private Long shopId;// 商家ID
+
+	public Long getMarketId() {
+		return marketId;
+	}
+
+	public void setMarketId(Long marketId) {
+		this.marketId = marketId;
+	}
+
+	public Long getShopId() {
+		return shopId;
+	}
+
+	public void setShopId(Long shopId) {
+		this.shopId = shopId;
+	}
+
+}

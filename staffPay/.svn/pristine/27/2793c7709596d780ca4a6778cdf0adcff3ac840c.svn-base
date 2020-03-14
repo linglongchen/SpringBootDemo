@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>广告商管理管理</title>
+
+    <head th:include="init :: init"></head>
+
+    <script type="text/javascript">
+
+        //提交表单
+        function validForm() {
+            $('#signupForm').validate({
+                submitHandler: function (form) {
+                    loading();
+                    form.action = '[[${ctx}]]/shopinfo/shopInfo/saveAccountRecharge';
+                    form.submit();
+                }
+            });
+            $('#signupForm').submit();
+        }
+    </script>
+</head>
+<body class="gray-bg">
+<div class="wrapper animated fadeInRight">
+    <div class="ibox-content">
+        <div class="row">
+            <form id="signupForm" class="layui-form form-horizontal m-t">
+                <input type="hidden" name="shopInfoId" th:value="${shopInfo.id}">
+                <div class="layui-form-item col-lg-6">
+                    <label class="col-xs-3 layui-form-label">账户打款：</label>
+                    <div class="col-xs-6">
+                        <input required name="price" class="layui-input" placeholder="请输入打款金额" autocomplete="off" type="text"
+                               maxlength="255">
+                    </div>
+                    <label style="font-size: 18px">元</label>
+                </div>
+                <div class="layui-form-item col-lg-6">
+                    <label class="col-xs-3 layui-form-label">账户余额：</label>
+                    <div class="col-xs-6">
+                    	<span class="layui-form-label" th:text="${shopInfo.account}"></span>
+                    	<label class="layui-form-label" style="font-size: 18px">元</label>
+                    </div>
+                </div>
+                <div class="layui-form-item col-lg-6">
+                    <label class="col-xs-3 layui-form-label">选择汇款单：</label>
+                    <div class="col-xs-6">
+                        <select id="billOfOriginId"   class="chosen-select-deselect form-control layui-input" name="billOfOriginId" data-placeholder="选择汇款单号">
+                            <option></option>
+                            <option th:each="list:${map}" th:text="${list.remittanceFlowNumber}" th:value="${list.id}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item col-lg-6 ">
+                    <label class="col-xs-3 layui-form-label">备注：</label>
+                    <div class="col-xs-6">
+                        <textarea name="remarks" class="layui-textarea" th:text="${shopInfo.remark}"
+                                  maxlength="255"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item col-lg-6">
+                    <label class="col-xs-3 layui-form-label">管理员账号：<i style="color: red">*</i></label>
+                    <div class="col-xs-6">
+                        <input required name="admin" class="layui-input" placeholder="" autocomplete="off" type="text">
+                    </div>
+                </div>
+                <div class="layui-form-item col-lg-6">
+                    <label class="col-xs-3 layui-form-label">管理员密码：<i style="color: red">*</i></label>
+                    <div class="col-xs-6">
+                        <input required name="password" class="layui-input" placeholder="" autocomplete="off" type="password">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

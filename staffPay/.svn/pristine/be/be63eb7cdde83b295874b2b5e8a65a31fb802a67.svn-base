@@ -1,0 +1,194 @@
+package com.chunqiu.mrjuly.modules.hotelinfo.model;
+
+import com.chunqiu.mrjuly.common.persistence.DataEntity;
+import org.hibernate.validator.constraints.Length;
+
+public class DepartmentInfoList extends DataEntity<DepartmentInfoList, Integer> {
+    private static final long serialVersionUID = 1L;
+    private Integer id;
+    private String serverNumberId;		// 服务端编号主键id 以逗号拼接 试例（1,2,3）
+    private Integer hotelCodeId;		// 酒店设备前缀编号id
+    private String departmentName;		// 部门名称
+    private String departmentNameEn;		// 部门英文名字
+    private String departmentHead;		// 头像
+    private String startTime;		// 营业开始时间
+    private String endTime;		// 营业结束时间
+    private String departmentalPositionPic;		// 部门位置图片放置
+    private String departmentalPositionVideo;		// 部门位置视频放置
+    private String departmentalPositionContent;		// 文字编辑部门位置内容
+    private String departmentalSpecialDescription;		// 部门特别说明
+    private String departmentalTel;		// 部门电话
+    private Integer status;		// 状态 1.激活 2.休眠
+
+    private String serviceMode;//服务方式
+
+    private String equipmentName;//服务端编码
+
+    private String position;//文件上传
+
+    private Integer type;//1.图片 2.视频
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public String getEquipmentName() {
+        return equipmentName;
+    }
+
+    public void setEquipmentName(String equipmentName) {
+        this.equipmentName = equipmentName;
+    }
+
+    public String getServiceMode() {
+        return serviceMode;
+    }
+
+    public void setServiceMode(String serviceMode) {
+        this.serviceMode = serviceMode;
+    }
+
+    public DepartmentInfoList() {
+        super();
+    }
+
+    public DepartmentInfoList(Integer id){
+        super(id);
+    }
+
+    @Override
+    public Integer getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    @Length(min=0, max=255, message="服务端编号主键id 以逗号拼接 试例（1,2,3）长度必须介于 0 和 255 之间")
+    public String getServerNumberId() {
+        return serverNumberId;
+    }
+
+    public void setServerNumberId(String serverNumberId) {
+        this.serverNumberId = serverNumberId;
+    }
+
+    public Integer getHotelCodeId() {
+        return hotelCodeId;
+    }
+
+    public void setHotelCodeId(Integer hotelCodeId) {
+        this.hotelCodeId = hotelCodeId;
+    }
+
+    @Length(min=0, max=255, message="部门名称长度必须介于 0 和 255 之间")
+    public String getDepartmentName() {
+        return departmentName;
+    }
+
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
+    }
+
+    @Length(min=0, max=255, message="部门英文名字长度必须介于 0 和 255 之间")
+    public String getDepartmentNameEn() {
+        return departmentNameEn;
+    }
+
+    public void setDepartmentNameEn(String departmentNameEn) {
+        this.departmentNameEn = departmentNameEn;
+    }
+
+    @Length(min=0, max=255, message="头像长度必须介于 0 和 255 之间")
+    public String getDepartmentHead() {
+        return departmentHead;
+    }
+
+    public void setDepartmentHead(String departmentHead) {
+        this.departmentHead = departmentHead;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    @Length(min=0, max=255, message="部门位置图片放置长度必须介于 0 和 255 之间")
+    public String getDepartmentalPositionPic() {
+        return departmentalPositionPic;
+    }
+
+    public void setDepartmentalPositionPic(String departmentalPositionPic) {
+        this.departmentalPositionPic = departmentalPositionPic;
+    }
+
+    @Length(min=0, max=255, message="部门位置视频放置长度必须介于 0 和 255 之间")
+    public String getDepartmentalPositionVideo() {
+        return departmentalPositionVideo;
+    }
+
+    public void setDepartmentalPositionVideo(String departmentalPositionVideo) {
+        this.departmentalPositionVideo = departmentalPositionVideo;
+    }
+
+    @Length(min=0, max=255, message="文字编辑部门位置内容长度必须介于 0 和 255 之间")
+    public String getDepartmentalPositionContent() {
+        return departmentalPositionContent;
+    }
+
+    public void setDepartmentalPositionContent(String departmentalPositionContent) {
+        this.departmentalPositionContent = departmentalPositionContent;
+    }
+
+    @Length(min=0, max=255, message="部门特别说明长度必须介于 0 和 255 之间")
+    public String getDepartmentalSpecialDescription() {
+        return departmentalSpecialDescription;
+    }
+
+    public void setDepartmentalSpecialDescription(String departmentalSpecialDescription) {
+        this.departmentalSpecialDescription = departmentalSpecialDescription;
+    }
+
+    @Length(min=0, max=255, message="部门电话长度必须介于 0 和 255 之间")
+    public String getDepartmentalTel() {
+        return departmentalTel;
+    }
+
+    public void setDepartmentalTel(String departmentalTel) {
+        this.departmentalTel = departmentalTel;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+}

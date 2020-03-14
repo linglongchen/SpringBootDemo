@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>全部设备管理</title>
+
+	<head th:include="init :: init"></head>
+    <head th:include="init_bootstrap_table :: bootstrap_table"></head>
+	
+	<script type="text/javascript">
+		$(function(){
+			$('#table').bootstrapTable({
+				undefinedText : '',//defined的默认显示文本
+				striped : true,//条纹
+				method : 'get',
+				url : '[[${ctx}]]/lyhoteldevicerelation/lyHotelDeviceRelation/allList',
+				pagination : true,//显示分页
+				sidePagination : 'server',//定义分页为服务器端分页
+				pageNumber : 1,//起始页数
+				pageSize : 20,//默认显示行数
+				pageList : [20, 50, 100 ,200],//可选分页数
+				singleSelect : false,//多选
+				//toolbar : '#toolbar',
+				height : 'auto',
+			    columns: [
+			    {
+			        field: 'code',
+			        title: '完整编号',
+			        halign : 'center',
+			        align : 'center'
+			    },{
+			        field: 'type',
+			        title: '类型',
+			        halign : 'center',
+			        align : 'center',
+						formatter : function(value, row, index){
+			        		if (value == 1){
+								return "客户端";
+							}else if (value == 2){
+								return "服务端";
+							}
+						}
+			    },{
+						field: 'connectStatus',
+						title: '连接状态',
+						halign : 'center',
+						align : 'center',
+						formatter : function(value, row, index){
+							if (value  == 1){
+								return "正常";
+							} else {
+								return "异常";
+							}
+						}
+					},{
+						field: 'deviceStatus',
+						title: '设备状态',
+						halign : 'center',
+						align : 'center',
+						formatter : function(value, row, index){
+							if (value == 1 && row.connectStatus == 1 && row.type == 1){
+								return "激活";
+							}else if (value == 2 && row.connectStatus == 1 && row.type == 1) {
+								return "休眠";
+							}else if (row.connectStatus == 2 || row.type == 2){
+								return "-";
+							}
+						}
+					},{
+			    	field : 'option',
+			    	title : '操作',
+			    	halign : 'center',
+			    	align : 'center',
+			    	formatter : function(value, row, index){
+			    		var _html = '<ul class="grid_btn_ul">';
+						if (row.connectStatus == 1 && row.deviceStatus == 1 && row.type == 1){
+							_html += '<li><a href="javascript:dormancy(' + row.id + ')" class="btn btn-danger btn-xs"><i class="fa fa-pencil"></i> 休眠 </a></li>';
+						}else if (row.connectStatus == 1 && row.deviceStatus == 2 && row.type == 1){
+							_html += '<li><a href="javascript:activation(' + row.id + ')" class="btn btn-success btn-xs"><i class="fa fa-pencil"></i> 激活 </a></li>';
+						}
+							_html += '<li><a href="javascript:editLyHotelDeviceStatus(' + row.id + ')" class="btn btn-danger btn-xs"><i class="fa fa-pencil"></i> 解除关联 </a></li>';
+			    			_html += '</ul>';
+			    		return _html;
+			    	}
+			    }],
+				onLoadSuccess : function(data){
+					if(data.total == 0){
+						$('#table').bootstrapTable('removeAll');
+					}
+					//禁止bootstrap table中的checkbox加载layui样式
+					$('.table .bs-checkbox input').each(function () {
+						$(this).attr("lay-ignore", "true");
+					});
+
+					$('.table thead .bs-checkbox .th-inner .layui-form-checkbox').remove();
+
+				}
+			});
+		});
+
+		//查询
+		function search(){
+			var param = $('#searchForm').serialize();
+			$('#table').bootstrapTable('refresh', {url : '[[${ctx}]]/lyhoteldevicerelation/lyHotelDeviceRelation/allList?' + param});
+		}
+
+		//清空
+		function empty(){
+			$("#code").val("");
+			$("#connectStatus").val(0);
+			$("#connectStatus").trigger("chosen:updated");
+			$("#type").val(0);
+			$("#type").trigger("chosen:updated");
+			search();
+		}
+
+		//休眠
+		function dormancy(id){
+			layer.confirm('您确定要休眠该设备吗？',function(){
+				parent.loading();
+				$.post('[[${ctx}]]/lyhoteldevicerelation/lyHotelDeviceRelation/updateDeviceStatus',{
+					id : id,
+					deviceStatus:2
+				},function(result){
+					closeLoading();
+					layer.closeAll();
+					showMsgSuccess('休眠成功！');
+					search();
+				});
+			});
+		}
+
+		//激活
+		function activation(id){
+			layer.confirm('您确定要激活该设备吗？',function(){
+				parent.loading();
+				$.post('[[${ctx}]]/lyhoteldevicerelation/lyHotelDeviceRelation/updateDeviceStatus',{
+					id : id,
+					deviceStatus:1
+				},function(result){
+					closeLoading();
+					layer.closeAll();
+					showMsgSuccess('激活成功！');
+					search();
+				});
+			});
+		}
+
+		//解除关联
+		function editLyHotelDeviceStatus(id){
+			layer.confirm('您确定要解除关联吗？',function(){
+				parent.loading();
+				$.post('[[${ctx}]]/lyhoteldevicerelation/lyHotelDeviceRelation/releaseOfAssociation',{
+					id : id
+				},function(result){
+					closeLoading();
+					layer.closeAll();
+					showMsgSuccess('解除成功！');
+					search();
+				});
+			});
+		}
+	</script>
+
+	<style type="text/css">
+		.layui-form input[type="checkbox"]{
+			display: block;
+		}
+	</style>
+</head>
+<body layadmin-themealias="default">
+	<div class="layui-fluid animated fadeInRight">
+        <div class="layui-card">
+        	<div class="layui-form layui-card-header layuiadmin-card-header-auto">
+					<form id="searchForm" class="layui-form">
+				<div class="layui-card-body">
+					<div style="padding-bottom: 10px;">
+						<div class="layui-input-inline">
+							<input name="code" id="code" autocomplete="off" class="layui-input" placeholder="输入完整编号" type="text">
+						</div>
+						<div class="layui-input-inline">
+							<label class="layui-form-label">连接状态：</label>
+							<div class="layui-input-inline">
+								<select style="width: 100px"  name="connectStatus" id="connectStatus" class="chosen-select-deselect form-control layui-input">
+									<option value="0">全部</option>
+									<option value="1">正常</option>
+									<option value="2">异常</option>
+								</select>
+							</div>
+						</div>
+						<div class="layui-inline">
+							<label class="layui-form-label">类型：</label>
+							<div class="layui-input-inline">
+								<select style="width: 100px" name="type" id="type" class="chosen-select-deselect form-control layui-input">
+									<option value="0">全部</option>
+									<option value="1">客户端</option>
+									<option value="2">服务端</option>
+								</select>
+							</div>
+						</div>
+						<button style="margin-left: 30px" class="btn btn-primary " type="button" onclick="search()"><i class="fa fa-search"></i>&nbsp;搜索</button>
+						<button  style="margin-left: 10px" class="btn btn-primary " type="button" onclick="empty()">&nbsp;清空</button>
+						</div>
+				</div>
+				<table id="table">
+
+				</table>
+					</form>
+	        </div>
+		</div>
+    </div>
+</body>
+</html>

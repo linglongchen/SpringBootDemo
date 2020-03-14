@@ -1,0 +1,31 @@
+package com.chunqiu.mrjuly.modules.install.model;
+
+import com.chunqiu.mrjuly.common.persistence.DataEntity;
+
+/**
+ * 在线商家类别设置
+ */
+public class ShopType extends DataEntity<ShopType, Integer> {
+
+    private static final long serialVersionUID = 1L;
+    private Integer id;
+    private String shopType;
+
+    @Override
+    public Integer getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getShopType() {
+        return shopType;
+    }
+
+    public void setShopType(String shopType) {
+        this.shopType = shopType;
+    }
+}

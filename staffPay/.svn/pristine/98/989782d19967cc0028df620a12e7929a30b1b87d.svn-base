@@ -1,0 +1,136 @@
+package com.chunqiu.mrjuly.modules.getaccommodation.controller;
+
+import com.chunqiu.mrjuly.common.annotation.Log;
+import com.chunqiu.mrjuly.common.persistence.BaseController;
+import com.chunqiu.mrjuly.common.utils.DateUtils;
+import com.chunqiu.mrjuly.common.utils.excel.ExportExcel;
+import com.chunqiu.mrjuly.common.vo.ExportVo;
+import com.chunqiu.mrjuly.common.vo.Grid;
+import com.chunqiu.mrjuly.common.vo.GridParam;
+import com.chunqiu.mrjuly.common.vo.Json;
+import com.chunqiu.mrjuly.modules.getaccommodation.model.GetAccommodation;
+import com.chunqiu.mrjuly.modules.getaccommodation.service.GetAccommodationService;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * 酒店激活号统计Controller
+ * @author zt
+ * @version 2019-03-26
+ */
+@Slf4j
+@Controller
+@RequestMapping(value = "${adminPath}/getaccommodation/getAccommodation")
+public class GetAccommodationController extends BaseController {
+
+	@Autowired
+	private GetAccommodationService getAccommodationService;
+
+	/**
+	 * @Description：酒店激活号统计列表页面
+	 * @author zt
+	 */
+	@Log("打开酒店激活号统计列表页面")
+	@RequestMapping("index")
+	@RequiresPermissions("getaccommodation:getAccommodation:view")
+	public String index(){
+		return "getaccommodation/getAccommodationList";
+	}
+
+	/**
+	 * @Description：酒店激活号统计列表数据
+	 * @author zt
+	 */
+	@Log("获取酒店激活号统计列表数据")
+	@RequestMapping("list")
+	@ResponseBody
+	@RequiresPermissions("getaccommodation:getAccommodation:view")
+	public Grid list(GetAccommodation getAccommodation, GridParam param) {
+		return getAccommodationService.findPage(getAccommodation, param);
+	}
+	/**
+	 * @Description：酒店激活号统计表单页面--新增/编辑
+	 * @author zt
+	 */
+	@Log("打开酒店激活号统计表单页面--新增/编辑")
+	@RequestMapping(value = "form")
+	@RequiresPermissions("getaccommodation:getAccommodation:view")
+	public String form(GetAccommodation getAccommodation, ModelMap model) {
+		getAccommodation = getAccommodationService.get(getAccommodation.getId());
+		model.addAttribute("getAccommodation", getAccommodation);
+		return "getaccommodation/getAccommodationForm";
+	}
+	/**
+	 * @Description：酒店激活号统计新增/编辑 保存方法
+	 * @author zt
+	 */
+	@Log("新增/编辑酒店激活号统计")
+	@RequestMapping("saveGetAccommodation")
+	@RequiresPermissions("getaccommodation:getAccommodation:edit")
+	public String saveGetAccommodation(GetAccommodation getAccommodation, ModelMap model){
+		try{
+			getAccommodationService.save(getAccommodation);
+		}catch(Exception e){
+			log.error("保存失败！ msg={}", e.getMessage(), e);
+
+			model.addAttribute("error", "保存失败！");
+			return form(getAccommodation, model);
+		}
+		return successPath;
+	}
+	/**
+	 * @Description：酒店激活号统计数据删除方法
+	 * @author zt
+	 */
+	@Log("删除酒店激活号统计")
+	@RequestMapping("delGetAccommodation")
+	@ResponseBody
+	@RequiresPermissions("getaccommodation:getAccommodation:edit")
+		public Json delGetAccommodation(GetAccommodation getAccommodation){
+		Json json = new Json();
+		try{
+			getAccommodationService.delete(getAccommodation);
+			json.setSuccess(true);
+		}catch(Exception e){
+			log.error("删除失败！ msg={}", e.getMessage(), e);
+
+			json.setSuccess(false);
+			json.setMsg("删除失败！");
+		}
+		return json;
+	}
+
+
+	/**
+	 * 导出数据
+	 *
+	 * @return
+	 */
+	@RequestMapping(value = "export", method = RequestMethod.POST)
+	@ResponseBody
+	public String exportFile(HttpServletRequest request, HttpServletResponse response,GetAccommodation getAccommodation) {
+		try {
+			String fileName = "酒店激活号数据统计" + DateUtils.getDate("yyyyMMddHHmmss") + ".xlsx";
+
+			List<GetAccommodation> getAccommodationList = getAccommodationService.getAccommodationList(getAccommodation);
+
+			new ExportExcel("酒店激活号数据统计", GetAccommodation.class).setDataList(getAccommodationList).write(response, fileName).dispose();
+			return null;
+		} catch (Exception e) {
+			request.setAttribute("error", "导出数据失败");
+		}
+		return null;
+	}
+
+}

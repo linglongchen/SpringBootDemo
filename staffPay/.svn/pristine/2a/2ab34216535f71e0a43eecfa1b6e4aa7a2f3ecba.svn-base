@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>账号充值管理</title>
+<head th:include="init :: init"></head>
+<head th:include="init_bootstrap_table :: bootstrap_table"></head>
+<style>
+/*定义类名为.thead-blue的样式*/
+table thead tr {
+	font-size: 25px;
+}
+</style>
+<script type="text/javascript">
+	$(function() {
+		var result = "[[${result}]]";
+		if(result != null && result == "success"){
+			if (navigator.userAgent.indexOf("Firefox") != -1 || navigator.userAgent.indexOf("Chrome") !=-1) {
+                window.location.href="about:blank";
+                window.close();
+            } else {
+                window.opener = null;
+                window.open("", "_self");
+                window.close();
+            }
+		}
+		
+		$('#table').bootstrapTable({
+			undefinedText : '',//defined的默认显示文本
+			striped : true,//条纹
+			method : 'get',
+			url : '[[${ctx}]]/alipay/moneyList',
+			pagination : false,//显示分页
+			theadClasses : "thead-blue",
+			sidePagination : 'server',//定义分页为服务器端分页
+			pageNumber : 1,//起始页数
+			pageSize : 20,//默认显示行数
+			pageList : [ 20, 50, 100, 200 ],//可选分页数
+			singleSelect : true,//多选
+			//toolbar : '#toolbar',
+			height : 'auto',
+			columns : [ {
+				field : 'money',
+				title : '金额(￥)',
+		    	halign : 'center',
+		    	align : 'center',
+		    	cellStyle : {css:{"font-size":"20px"}}
+			}, {
+				field : '',
+		    	halign : 'center',
+		    	align : 'center',
+				title : '操作',
+				formatter : function(value, row, index){
+					var _html = '<form action="[[${ctx}]]/alipay/alipaying?id='+row.id+'" method="post"><ul>';
+					_html += '<li><button class="btn btn-primary" type="button" onclick="form.submit()"><i class="fa fa-jpy"></i>&nbsp;充值</button></li>';
+		    		_html += '</ul></form>';
+		    		return _html;
+                }
+			} ],
+			onLoadSuccess : function(data) {
+				if (data.total == 0) {
+					$('#table').bootstrapTable('removeAll');
+				}
+			}
+		});
+	});
+
+</script>
+</head>
+<body>
+	<table id="table">
+
+	</table>
+
+</body>
+</html>

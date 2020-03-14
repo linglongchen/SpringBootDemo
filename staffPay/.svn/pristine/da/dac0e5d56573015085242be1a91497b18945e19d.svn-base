@@ -1,0 +1,37 @@
+package com.chunqiu.mrjuly.modules.install.model;
+
+import com.chunqiu.mrjuly.common.persistence.DataEntity;
+
+public class CompanyInfo extends DataEntity<CompanyInfo, Integer> {
+
+    private static final long serialVersionUID = 1L;
+    private Integer id;
+    private String name;
+    private String urlLink;
+
+    @Override
+    public Integer getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getUrlLink() {
+        return urlLink;
+    }
+
+    public void setUrlLink(String urlLink) {
+        this.urlLink = urlLink;
+    }
+}

@@ -1,0 +1,251 @@
+package com.chunqiu.mrjuly;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
+
+import com.alibaba.fastjson.JSONObject;
+import com.chunqiu.mrjuly.common.enums.PlatformTypeEnum;
+import com.chunqiu.mrjuly.common.enums.RedisKeyCode;
+import com.chunqiu.mrjuly.common.utils.CacheRedisUtil;
+import com.chunqiu.mrjuly.common.utils.DateUtils;
+import com.chunqiu.mrjuly.common.utils.UserUtils;
+import com.chunqiu.mrjuly.common.vo.GridParam;
+import com.chunqiu.mrjuly.modules.advertiserinfo.model.AdvertiserInfo;
+import com.chunqiu.mrjuly.modules.advertiserinfo.service.AdvertiserInfoService;
+import com.chunqiu.mrjuly.modules.flowsheetinfo.model.FlowSheetInfo;
+import com.chunqiu.mrjuly.modules.flowsheetinfo.service.FlowSheetInfoService;
+import com.chunqiu.mrjuly.modules.hotelinfo.model.LyHotelDeviceActivate;
+import com.chunqiu.mrjuly.modules.hotelinfo.model.LyHotelUserPrize;
+import com.chunqiu.mrjuly.modules.hotelinfo.service.LyHotelDeviceActivateService;
+import com.chunqiu.mrjuly.modules.hotelinfo.service.LyHotelUserPrizeService;
+import com.chunqiu.mrjuly.modules.install.model.NoticeInfo;
+import com.chunqiu.mrjuly.modules.install.model.PrizeInfo;
+import com.chunqiu.mrjuly.modules.install.service.PrizeInfoService;
+import com.chunqiu.mrjuly.modules.mybill.model.MyBillInfo;
+import com.chunqiu.mrjuly.modules.mybill.service.MyBillInfoService;
+import com.chunqiu.mrjuly.modules.shopinfo.model.ShopInfo;
+import com.chunqiu.mrjuly.modules.shopinfo.service.ShopInfoService;
+import com.chunqiu.mrjuly.modules.system.model.LyConfigStar;
+import com.chunqiu.mrjuly.modules.system.service.LyConfigStarService;
+
+@RunWith(SpringRunner.class)
+//解决引入websocket无法进行JUnit测试：为App生成嵌入式servlet容器启动并监听定义的端口，默认8080
+@SpringBootTest(classes = SpringbootApplication.class, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+public class SpringbootApplicationTests {
+
+	@Autowired
+	private LyConfigStarService lyConfigStarService;
+	@Autowired
+	private StringRedisTemplate redisTemplate;
+	@Autowired
+	CacheRedisUtil redisUtil;
+    @Autowired
+    private LyHotelDeviceActivateService hotelDeviceActivateService;
+    @Autowired
+    private LyHotelUserPrizeService hotelUserPrizeService;
+    @Autowired
+    private PrizeInfoService prizeInfoService;
+    @Autowired
+    private MyBillInfoService myBillInfoService;
+    @Autowired
+    private ShopInfoService shopInfoService;
+    @Autowired
+    private AdvertiserInfoService advertiserInfoService;
+    @Autowired
+    private FlowSheetInfoService flowSheetInfoService;
+	
+	
+	@Test
+	public void testConfigStar() {
+		//新增
+//		LyConfigStar record = new LyConfigStar();
+//		record.setCreateBy("wy");
+//		record.setDiscount(5);
+//		record.setStar(1);
+//		record.setUpdateBy("wy");
+//		System.out.println(JSONObject.toJSONString(lyConfigStarService.insertSelective(record)));
+		
+		//修改
+//		LyConfigStar record = new LyConfigStar();
+//		record.setId(1L);
+//		record.setDiscount(6);
+//		System.out.println(JSONObject.toJSONString(lyConfigStarService.updateByPrimaryKeySelective(record)));
+		
+		//分页获取所有
+		GridParam param = new GridParam();
+		param.setLimit(2);
+		param.setOffset(1);
+		System.out.println(JSONObject.toJSONString(lyConfigStarService.getAllConfigStar(param)));
+		
+		//根据ID查询
+//		System.out.println(JSONObject.toJSONString(lyConfigStarService.selectByPrimaryKey(1L)));
+		
+		//删除
+//		System.out.println(JSONObject.toJSONString(lyConfigStarService.deleteByPrimaryKey(1L)));
+	}
+
+	@Test
+	public void testGetRedis(){
+		Integer p = redisUtil.getByClass(RedisKeyCode.UPLOAD_ADVERTISEMENT_P_SIZE, Integer.class);
+		System.out.println(p);
+		Integer v = redisUtil.getByClass(RedisKeyCode.UPLOAD_ADVERTISEMENT_V_SIZE, Integer.class);
+		System.out.println(v);
+		Integer t = redisUtil.getByClass(RedisKeyCode.UPLOAD_ADVERTISEMENT_TIME, Integer.class);
+		System.out.println(t);
+//		String str = redisUtil.get("aaa");
+//		System.out.println(str);
+//		LyConfigStar obj = redisUtil.getByClass("bbb", LyConfigStar.class);
+//		System.out.println(JSONObject.toJSONString(obj));
+//		Set<LyConfigStar> set = redisUtil.getSetByClass("ccc", LyConfigStar.class);
+//		System.out.println(JSONObject.toJSONString(set));
+//		List<LyConfigStar> list = redisUtil.getListByClass("ddd", LyConfigStar.class);
+//		System.out.println(JSONObject.toJSONString(list));
+//		Map<String, LyConfigStar> map = redisUtil.getMapByClass("eee", LyConfigStar.class);
+//		System.out.println(JSONObject.toJSONString(map));
+	}
+	
+	@Test
+	public void testSetRedis(){
+		System.out.println(redisUtil.set(RedisKeyCode.UPLOAD_ADVERTISEMENT_P_SIZE, 10));
+		System.out.println(redisUtil.set(RedisKeyCode.UPLOAD_ADVERTISEMENT_V_SIZE, 30));
+		System.out.println(redisUtil.set(RedisKeyCode.UPLOAD_ADVERTISEMENT_TIME, 15));
+//		System.out.println(redisUtil.set("aaa", "linkinn0610"));
+//		LyConfigStar obj = new LyConfigStar();
+//		obj.setId(10L);
+//		obj.setCreateTime(new Date());
+//		obj.setDiscount(77);
+//		obj.setStar(9);
+//		System.out.println(JSONObject.toJSONString(redisUtil.set("bbb", obj)));
+//		Set<LyConfigStar> set = new HashSet<LyConfigStar>();
+//		set.add(obj);
+//		System.out.println(JSONObject.toJSONString(redisUtil.saveSet("ccc", set)));
+//		List<LyConfigStar> list = new ArrayList<LyConfigStar>();
+//		list.add(obj);
+//		System.out.println(JSONObject.toJSONString(redisUtil.saveList("ddd", list)));
+//		Map<String, LyConfigStar> map = new HashMap<String, LyConfigStar>();
+//		map.put("linkinn", obj);
+//		System.out.println(JSONObject.toJSONString(redisUtil.saveMap("eee", map)));
+	}
+	
+	@Test
+	public void luckDraw(){
+        try {
+	        //查询所有奖项
+	        List<PrizeInfo> prizeInfoList = prizeInfoService.prizeInfoList();
+	        //查询当前日期的激活记录
+	        LyHotelDeviceActivate condition = new LyHotelDeviceActivate();
+	        condition.setActivateDate(DateUtils.getNowDate());
+	        List<LyHotelDeviceActivate> records = hotelDeviceActivateService.selectRecordsByCondition(condition);
+	        if (CollectionUtils.isNotEmpty(prizeInfoList) && CollectionUtils.isNotEmpty(records)) {
+	        	int randomNum = 0;
+	        	LyHotelUserPrize insertPrize = null;
+	        	LyHotelDeviceActivate win = null;
+	        	PrizeInfo prizeInfo = null;
+	        	NoticeInfo noticeInfo = null;
+	        	Set<Long> winIds = new HashSet<Long>();
+	        	Iterator<PrizeInfo> prizeIterator = prizeInfoList.iterator();
+				while (prizeIterator.hasNext()) {
+					//获取第一个奖品
+					prizeInfo = (PrizeInfo) prizeIterator.next();
+					while (true) {
+						//获取所有记录中随机值
+						randomNum = new Random().nextInt(records.size());
+						//获取中奖记录
+						win = records.get(randomNum);
+						if (!winIds.contains(win.getId())) {
+							break;
+						}
+					}
+					//保存中奖记录
+					insertPrize = new LyHotelUserPrize();
+					insertPrize.setDeviceActivateId(win.getId());
+					insertPrize.setFullName(win.getName());
+					insertPrize.setHotelId(win.getHotelId());
+					insertPrize.setPrizeId(prizeInfo.getId());
+					hotelUserPrizeService.insertSelective(insertPrize);
+					//记录中奖ID
+					winIds.add(win.getId());
+	                //新增客户端消息
+					noticeInfo = new NoticeInfo();
+	                noticeInfo.setNoticeTitle(win.getName()+"中得" + prizeInfo.getPrize()+"，奖品为" + prizeInfo.getPrizeName());
+	                noticeInfo.setNoticeContent(win.getName()+"中得" + prizeInfo.getPrize()+"，奖品为" + prizeInfo.getPrizeName());
+	                noticeInfo.setTarget(4);
+	                noticeInfo.setType(3);
+	                noticeInfo.setRoomNumber(win.getRoomId().toString());
+	                noticeInfo.setHotelCodeId(win.getHotelId());
+	                prizeInfoService.NoticeInfo(noticeInfo);
+	                //新增酒店平台消息
+	                noticeInfo.setTarget(1);
+	                noticeInfo.setType(2);
+	                noticeInfo.setHotelCodeId(null);
+	                noticeInfo.setObjectId(win.getHotelId());
+	                noticeInfo.setTimeSn(System.currentTimeMillis()+"");
+	                noticeInfo.setRoomNumber(null);
+	                noticeInfo.setNoticeRoll(1);
+	                //系统当前时间
+	                Calendar calendar = Calendar.getInstance();
+	                //得到后一天
+	                calendar.add(Calendar.DATE, 1);    
+	                noticeInfo.setCircularEndTimeTwo(DateUtils.formatDate(calendar.getTime()));
+	                prizeInfoService.NoticeInfo(noticeInfo);
+					//中奖数与记录数一致时，结束抽奖
+					if (winIds.size() == records.size()) {
+						break;
+					}
+				}
+			}
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+        }
+    }
+	
+	@Test
+	public void serviceTest() {
+		MyBillInfo myBillInfo = new MyBillInfo();
+        myBillInfo.setBillOfOriginId("152");
+        myBillInfo = myBillInfoService.getMybillByBillId(myBillInfo);
+		
+		BigDecimal num = new BigDecimal(myBillInfo.getAmountPrice());
+		
+		AdvertiserInfo advertiserInfo = advertiserInfoService.get(6);
+        AdvertiserInfo updateData = new AdvertiserInfo();
+        updateData.setId(advertiserInfo.getId());
+        updateData.setAccountBalance(advertiserInfo.getAccountBalance() + num.floatValue());
+        advertiserInfoService.updateByPrimaryKeySelective(updateData);
+        
+        ShopInfo shopInfo = shopInfoService.get(20);
+        ShopInfo updateShop = new ShopInfo();
+        updateShop.setId(shopInfo.getId());
+        updateShop.setAccount(shopInfo.getAccount() + num.floatValue());
+        shopInfoService.updateByPrimaryKeySelective(updateShop);
+        
+        FlowSheetInfo flowSheet = new FlowSheetInfo();
+        flowSheet.setAccountAmount(new BigDecimal(shopInfo.getAccount() + num.floatValue()));
+        flowSheet.setObjectId(shopInfo.getId());
+        flowSheet.setOperatingAmount(new BigDecimal(num.floatValue()));
+        flowSheet.setFlowSheetPlatform(PlatformTypeEnum.SHOP.getType());
+        flowSheet.setMerchantCode(shopInfo.getShopNumber());
+        flowSheet.setMerchantName(shopInfo.getShopName());
+        flowSheet.setOperationMode(1);
+        flowSheet.setRemarks("支付宝充值成功");
+        flowSheetInfoService.insertSelective(flowSheet);
+	}
+}

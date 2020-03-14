@@ -1,0 +1,30 @@
+package com.chunqiu.mrjuly.modules.install.service;
+
+import com.chunqiu.mrjuly.common.persistence.CrudService;
+import com.chunqiu.mrjuly.modules.install.dao.AgreementDao;
+import com.chunqiu.mrjuly.modules.install.model.Agreement;
+import org.springframework.stereotype.Service;
+import javax.annotation.Resource;
+
+@Service
+public class AgreementService extends CrudService<AgreementDao, Agreement, Integer> {
+    @Resource
+    private AgreementDao agreementDao;
+
+    /**
+     * 用户协议设置
+     * @return
+     */
+    public Agreement agreement(){
+        return  agreementDao.agreement();
+    }
+
+    /**更新用户协议
+     *
+     * @param agreement
+     * @return
+     */
+    public int updateAgreement(Agreement agreement){
+        return  agreementDao.updateAgreement(agreement);
+    }
+}

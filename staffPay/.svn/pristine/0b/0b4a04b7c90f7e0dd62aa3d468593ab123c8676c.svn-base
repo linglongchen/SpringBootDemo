@@ -1,0 +1,122 @@
+package com.chunqiu.mrjuly.modules.install.model;
+
+import com.chunqiu.mrjuly.common.persistence.DataEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.Date;
+
+/**
+ *消息通知
+ */
+public class Complaints extends DataEntity<Complaints, Integer> {
+
+    private static final long serialVersionUID = 1L;
+    private Integer id;   //投诉类型id
+    private Integer complaintsType;//投诉建议内容
+    private String  complaintContent;//投诉建议内容
+    private Integer isFeedback;//是否反馈 1.是 2.否
+    private Integer feedbackFode; //反馈方式 1.手机号码 2.邮箱
+    private String  contactInformation;//联系方式 （手机号码或者邮箱）
+    private String  feedbackRoom;//反馈的房间号
+    private Integer feedbackType;//反馈类型 1.本地服务 2.在线服务 3.平台系统
+    private Integer objectId;//需要投诉该对象的id（如果投诉类型是平台系统 固定投诉对象的id为 1.总控平台 2.本地管理端 3.在线服务端）
+    private Date    createDate;//创建时间
+    private Integer hotelCodeId;//酒店设备前缀id
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    @Override
+    public Integer getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getComplaintsType() {
+        return complaintsType;
+    }
+
+    public void setComplaintsType(Integer complaintsType) {
+        this.complaintsType = complaintsType;
+    }
+
+    public String getComplaintContent() {
+        return complaintContent;
+    }
+
+    public void setComplaintContent(String complaintContent) {
+        this.complaintContent = complaintContent;
+    }
+
+    public Integer getIsFeedback() {
+        return isFeedback;
+    }
+
+    public void setIsFeedback(Integer isFeedback) {
+        this.isFeedback = isFeedback;
+    }
+
+    public Integer getFeedbackFode() {
+        return feedbackFode;
+    }
+
+    public void setFeedbackFode(Integer feedbackFode) {
+        this.feedbackFode = feedbackFode;
+    }
+
+    public String getContactInformation() {
+        return contactInformation;
+    }
+
+    public void setContactInformation(String contactInformation) {
+        this.contactInformation = contactInformation;
+    }
+
+    public String getFeedbackRoom() {
+        return feedbackRoom;
+    }
+
+    public void setFeedbackRoom(String feedbackRoom) {
+        this.feedbackRoom = feedbackRoom;
+    }
+
+    public Integer getFeedbackType() {
+        return feedbackType;
+    }
+
+    public void setFeedbackType(Integer feedbackType) {
+        this.feedbackType = feedbackType;
+    }
+
+    public Integer getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(Integer objectId) {
+        this.objectId = objectId;
+    }
+
+    @Override
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    @Override
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public Integer getHotelCodeId() {
+        return hotelCodeId;
+    }
+
+    public void setHotelCodeId(Integer hotelCodeId) {
+        this.hotelCodeId = hotelCodeId;
+    }
+}

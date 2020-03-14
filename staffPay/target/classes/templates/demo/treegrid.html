@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>树状grid demo</title>
+    <head th:include="init :: init"></head>
+
+    <!-- treegrid暂时需要单独引用js和css -->
+    <link rel="stylesheet" th:href="@{/bootstrap-table/assets/bootstrap-table/src/bootstrap-table.css}">
+    <link rel="stylesheet" th:href="@{/bootstrap-table/assets/bootstrap-table/src/extensions/treegrid/css/jquery.treegrid.min.css}">
+
+    <script th:src="@{/bootstrap-table/assets/bootstrap-table/src/bootstrap-table.js}"></script>
+    <script th:src="@{/bootstrap-table/assets/bootstrap-table/src/extensions/treegrid/bootstrap-table-treegrid.js}"></script>
+    <script th:src="@{/bootstrap-table/assets/bootstrap-table/src/extensions/treegrid/js/jquery.treegrid.min.js}"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            $('#table').bootstrapTable({
+                url : '/demo/treeGrid.json',
+                height : 'auto',
+                striped: true,
+                sidePagination: 'server',
+                idField: 'id',
+                columns: [
+                    {
+                        field: 'ck',
+                        checkbox: true
+                    },
+                    {
+                        field: 'name',
+                        title: '名称'
+                    },
+                    // {field: 'id', title: '编号', sortable: true, align: 'center'},
+                    // {field: 'pid', title: '所属上级'},
+                    {
+                        field: 'status',
+                        title: '状态',
+                        sortable: true,
+                        align: 'center',
+                        formatter: 'statusFormatter'
+                    },
+                    {
+                        field: 'permissionValue',
+                        title: '权限值'
+                    }
+                ],
+                // bootstrap-table-tree-column.js 插件配置
+                // treeShowField: 'name',
+                // parentIdField: 'pid'
+                // bootstrap-table-tree-column.js 插件配置
+
+                // bootstrap-table-treegrid.js 插件配置
+                treeShowField: 'name',
+                parentIdField: 'pid',
+                onLoadSuccess: function(data) {
+                    //禁止bootstrap table中的checkbox加载layui样式
+                    $('.table .bs-checkbox input').each(function () {
+                        $(this).attr("lay-ignore", "true");
+                    });
+                    // jquery.treegrid.js
+                    $('#table').treegrid({
+                        //initialState: 'collapsed',
+                        treeColumn: 1,
+                        // expanderExpandedClass: 'glyphicon glyphicon-minus',
+                        // expanderCollapsedClass: 'glyphicon glyphicon-plus',
+                        onChange: function() {
+                            $('#table').bootstrapTable('resetWidth');
+                        }
+                    });
+                }
+                // bootstrap-table-treetreegrid.js 插件配置
+            });
+
+        });
+
+
+        // 格式化类型
+        function typeFormatter(value, row, index) {
+            if (value === 'menu') {
+                return '菜单';
+            }
+            if (value === 'button') {
+                return '按钮';
+            }
+            if (value === 'api') {
+                return '接口';
+            }
+            return '-';
+        }
+
+        // 格式化状态
+        function statusFormatter(value, row, index) {
+            if (value === 1) {
+                return '<span class="label label-success">正常</span>';
+            } else {
+                return '<span class="label label-default">锁定</span>';
+            }
+        }
+    </script>
+
+</head>
+<body layadmin-themealias="default">
+    <div class="layui-fluid animated fadeInRight">
+        <div class="layui-card">
+            <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+                <div class="layui-form-item form-head">
+                    <form id="searchForm">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">普通输入框：</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button class="btn btn-primary " type="button" onclick="search()"><i class="fa fa-search"></i>&nbsp;查询</button>
+                        </div>
+                    </form>
+                </div>
+
+                <table id="table">
+
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

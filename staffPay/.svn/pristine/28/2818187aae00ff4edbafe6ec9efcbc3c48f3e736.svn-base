@@ -1,0 +1,18 @@
+package com.chunqiu.mrjuly.modules.install.service;
+
+import com.chunqiu.mrjuly.common.persistence.CrudService;
+import com.chunqiu.mrjuly.modules.install.dao.FeedbackInfoDao;
+import com.chunqiu.mrjuly.modules.install.model.FeedbackInfo;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+
+/**
+ * 反馈管理
+ */
+@Service
+public class FeedbackInfoService extends CrudService<FeedbackInfoDao, FeedbackInfo, Integer> {
+
+    @Resource
+    private FeedbackInfoDao feedbackInfoDao;
+}

@@ -1,0 +1,68 @@
+package com.chunqiu.mrjuly.modules.install.controller;
+
+import com.chunqiu.mrjuly.common.annotation.Log;
+import com.chunqiu.mrjuly.common.persistence.BaseController;
+import com.chunqiu.mrjuly.modules.install.model.CompanyInfo;
+import com.chunqiu.mrjuly.modules.install.service.CompanyInfoService;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+/**
+ * 导航公司设置
+ */
+@Slf4j
+@Controller
+@RequestMapping(value = "${adminPath}/install/companyInfo")
+public class CompanyInfoController extends BaseController {
+
+    @Autowired
+    private CompanyInfoService companyInfoService;
+
+    /**
+     * 编辑导航公司数据
+     *
+     * @param companyInfo
+     * @param model
+     * @return
+     */
+    @Log("登录导航公司编辑页面")
+    @RequestMapping("index")
+    @RequiresPermissions("install:companyInfo:view")
+    public String form(CompanyInfo companyInfo, ModelMap model) {
+        if (companyInfo != null) {
+            companyInfo = companyInfoService.get(companyInfo.getId());
+        }
+        model.addAttribute("companyInfo", companyInfo);
+        return "install/companyInfoForm";
+    }
+
+
+    /**
+     * 导航公司编辑保存
+     *
+     * @param companyInfo
+     * @param model
+     * @return
+     */
+    @Log("保存导航公司")
+    @RequestMapping("saveCompanyInfo")
+    @RequiresPermissions("install:companyInfo:edit")
+    public String saveCompanyInfo(CompanyInfo companyInfo, ModelMap model) {
+        try {
+            companyInfoService.save(companyInfo);
+            companyInfo = companyInfoService.get(companyInfo.getId());
+        } catch (Exception e) {
+            log.error("保存失败！ msg={}", e.getMessage(), e);
+            model.addAttribute("error", "保存失败！");
+            return form(companyInfo, model);
+        }
+        return form(companyInfo,model);
+
+    }
+
+
+}

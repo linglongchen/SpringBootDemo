@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: asm:asm:unknown">
+    <CLASSES>
+      <root url="jar://D:/development/MavenRepository/asm/asm/unknown/asm-unknown.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://D:/development/MavenRepository/asm/asm/unknown/asm-unknown-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://D:/development/MavenRepository/asm/asm/unknown/asm-unknown-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

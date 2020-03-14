@@ -1,0 +1,301 @@
+package com.chunqiu.mrjuly.modules.foregroundConfiguration.controller;
+
+import com.chunqiu.mrjuly.common.annotation.Log;
+import com.chunqiu.mrjuly.common.persistence.BaseController;
+import com.chunqiu.mrjuly.common.vo.Grid;
+import com.chunqiu.mrjuly.common.vo.GridParam;
+import com.chunqiu.mrjuly.common.vo.Json;
+import com.chunqiu.mrjuly.modules.foregroundConfiguration.model.PositionInfo;
+import com.chunqiu.mrjuly.modules.foregroundConfiguration.model.ReceptionInfo;
+import com.chunqiu.mrjuly.modules.foregroundConfiguration.service.PositionInfoService;
+import com.chunqiu.mrjuly.modules.foregroundConfiguration.service.ReceptionInfoService;
+import com.chunqiu.mrjuly.modules.hotelinfo.model.HotelInfo;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 前台配置Controller
+ *
+ * @author chen
+ * @version 2019-03-15
+ */
+@Slf4j
+@Controller
+@RequestMapping(value = "${adminPath}/receptionInfo")
+public class ReceptionInfoController extends BaseController {
+    @Autowired
+    private ReceptionInfoService receptionInfoService;
+    @Autowired
+    private PositionInfoService positionInfoService;
+
+
+    @Log("新增联系邻樱")
+    @RequestMapping(value ="/receptionInfo", method = RequestMethod.POST)
+    @ResponseBody
+    public Json insertContactInfo(ReceptionInfo receptionInfo) {
+        Json json = new Json();
+        try {
+            List<ReceptionInfo> receptionInfoList = receptionInfoService.getAll();
+            for (int i=0;i<receptionInfoList.size();i++){
+                if ((receptionInfo.getTelephone()==receptionInfoList.get(i).getTelephone()||(receptionInfo.getMailBox()==receptionInfoList.get(i).getMailBox()))){
+                    json.setSuccess(false);
+                    json.setMsg("重复手机号或邮箱！");
+                    return json;
+                }
+            }
+            receptionInfoService.insertContactInfo(receptionInfo);
+            json.setSuccess(true);
+        } catch (Exception e) {
+            log.error("新增失败！ msg={}", e.getMessage(), e);
+            json.setSuccess(false);
+            json.setMsg("新增失败！");
+        }
+        return json;
+    }
+
+
+    /**
+     * 登录到联系邻樱页面
+     * @return
+     */
+    @Log("登录联系邻樱页面")
+    @RequestMapping("index")
+    public String index(){
+        return "foregroundConfiguration/receptionInfoList";
+    }
+
+    /**
+     * 查询联系邻樱列表
+     * @param receptionInfo
+     * @param param
+     * @return
+     */
+    @Log("查询联系邻樱列表")
+    @RequestMapping("list")
+    @ResponseBody
+    public Grid list(ReceptionInfo receptionInfo, GridParam param) {
+        return receptionInfoService.findPage(receptionInfo, param);
+    }
+
+    /**
+     * 删除联系邻樱信息
+     * @param receptionInfo
+     * @return
+     */
+    @Log("删除联系邻樱信息")
+    @RequestMapping("delReceptionInfo")
+    @ResponseBody
+    public Json delReceptionInfo(ReceptionInfo receptionInfo){
+        Json json = new Json();
+        try{
+            receptionInfoService.delete(receptionInfo);
+            json.setSuccess(true);
+        }catch(Exception e){
+
+            json.setSuccess(false);
+            json.setMsg("删除失败！");
+        }
+        return json;
+    }
+
+    /**
+     * 登录邻奌通服务管理系统视频上传页面
+     * @return
+     */
+    @Log("登录邻奌通服务管理系统视频上传页面")
+    @RequestMapping("index1")
+    public String index1(){
+        return "foregroundConfiguration/uploadVideo";
+    }
+
+    /**
+     * 邻奌通服务管理系统网站视频列表
+     * @param receptionInfo
+     * @return
+     */
+    @Log("网站视频列表")
+    @RequestMapping("videoInfo")
+    @ResponseBody
+    public Map<String,Object> videoInfo1(ReceptionInfo receptionInfo,HttpServletResponse response) throws UnsupportedEncodingException{
+        Map<String,Object> map = new HashMap<>();
+        receptionInfo = receptionInfoService.receptionVideoInfo();
+
+        map.put("receptionInfo",receptionInfo);
+        response.addHeader("Access-Control-Allow-Origin", "*");
+        response.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "x-requested-with");
+        response.addHeader("Access-Control-Max-Age", "1800");//30 min
+        return map;
+    }
+
+    /**
+     * 邻奌通服务管理系统后台保存网站视频
+     * @param receptionInfo
+     * @param model
+     * @return
+     */
+    @Log("后台保存网站视频")
+    @RequestMapping("saveVideoInfo")
+    public String saveVideoInfo(ReceptionInfo receptionInfo, ModelMap model){
+        try{
+            receptionInfoService.save(receptionInfo);
+        }catch(Exception e){
+            model.addAttribute("error", "保存失败！");
+            return index1();
+        }
+        return index1();
+    }
+
+    /**
+     * 网页视频列表
+     * @param receptionInfo
+     * @param response
+     * @return
+     * @throws UnsupportedEncodingException
+     */
+    @Log("网站视频列表")
+    @RequestMapping(value ="/videoInfo", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String,Object> videoInfo(ReceptionInfo receptionInfo,HttpServletResponse response) throws UnsupportedEncodingException{
+        Map<String,Object> map = new HashMap<>();
+        receptionInfo = receptionInfoService.receptionVideoInfo();
+
+        map.put("receptionInfo",receptionInfo);
+        response.addHeader("Access-Control-Allow-Origin", "*");
+        response.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "x-requested-with");
+        response.addHeader("Access-Control-Max-Age", "1800");//30 min
+        return map;
+    }
+
+    /**
+     * 登录职位描述页面
+     * @return
+     */
+    @Log("登录职位描述页面")
+    @RequestMapping("index2")
+    public String index2(){
+        return "foregroundConfiguration/positionInfo";
+    }
+
+    /**
+     * 后台查询职位列表
+     * @param positionInfo
+     * @param param
+     * @return
+     */
+    @Log("后台查询职位列表")
+    @RequestMapping("positionList")
+    @ResponseBody
+    public Grid positionList(PositionInfo positionInfo, GridParam param) {
+        return receptionInfoService.positionFindPage(positionInfo, param);
+    }
+
+    /**
+     * 登录职位新增/编辑页面
+     * @param positionInfo
+     * @param model
+     * @return
+     */
+    @Log("登录新增/编辑页面")
+    @RequestMapping(value = "form")
+    public String form(PositionInfo positionInfo, ModelMap model) {
+        if (positionInfo.getPositionName()== null && positionInfo.getId() != null){
+            positionInfo = positionInfoService.get(positionInfo.getId());
+        }
+        model.addAttribute("positionInfo", positionInfo);
+        return "foregroundConfiguration/positionInfoForm";
+    }
+
+    /**
+     * 后台保存职位列表
+     * @param positionInfo
+     * @param model
+     * @return
+     */
+    @Log("后台保存职位列表")
+    @RequestMapping("savePositionInfo")
+    public String savePositionInfo(PositionInfo positionInfo, ModelMap model){
+        try{
+            receptionInfoService.savePositionInfo(positionInfo);
+        }catch(Exception e){
+            model.addAttribute("error", "保存失败！");
+            return form(positionInfo,model);
+        }
+        return successPath;
+    }
+
+    /**
+     * 删除职位信息
+     * @param positionInfo
+     * @return
+     */
+    @Log("删除职位信息")
+    @RequestMapping("delPosition")
+    @ResponseBody
+    public Json delPosition(PositionInfo positionInfo){
+        Json json = new Json();
+        try{
+            positionInfoService.delete(positionInfo);
+            json.setSuccess(true);
+        }catch(Exception e){
+
+            json.setSuccess(false);
+            json.setMsg("删除失败！");
+        }
+        return json;
+    }
+
+    /*@Log("网站查询职位列表")
+    @RequestMapping(value ="/websitePositionList", method = RequestMethod.POST)
+    @ResponseBody
+    public List<PositionInfo> websitePositionList(PositionInfo positionInfo,HttpServletResponse response) throws UnsupportedEncodingException{
+        response.addHeader("Access-Control-Allow-Origin", "*");
+        response.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "x-requested-with");
+        response.addHeader("Access-Control-Max-Age", "1800");//30 min
+        return receptionInfoService.websitePositionList(positionInfo);
+    }*/
+
+    @Log("网站查询职位列表")
+    @ResponseBody
+    @RequestMapping(value ="/websitePositionList", method = RequestMethod.POST)
+    public Map<String,Object> check2(PositionInfo positionInfo,HttpServletResponse response)throws UnsupportedEncodingException{
+        Map<String,Object> map = new HashMap<String,Object>();
+        //这里写你的查询
+        List<PositionInfo> list = receptionInfoService.websitePositionList(positionInfo);
+        map.put("list1",list);
+        response.addHeader("Access-Control-Allow-Origin", "*");
+        response.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "x-requested-with");
+        response.addHeader("Access-Control-Max-Age", "1800");//30 min
+        return map;//返回到页面  map里面定义的XXX  到页面上直接data.XX
+    }
+
+    @Log("网站查询地址")
+    @ResponseBody
+    @RequestMapping(value ="/selAddress", method = RequestMethod.POST)
+    public Map<String,Object> selAddress(HotelInfo hotelInfo, HttpServletResponse response)throws UnsupportedEncodingException{
+        Map<String,Object> map = new HashMap<String,Object>();
+        //这里写你的查询
+        List<HotelInfo> hotelInfoList = receptionInfoService.selAddress(hotelInfo);
+        map.put("hotelInfoList",hotelInfoList);
+        response.addHeader("Access-Control-Allow-Origin", "*");
+        response.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "x-requested-with");
+        response.addHeader("Access-Control-Max-Age", "1800");//30 min
+        return map;//返回到页面  map里面定义的XXX  到页面上直接data.XX
+    }
+
+}

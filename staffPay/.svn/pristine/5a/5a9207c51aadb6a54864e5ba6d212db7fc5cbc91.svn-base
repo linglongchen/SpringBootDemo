@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>开具</title>
+
+	<head th:include="init :: init"></head>
+
+	<script type="text/javascript">
+		function validForm(){
+            $('#signupForm').validate({
+                submitHandler:function(form){
+                    loading();
+                    form.action = '[[${ctx}]]/invoiceinfo/invoiceInfo/updateInvoiceNumber';
+                    form.submit();
+                }
+            });
+            $('#signupForm').submit();
+        }
+	</script>
+</head>
+<body layadmin-themealias="default">
+<div class="wrapper animated fadeInRight">
+	<div class="ibox-content">
+		<div class="row">
+			<form id="signupForm" class="layui-form form-horizontal m-t">
+				<input type="hidden" th:value="${invoiceInfo.id}" name="id">
+				<div class="layui-inline" style="height: 152px;">
+					<label class="layui-form-label">开具发票号：</label>
+					<div class="layui-input-inline">
+						<input type="text" style="width: 300px" required name="invoiceNumber" autocomplete="off" placeholder="请输入发票号" class="layui-input">
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+</body>
+</html>

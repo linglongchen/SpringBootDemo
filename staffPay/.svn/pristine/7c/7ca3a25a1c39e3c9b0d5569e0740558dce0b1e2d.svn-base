@@ -1,0 +1,115 @@
+package com.chunqiu.mrjuly.modules.advertisement.model;
+
+import com.chunqiu.mrjuly.common.persistence.DataEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.hibernate.validator.constraints.Length;
+
+import java.math.BigDecimal;
+import java.util.Date;
+
+/**
+ * 广告主管理Entity
+ * @author chen
+ * @version 2019-04-18
+ */
+public class AdvertiserMasterInfo extends DataEntity<AdvertiserMasterInfo, Integer> {
+	
+	private static final long serialVersionUID = 1L;
+	private String advertiserNumber;		// 广告主编号
+	private String freezeReason;		// 冻结原因
+	private Date validityTime;		// 经营有效期
+	private String businessLicense;		// 营业执照
+	private String enterpriseNumber;		// 企业编号
+	private String advertiserName;		// 企业名称
+	private BigDecimal frozenPrice;		// 冻结资金
+	private Integer advertiseInfoId;		// 广告商id
+	private String advertiseInfoName;
+
+
+	public String getAdvertiseInfoName() {
+		return advertiseInfoName;
+	}
+
+	public void setAdvertiseInfoName(String advertiseInfoName) {
+		this.advertiseInfoName = advertiseInfoName;
+	}
+
+	public AdvertiserMasterInfo() {
+		super();
+	}
+
+	public AdvertiserMasterInfo(Integer id){
+		super(id);
+	}
+
+	@Length(min=0, max=255, message="广告主编号长度必须介于 0 和 255 之间")
+	public String getAdvertiserNumber() {
+		return advertiserNumber;
+	}
+
+	public void setAdvertiserNumber(String advertiserNumber) {
+		this.advertiserNumber = advertiserNumber;
+	}
+	
+	@Length(min=0, max=255, message="冻结原因长度必须介于 0 和 255 之间")
+	public String getFreezeReason() {
+		return freezeReason;
+	}
+
+	public void setFreezeReason(String freezeReason) {
+		this.freezeReason = freezeReason;
+	}
+	
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	public Date getValidityTime() {
+		return validityTime;
+	}
+
+	public void setValidityTime(Date validityTime) {
+		this.validityTime = validityTime;
+	}
+	
+	@Length(min=0, max=255, message="营业执照长度必须介于 0 和 255 之间")
+	public String getBusinessLicense() {
+		return businessLicense;
+	}
+
+	public void setBusinessLicense(String businessLicense) {
+		this.businessLicense = businessLicense;
+	}
+	
+	@Length(min=0, max=20, message="企业编号长度必须介于 0 和 20 之间")
+	public String getEnterpriseNumber() {
+		return enterpriseNumber;
+	}
+
+	public void setEnterpriseNumber(String enterpriseNumber) {
+		this.enterpriseNumber = enterpriseNumber;
+	}
+	
+	@Length(min=0, max=255, message="企业名称长度必须介于 0 和 255 之间")
+	public String getAdvertiserName() {
+		return advertiserName;
+	}
+
+	public void setAdvertiserName(String advertiserName) {
+		this.advertiserName = advertiserName;
+	}
+	
+	public BigDecimal getFrozenPrice() {
+		return frozenPrice;
+	}
+
+	public void setFrozenPrice(BigDecimal frozenPrice) {
+		this.frozenPrice = frozenPrice;
+	}
+	
+	public Integer getAdvertiseInfoId() {
+		return advertiseInfoId;
+	}
+
+	public void setAdvertiseInfoId(Integer advertiseInfoId) {
+		this.advertiseInfoId = advertiseInfoId;
+	}
+	
+}

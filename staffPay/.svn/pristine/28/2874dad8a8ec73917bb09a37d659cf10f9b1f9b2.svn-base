@@ -1,0 +1,21 @@
+package com.chunqiu.mrjuly.modules.shopinfo.service;
+
+import com.chunqiu.mrjuly.common.persistence.CrudService;
+import com.chunqiu.mrjuly.modules.shopinfo.dao.ShopRenovationInfoDao;
+import com.chunqiu.mrjuly.modules.shopinfo.model.ShopRenovationInfo;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+
+/**
+ * 商家首页信息Service
+ * @author wang
+ * @version 2019-03-12
+ */
+@Service
+public class ShopRenovationInfoService extends CrudService<ShopRenovationInfoDao, ShopRenovationInfo, Integer> {
+	@Resource
+	private ShopRenovationInfoDao shopRenovationInfoDao;
+
+
+}

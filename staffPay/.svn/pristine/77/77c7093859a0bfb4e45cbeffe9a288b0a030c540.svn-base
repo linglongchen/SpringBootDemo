@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>商家信息管理</title>
+
+    <head th:include="init :: init"></head>
+    <head th:include="init_bootstrap_table :: bootstrap_table"></head>
+
+    <script type="text/javascript">
+        $(function () {
+            $('#table').bootstrapTable({
+                undefinedText: '',//defined的默认显示文本
+                striped: true,//条纹
+                method: 'get',
+                url: '[[${ctx}]]/shopinfo/shopInfo/list2',
+                pagination: true,//显示分页
+                sidePagination: 'server',//定义分页为服务器端分页
+                pageNumber: 1,//起始页数
+                pageSize: 20,//默认显示行数
+                pageList: [20, 50, 100, 200],//可选分页数
+                singleSelect: false,//多选
+                //toolbar : '#toolbar',
+                height: 'auto',
+                columns: [
+                     {
+                        field: 'status',
+                        title: '审核状态',
+                        halign: 'center',
+                        align: 'center',
+                        formatter: function (value, row, index) {
+                            if (value == 0) {
+                                return "待审核";
+                            } else if (value == 1) {
+                                return "驳回";
+                            } else if (value == 2) {
+                                return "搁置";
+                            } else {
+                                return "通过";
+                            }
+                        }
+                    }, {
+                        field: 'shopName',
+                        title: '商家名称',
+                        halign: 'center',
+                        align: 'center'
+                    }, {
+                        field: 'shopNumber',
+                        title: '商家编号',
+                        halign: 'center',
+                        align: 'center'
+                    }, {
+                        field: 'shopTypeName',
+                        title: '商家类别',
+                        halign: 'center',
+                        align: 'center'
+                    }, {
+                        field: 'shopTypeName',
+                        title: '展业状态',
+                        halign: 'center',
+                        align: 'center',
+                        formatter: function (value, row, index) {
+                        	if (row.openingType == 1){
+                                return "新开业";
+                        	} else {
+                                return "续期";
+                        	}
+                        }
+                    }, {
+                        field: 'businessLicensePeriod',
+                        title: '营业执照期限',
+                        halign: 'center',
+                        align: 'center'
+                    }, {
+                        field: 'businessLicenseImg',
+                        title: '营业执照照片',
+                        halign: 'center',
+                        align: 'center',
+                        formatter: function (value, row, index) {
+                            return '<img style="width:64px;height:64px;" src="' + value + '">';
+                        }
+                    }, {
+                        field: 'createDate',
+                        title: '创建时间',
+                        halign: 'center',
+                        align: 'center'
+                    }, {
+                        field: 'leaseTerm2',
+                        title: '展业结束日期',
+                        halign: 'center',
+                        align: 'center',
+                        formatter:function (value,row,index) {
+                            var str = value.split(",");
+                            var str2 = "";
+                            for (var i=0;i<str.length;i++){
+                                str2 +=str[i]+'<br/>';
+                            }
+                            return str2;
+                        }
+                    }, {
+                        field: 'option',
+                        title: '操作',
+                        halign: 'center',
+                        align: 'center',
+                        formatter: function (value, row, index) {
+                            var _html = '<ul>';
+                            if (row.status == 0){
+                                _html += '<li><a href="javascript:editShopInfo(' + row.shopId + ' , '+row.id+')" class="btn btn-success btn-xs"><i class="fa fa-pencil"></i> 查看详情并审核 </a></li>';
+                            } else if (row.status == 1 || row.status == 2){
+                            	_html += '<li>原因：'+row.banReason+'</li>';
+                            } else {
+                            	_html += '<li>审核通过</li>';
+                            }
+                            _html += '</ul>';
+                            return _html;
+
+                        }
+                    }],
+                onLoadSuccess: function (data) {
+                    if (data.total == 0) {
+                        $('#table').bootstrapTable('removeAll');
+                    }
+                }
+            });
+        });
+
+
+        //编辑商家信息
+        function editShopInfo(id,shopHotelId) {
+            layer.open({
+                type: 2,
+                title: '查看详情并审核',
+                area: ['80%', '90%'],
+                content: '[[${ctx}]]/shopinfo/shopInfo/form?id='+id+'&shopHotelId='+shopHotelId+'', //这里content是一个DOM
+                closeBtn: '1',
+                shadeClose: true,//点击遮罩层关闭
+                shade: [0.8, '#393D49'],
+                yes: function (index, layero) {
+                    var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                    iframeWin.validForm();
+                }
+            });
+        }
+
+
+        //查询
+        function search() {
+            var param = $('#searchForm').serialize();
+            $('#table').bootstrapTable('refresh', {url: '[[${ctx}]]/shopinfo/shopInfo/list2?' + param});
+        }
+    </script>
+</head>
+<body layadmin-themealias="default">
+<div class="layui-fluid animated fadeInRight">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+            <div class="layui-form-item form-head">
+                <form id="searchForm" class="layui-form">
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">商家名称：</label>
+                        <div class="layui-input-inline">
+                            <input name="shopName" autocomplete="off" class="layui-input" placeholder="请输入商家名称"
+                                   type="text">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">商家编号：</label>
+                        <div class="layui-input-inline">
+                            <input name="shopNumber" autocomplete="off" class="layui-input" placeholder="请输入商家编号"
+                                   type="text">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                    <button class="btn btn-primary " type="button" onclick="search()"><i class="fa fa-search"></i>&nbsp;查询
+                    </button>
+                </div>
+                </form>
+            </div>
+            <table id="table">
+
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

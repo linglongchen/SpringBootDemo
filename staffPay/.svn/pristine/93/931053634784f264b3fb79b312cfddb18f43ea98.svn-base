@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>商品管理</title>
+
+	<head th:include="init :: init"></head>
+    <head th:include="init_bootstrap_table :: bootstrap_table"></head>
+
+	<script type="text/javascript">
+		$(function(){
+			$('#table').bootstrapTable({
+				undefinedText : '',//defined的默认显示文本
+				striped : true,//条纹
+				method : 'get',
+				url : '[[${ctx}]]/hotelinfo/departmentGoodsInfo/list',
+				pagination : true,//显示分页
+				sidePagination : 'server',//定义分页为服务器端分页
+				pageNumber : 1,//起始页数
+				pageSize : 5,//默认显示行数
+				pageList : [5, 50, 100 ,200],//可选分页数
+				singleSelect : false,//多选
+				//toolbar : '#toolbar',
+				height : 'auto',
+			    columns: [
+                    {
+                        checkbox: true
+                    },{
+                        field: 'departmentGoodsPic',
+                        title: '商品图',
+                        halign : 'center',
+                        align : 'center',
+                        formatter : function(value, row, index){
+                         	var str = row.departmentGoodsPic.split(",");
+                         	return "<img src="+str[0]+">";
+                        }
+                    },
+					{
+			        field: 'departmentGoodsName',
+			        title: '商品名',
+			        halign : 'center',
+			        align : 'center'
+			    },
+                    {
+                        field: 'categoryName',
+                        title: '所属类目',
+                        halign : 'center',
+                        align : 'center'
+                    },{
+			        field: 'departmentGoodsNum',
+			        title: '数量',
+			        halign : 'center',
+			        align : 'center'
+			    }
+                   , {
+                        field: 'departmentName',
+                        title: '部门',
+                        halign : 'center',
+                        align : 'center'
+                    },{
+			        field: 'departmentGoodsPrice',
+			        title: '价格',
+			        halign : 'center',
+			        align : 'center'
+			    },{
+			        field: 'stock',
+			        title: '库存',
+			        halign : 'center',
+			        align : 'center',
+                        formatter : function(value, row, index){
+                           if (row.stock == 1){
+                               return "售罄";
+						   }else {
+                               return "有货";
+						   }
+						   return value;
+                        }
+			    },
+                    {
+                        field: 'departmentGoodsLanguage',
+                        title: '语言',
+                        halign : 'center',
+                        align : 'center',
+                        formatter : function(value, row, index){
+                            if (row.departmentGoodsLanguage == 1){
+                                return "中";
+                            }else if (row.departmentGoodsLanguage == 2) {
+                                return "英";
+                            }else if (row.departmentGoodsLanguage == 3) {
+                                return "德";
+                            }else if (row.departmentGoodsLanguage == 4) {
+                                return "法";
+                            }else if (row.departmentGoodsLanguage == 5) {
+                                return "意";
+                            }else if (row.departmentGoodsLanguage == 6 ) {
+                                return "日";
+                            }else if (row.departmentGoodsLanguage == 7) {
+                                return "韩";
+                            }else if (row.departmentGoodsLanguage == 8) {
+                                return "拉丁";
+                            }else if (row.departmentGoodsLanguage == 9) {
+                                return "阿拉伯";
+                            }
+                            return value;
+                        }
+                    },{
+			        field: 'serviceMode',
+			        title: '服务方式',
+			        halign : 'center',
+			        align : 'center'
+			    },{
+			        field: 'departmentGoodsDescribe',
+			        title: '商品文字描述',
+			        halign : 'center',
+			        align : 'center'
+			    },{
+			        field: 'isShelf',
+			        title: '状态 ',
+			        halign : 'center',
+			        align : 'center',
+                        formatter : function(value, row, index){
+                            if (row.isShelf == 0){
+                                return "下架";
+                            }else {
+                                return "上架";
+                            }
+                            return value;
+                        }
+			    },{
+			    	field : 'option',
+			    	title : '操作',
+			    	halign : 'center',
+			    	align : 'center',
+			    	formatter : function(value, row, index){
+			    		var _html = '<ul class="grid_btn_ul">';
+			    		if (row.isShelf == 0){
+                            _html += '<li><a href="javascript:upper(' + row.id + ',1)" class="btn btn-success btn-xs"><i class="fa fa-pencil"></i> 上架 </a></li>';
+                        }else {
+                            _html += '<li><a href="javascript:upper(' + row.id + ',0)" class="btn btn-success btn-xs"><i class="fa fa-pencil"></i> 下架 </a></li>';
+                        }
+                        _html += '<li><a href="javascript:editDepartmentGoodsInfo(' + row.id + ')" class="btn btn-success btn-xs"><i class="fa fa-pencil"></i> 编辑 </a></li>';
+                        _html += '<li><a href="javascript:departmentGoodsInfo(' + row.id + ')" class="btn btn-success btn-xs"><i class="fa fa-pencil"></i> 查看详情 </a></li>';
+                        _html += '<li><a href="javascript:delDepartmentGoodsInfo(' + row.id + ')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> 删除 </a></li>';
+			    		_html += '</ul>';
+			    		return _html;
+			    	}
+			    }],
+                onLoadSuccess : function(data){
+                    if(data.total == 0){
+                        $('#table').bootstrapTable('removeAll');
+                    }
+                    //禁止bootstrap table中的checkbox加载layui样式
+                    $('.table .bs-checkbox input').each(function () {
+                        $(this).attr("lay-ignore", "true");
+                    });
+                    $('.table thead .bs-checkbox .th-inner .layui-form-checkbox').remove();
+                }
+
+			});
+		});
+
+		//单件商品上下架
+		function upper(id,status){
+		    var idList = [];
+		    idList.push(id);
+            layer.confirm('您确定要更改该商品上下架的状态？',function(){
+                parent.loading();
+                $.post('[[${ctx}]]/hotelinfo/departmentGoodsInfo/framesStatus',{
+                    idList : idList.toString(),
+                    isShelf :status
+                },function(result){
+                    closeLoading();
+                    layer.closeAll();
+                    if(result.success){
+                        showMsgSuccess('更改状态成功');
+
+                        refreshTable();
+                    }else{
+                        showMsgError(result.msg);
+                    }
+                },'json');
+            });
+		}
+
+		//批量上下架商品
+		function upperList(status){
+            var idList = [];
+            var row = $.map($('#table').bootstrapTable('getSelections'), function (row) {
+                idList.push(row.id);
+            });
+            if (idList.length <= 0) {
+                showMsgError("请选择商品");
+                return;
+            }
+
+            layer.confirm('您确定要更改该商品上下架的状态？',function(){
+                parent.loading();
+                $.post('[[${ctx}]]/hotelinfo/departmentGoodsInfo/framesStatus',{
+                    idList : idList.toString(),
+                    isShelf :status
+                },function(result){
+                    closeLoading();
+                    layer.closeAll();
+                    if(result.success){
+                        showMsgSuccess('更改状态成功');
+
+                        refreshTable();
+                    }else{
+                        showMsgError(result.msg);
+                    }
+                },'json');
+            });
+		}
+
+		//批量删除
+		function batchDel(){
+            var idList = [];
+            var row = $.map($('#table').bootstrapTable('getSelections'), function (row) {
+                idList.push(row.id);
+            });
+            if (idList.length <= 0) {
+                showMsgError("请选择商品");
+                return;
+            }
+
+            layer.confirm('您确定要删除该商品？',function(){
+                parent.loading();
+                $.post('[[${ctx}]]/hotelinfo/departmentGoodsInfo/framesDelGoods',{
+                    idList : idList.toString()
+                },function(result){
+                    closeLoading();
+                    layer.closeAll();
+                    if(result.success){
+                        showMsgSuccess('删除成功');
+
+                        refreshTable();
+                    }else{
+                        showMsgError(result.msg);
+                    }
+                },'json');
+            });
+		}
+
+
+		//添加商品
+		function addDepartmentGoodsInfo(){
+			layer.open({
+			    type: 2,
+			    title : '新增商品',
+			    area : ['600px','600px'],
+			    content: '[[${ctx}]]/hotelinfo/departmentGoodsInfo/form', //这里content是一个DOM
+			    btn : ['保存', '关闭'],
+			    closeBtn : '1',
+			    shadeClose : true,//点击遮罩层关闭
+			    shade : [0.8, '#393D49'],
+			    yes : function(index, layero){
+			        var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+			        iframeWin.validForm();
+			    }
+			});
+		}
+
+		//编辑商品
+		function editDepartmentGoodsInfo(id){
+			layer.open({
+			    type: 2,
+			    title : '编辑商品',
+                area : ['600px','600px'],
+			    content: '[[${ctx}]]/hotelinfo/departmentGoodsInfo/form?id=' + id, //这里content是一个DOM
+			    btn : ['保存', '关闭'],
+			    closeBtn : '1',
+			    shadeClose : true,//点击遮罩层关闭
+			    shade : [0.8, '#393D49'],
+			    yes : function(index, layero){
+			        var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+			        iframeWin.validForm();
+			    }
+			});
+		}
+
+		//查看详情
+		function departmentGoodsInfo(id){
+            layer.open({
+                type: 2,
+                title : '编辑商品',
+                area : ['600px','600px'],
+                content: '[[${ctx}]]/hotelinfo/departmentGoodsInfo/form?id=' + id, //这里content是一个DOM
+                /*btn : ['保存', '关闭'],*/
+                closeBtn : '1',
+                shadeClose : true,//点击遮罩层关闭
+                shade : [0.8, '#393D49'],
+                yes : function(index, layero){
+                    var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                    iframeWin.validForm();
+                }
+            });
+		}
+
+
+		//删除商品
+		function delDepartmentGoodsInfo(id){
+			layer.confirm('您确定要删除该商品吗？',function(){
+				parent.loading();
+				$.post('[[${ctx}]]/hotelinfo/departmentGoodsInfo/delDepartmentGoodsInfo',{
+					id : id
+				},function(result){
+					closeLoading();
+					layer.closeAll();
+					if(result.success){
+						showMsgSuccess('删除成功');
+
+						refreshTable();
+					}else{
+						showMsgError(result.msg);
+					}
+				},'json');
+			});
+		}
+
+		//查询
+		function search(){
+			var param = $('#searchForm').serialize();
+			$('#table').bootstrapTable('refresh', {url : '[[${ctx}]]/hotelinfo/departmentGoodsInfo/list?' + param});
+		}
+	</script>
+
+	<style type="text/css">
+		.layui-form input[type="checkbox"]{
+			display: block;
+		}
+	</style>
+</head>
+<body layadmin-themealias="default">
+	<div class="layui-fluid animated fadeInRight">
+        <div class="layui-card">
+        	<div class="layui-form layui-card-header layuiadmin-card-header-auto">
+                <div class="layui-form-item form-head">
+					<form id="searchForm" class="layui-form">
+						<div class="layui-inline">
+							<div class="layui-input-inline">
+								<input type="text" name="departmentName" autocomplete="off" placeholder="请输入商品名" class="layui-input">
+							</div>
+						</div>
+						<div class="layui-inline">
+							<div class="layui-input-inline">
+								<select id="departmentId" name="departmentId" data-placeholder="请选择部门" class="chosen-select-deselect form-control layui-input">
+									<option ></option>
+									<option th:each="departmentInfoListList:${departmentInfoListList}" th:value="${departmentInfoListList?.id}" th:text="${departmentInfoListList.departmentName}"></option>
+								</select>
+							</div>
+						</div>
+						<div class="layui-inline">
+							<div class="layui-input-inline">
+							<button class="btn btn-primary " type="button" onclick="search()"><i class="fa fa-search"></i>&nbsp;查询</button>
+							</div>
+						</div>
+							<div class="layui-card-body">
+								<button class="btn btn-primary " type="button" data-toggle="modal" onclick="addDepartmentGoodsInfo()"><i class="fa fa-plus"></i>&nbsp;新增</button>
+								<button class="btn btn-primary " type="button" data-toggle="modal" onclick="batchDel()"><i class="fa fa-del"></i>&nbsp;批量删除</button>
+								<button class="btn btn-primary " type="button" data-toggle="modal" onclick="upperList(1)"><i class="fa fa-plus"></i>&nbsp;上架</button>
+								<button class="btn btn-primary " type="button" data-toggle="modal" onclick="upperList(0)"><i class="fa fa-plus"></i>&nbsp;下架</button>
+						</div>
+					</form>
+				</div>
+				<table id="table">
+
+				</table>
+	        </div>
+		</div>
+    </div>
+</body>
+</html>

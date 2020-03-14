@@ -1,0 +1,30 @@
+package com.chunqiu.mrjuly.modules.advertisingorder.service;
+
+import com.chunqiu.mrjuly.common.persistence.CrudService;
+import com.chunqiu.mrjuly.common.vo.Grid;
+import com.chunqiu.mrjuly.common.vo.GridParam;
+import com.chunqiu.mrjuly.modules.advertisingorder.dao.AdvertisingOrderDao;
+import com.chunqiu.mrjuly.modules.advertisingorder.dao.HousingSituationDao;
+import com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder;
+import com.chunqiu.mrjuly.modules.flowsheetinfo.model.FlowSheetInfo;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.List;
+
+/**
+ * 房源情况Service
+ * @author wyy
+ * @version 2019-03-25
+ */
+@Service
+public class HousingSituationService extends CrudService<HousingSituationDao, AdvertisingOrder, Integer> {
+	@Resource
+	private HousingSituationDao housingSituationDao;
+
+	public AdvertisingOrder selAllIn(AdvertisingOrder advertisingOrder){
+		return dao.selAllIn(advertisingOrder);
+	}
+}

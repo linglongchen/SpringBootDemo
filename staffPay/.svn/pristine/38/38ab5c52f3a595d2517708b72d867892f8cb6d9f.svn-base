@@ -1,0 +1,520 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chunqiu.mrjuly.modules.lyhoteldevicerelation.dao.LyHotelDeviceRelationDao">
+    
+	<sql id="lyHotelDeviceRelationColumns">
+		a.id AS "id",
+		a.device_coding AS "deviceCoding",
+		a.type AS "type",
+		a.hotel_id AS "hotelId",
+		a.department_id AS "departmentId",
+		a.code AS "code",
+		a.connect_status AS "connectStatus",
+		a.device_status AS "deviceStatus",
+		a.create_by AS "createBy.id",
+		a.create_time AS "createTime"
+	</sql>
+	
+	<sql id="lyHotelDeviceRelationJoins">
+	</sql>
+    
+	<select id="get" resultType="LyHotelDeviceRelation">
+		SELECT
+			f.hotel_code as "hotelCode",
+			<include refid="lyHotelDeviceRelationColumns"/>
+		FROM ly_hotel_device_relation a left join hotel_unique_code as f on  f.id = a.hotel_id
+		<include refid="lyHotelDeviceRelationJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="LyHotelDeviceRelation">
+		SELECT 
+			<include refid="lyHotelDeviceRelationColumns"/>
+		FROM ly_hotel_device_relation a
+		<include refid="lyHotelDeviceRelationJoins"/>
+		<where>
+			<if test="deviceCoding != null and deviceCoding != '' ">
+				a.hotel_id in (
+				(
+				SELECT id FROM hotel_unique_code where (hotel_name LIKE CONCAT("%",#{deviceCoding},"%"))
+				or
+				( hotel_code LIKE CONCAT("%",#{deviceCoding},"%") )
+				)
+				)
+			</if>
+		</where>
+		<choose>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			order by a.id desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="LyHotelDeviceRelation">
+		SELECT 
+			<include refid="lyHotelDeviceRelationColumns"/>
+		FROM ly_hotel_device_relation a
+		<include refid="lyHotelDeviceRelationJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			order by a.id desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO ly_hotel_device_relation(
+								device_coding,
+						type,
+						hotel_id,
+						department_id,
+						code,
+						connect_status,
+						device_status,
+						create_by,
+						create_time
+		) VALUES (
+								#{deviceCoding},
+						#{type},
+						#{hotelId},
+						#{departmentId},
+						#{code},
+						#{connectStatus},
+						#{deviceStatus},
+						#{createBy.id},
+						#{createTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE ly_hotel_device_relation 
+		<set> 	
+			<if test="deviceCoding != null and deviceCoding != ''">
+				device_coding = #{deviceCoding},
+			</if>
+			<if test="type != null">
+				type = #{type},
+			</if>
+			<if test="hotelId != null">
+				hotel_id = #{hotelId},
+			</if>
+
+				department_id = 0,
+
+			<if test="code != null and code != ''">
+				code = #{code},
+			</if>
+			<if test="connectStatus != null">
+				connect_status = #{connectStatus},
+			</if>
+			<if test="deviceStatus != null">
+				device_status = #{deviceStatus},
+			</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM ly_hotel_device_relation
+		WHERE id = #{id}
+	</update>
+
+
+	<insert id="insertHotelCodeList" parameterType="list">
+		INSERT INTO ly_hotel_device_relation (
+		device_coding,
+		type,
+		create_time,
+		create_by
+		)
+		VALUES
+		<foreach collection="list" item="item" separator=",">
+			(
+			#{item.uniqueEncoding},
+			#{item.type},
+			#{item.createDate},
+			#{item.createBy.id}
+			)
+		</foreach>
+		ON DUPLICATE KEY UPDATE device_coding =
+		VALUES
+		(device_coding);
+	</insert>
+
+
+	<select id="hotelCodeList" resultType="hotelInfo">
+			select 	hotel_code as "hotelCode",id,hotel_name as "hotelName" from hotel_unique_code where de_flag = '0'
+	</select>
+
+	<update id="insertHotelCodeIdByList">
+			update ly_hotel_device_relation
+			<set>
+				hotel_id=#{lyHotelDeviceRelation.hotelId},
+				department_id = 0,
+			</set>
+			where id in
+		<foreach collection="lyHotelDeviceRelationList" item="item" index="index" open="(" separator="," close=")">
+			#{item.id}
+		</foreach>
+	</update>
+
+	<update id="updateHotelIdById">
+		UPDATE `ly_hotel_device_relation`
+			SET
+			 `hotel_id` = NULL,
+			 `department_id` = NULL,
+			 `code` = NULL,
+			`connect_status`= 2,
+			 `device_status` = 2
+			WHERE
+				`id` = #{id}
+	</update>
+
+
+	<select id="allFindPage" resultType="LyHotelDeviceRelation">
+		SELECT
+		a.id,
+		a.type,
+		a.connect_status AS "connectStatus",
+		a.device_status AS "deviceStatus",
+		CASE
+	WHEN a.type = 1 THEN
+		CONCAT(
+			a.device_coding,
+			b.hotel_code,
+			"C",
+			CASE
+		WHEN length(a. CODE) = 1 THEN
+			CONCAT("000", a. CODE)
+		WHEN length(a. CODE) = 2 THEN
+			CONCAT("00", a. CODE)
+		WHEN length(a. CODE) = 3 THEN
+			CONCAT("0", a. CODE)
+		WHEN length(a. CODE) = 4 THEN
+		CONCAT("", a. CODE)
+		END
+
+		)
+	WHEN a.type = 2 THEN
+		CONCAT(
+			a.device_coding,
+			b.hotel_code,
+			"S",
+			a.department_id,
+			CASE
+		WHEN length(a. CODE) = 1 THEN
+			CONCAT("0", a. CODE)
+		WHEN length(a. CODE) = 2 THEN
+		CONCAT("", a. CODE)
+		END
+		)
+	END AS "code"
+	FROM
+		ly_hotel_device_relation AS a
+	LEFT JOIN hotel_unique_code AS b ON b.id = a.hotel_id
+	WHERE
+		a.hotel_id IS NOT NULL and  a.code IS NOT NULL
+	<if test="connectStatus != 0 and connectStatus != null ">
+		AND a.connect_status = #{connectStatus}
+	</if>
+	<if test="type != 0 and type != null">
+		AND a.type = #{type}
+	</if>
+	<if test="code != null and code != '' ">
+		AND
+		(CASE
+		WHEN a.type = 1 THEN
+		CONCAT(
+		a.device_coding,
+		b.hotel_code,
+		"C",
+		CASE
+		WHEN length(a. CODE) = 1 THEN
+		CONCAT("000", a. CODE)
+		WHEN length(a. CODE) = 2 THEN
+		CONCAT("00", a. CODE)
+		WHEN length(a. CODE) = 3 THEN
+		CONCAT("0", a. CODE)
+		WHEN length(a. CODE) = 4 THEN
+		CONCAT("", a. CODE)
+		END
+		)
+		WHEN a.type = 2 THEN
+		CONCAT(
+		a.device_coding,
+		b.hotel_code,
+		"S",
+		a.department_id,
+		CASE
+		WHEN length(a. CODE) = 1 THEN
+		CONCAT("0", a. CODE)
+		WHEN length(a. CODE) = 2 THEN
+		CONCAT("", a. CODE)
+		END
+		)
+		END) LIKE concat(concat('%',#{code}),'%')
+		<choose>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			order by a.id desc
+			</otherwise>
+		</choose>
+	</if>
+	</select>
+
+
+	<update id="updateDeviceStatusById">
+		UPDATE `ly_hotel_device_relation`
+			SET
+			 `device_status` = #{deviceStatus}
+			WHERE
+				`id` = #{id};
+	</update>
+
+	<select id="clientFindPage" resultType="LyHotelDeviceRelation">
+		SELECT
+			a.id,
+			a.connect_status AS "connectStatus",
+			a.code,
+			a.device_status AS "deviceStatus",
+			CONCAT(a.device_coding,b.hotel_code,"C") as "deviceCoding",
+			CONCAT(a.device_coding,b.hotel_code,"C",a. CODE) as "hotelCode",
+			a.device_coding as "codeName",
+			a.hotel_id as "hotelId"
+		FROM
+		ly_hotel_device_relation as a LEFT JOIN hotel_unique_code as b on b.id = a.hotel_id
+		WHERE a.type = 1 and hotel_id = #{hotelCodeId}
+		<if test="connectStatus != null and connectStatus != 0 ">
+			and a.connect_status = #{connectStatus}
+		</if>
+		<if test="deviceCoding != null and deviceCoding != '' ">
+			AND (a.code LIKE CONCAT("%",#{deviceCoding},"%") or (CONCAT(a.device_coding,b.hotel_code,"C",a. CODE)) LIKE CONCAT("%",#{deviceCoding},"%"))
+		</if>
+		<choose>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a. CODE ASC
+			</otherwise>
+		</choose>
+
+	</select>
+
+
+	<update id="updateDeviceRelieveStatusById">
+		UPDATE `ly_hotel_device_relation`
+		SET
+		 `code` = NULL,
+		 `connect_status` = 2,
+		 `device_status` = 2
+		WHERE
+			`id` =#{id}
+	</update>
+
+	<update id="updateDeviceRelieveStatusByIdList">
+		UPDATE `ly_hotel_device_relation`
+		SET
+		 `code` = NULL,
+		 `connect_status` = 2,
+		 `device_status` = 2
+		WHERE
+			`id` in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item.id}
+		</foreach>
+	</update>
+
+	<select id="getLyHotelDeviceRelationById" resultType="LyHotelDeviceRelation">
+		select code from ly_hotel_device_relation where hotel_id = #{hotelId} AND type = 1 and code = #{code}
+	</select>
+
+	<update id="updateClientCodeById">
+		UPDATE `ly_hotel_device_relation`
+		SET
+		`code` = #{code},
+		`device_status` = 2,
+		connect_status =2,
+		department_id =0
+		WHERE
+		`id` = #{id}
+	</update>
+
+
+	<select id="getClientExportListByHotelId" resultType="LyClientExport">
+		SELECT
+			a.device_coding AS "deviceCoding"
+			FROM
+				ly_hotel_device_relation AS a
+			LEFT JOIN hotel_unique_code AS b ON b.id = a.hotel_id
+			WHERE
+				a.type = 1
+			AND a.hotel_id = #{hotelId}
+			AND a.code is NULL
+	</select>
+
+
+	<select id="getClientNumberByDeviceCoding" resultType="LyHotelDeviceRelation">
+		select code from ly_hotel_device_relation where device_coding = #{deviceCoding} and  type = 1 and  hotel_id = #{hotelId}
+	</select>
+
+	<update id="updateClientCodeByDeviceCoding">
+		UPDATE `ly_hotel_device_relation`
+		SET
+		`code` = #{code},
+		`device_status` = 2,
+		connect_status = 2,
+		department_id = 0
+		WHERE
+		`device_coding` = #{deviceCoding}
+	</update>
+
+	<select id="getDepartmentListByHotelId" resultType="LyHotelDeviceRelation">
+			SELECT department_name as "departmentName" ,id as "departmentId"  from department_info WHERE hotel_code_id = #{hotelId} and del_flag = '0'
+	</select>
+
+	<select id="serverFindPage" resultType="LyHotelDeviceRelation">
+		SELECT
+		a.id,
+		a.connect_status AS "connectStatus",
+		a.code,
+		a.device_status AS "deviceStatus",
+		CONCAT(a.device_coding,b.hotel_code,"S") as "deviceCoding",
+		CONCAT(a.device_coding,b.hotel_code,"S",a.department_id,a. CODE) as "hotelCode",
+		a.device_coding as "codeName",
+		a.hotel_id as "hotelId",
+		c.department_name as "departmentName"
+		FROM
+		ly_hotel_device_relation as a LEFT JOIN hotel_unique_code as b on b.id = a.hotel_id
+		left join department_info as c on c.id = a.department_id
+		WHERE a.type = 2 and hotel_id = #{hotelCodeId}
+		<if test="connectStatus != null and connectStatus != 0 ">
+			and a.connect_status = #{connectStatus}
+		</if>
+		<if test="departmentId != null and departmentId != -1 and departmentId != 0">
+			and a.department_id = #{departmentId}
+		</if>
+		<if test="departmentId == -1">
+			and a.department_id = 0 or a.department_id is null
+		</if>
+		<if test="deviceCoding != null and deviceCoding != '' ">
+			AND (a.code LIKE CONCAT("%",#{deviceCoding},"%") or (CONCAT(a.device_coding,b.hotel_code,"S",a.department_id,a. CODE)) LIKE CONCAT("%",#{deviceCoding},"%"))
+		</if>
+		<choose>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a. CODE ASC
+			</otherwise>
+		</choose>
+
+	</select>
+
+
+	<update id="updateServerRelieveById">
+		UPDATE `ly_hotel_device_relation`
+				SET
+				`department_id` = 0,
+				`code` = null,
+				`connect_status` = 2,
+				`device_status` = 2
+				WHERE
+		`id` = #{id}
+	</update>
+
+	<select id="getServerDepartmentNumerByHotelId" resultType="LyHotelDeviceRelation">
+			select code from ly_hotel_device_relation where hotel_id = #{hotelId} AND type = 2 and department_id = #{departmentId} and code = #{code}
+	</select>
+
+	<update id="updateServerDepartmentCodeById">
+			UPDATE `ly_hotel_device_relation`
+				SET
+				`department_id` = #{departmentId},
+				`code` = #{code},
+				`device_status` = 1,
+				connect_status = 2
+				WHERE
+			`id` = #{id}
+	</update>
+
+
+	<update id="updateDepartmentsDismantledByIdList">
+		UPDATE `ly_hotel_device_relation`
+				SET
+				`department_id` = 0,
+				`code` = null,
+				`connect_status` = 2,
+				`device_status` = 2
+				WHERE
+				`id` in
+			<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+				#{item.id}
+			</foreach>
+	</update>
+
+	<select id="allHotelListFindPage" resultType="LyHotelDeviceRelation">
+			SELECT
+				a.id,
+				a.connect_status AS "connectStatus",
+				a.device_status AS "deviceStatus",
+				a.type,
+			CASE
+				WHEN a.type = 1 THEN
+					CONCAT("客房","-",a.code)
+				WHEN a.type = 2 THEN
+					CONCAT(c.department_name,"-",a.code)
+					END as "code",
+			CASE
+				WHEN a.type = 1 THEN
+					CONCAT(a.device_coding,b.hotel_code,"C",a.code)
+				WHEN a.type = 2 THEN
+					CONCAT(a.device_coding,b.hotel_code,"S",a.department_id,a.code)
+					END as "deviceCoding"
+			FROM
+				ly_hotel_device_relation AS a
+			LEFT JOIN hotel_unique_code AS b ON b.id = a.hotel_id
+			LEFT JOIN department_info as c on c.id = a.department_id
+			WHERE
+			a.hotel_id = #{hotelId}
+			AND a.code IS NOT NULL
+		<if test="connectStatus != null and connectStatus != 0 ">
+			and a.connect_status = #{connectStatus}
+		</if>
+		<if test="type != null and type != 0">
+			and a.type = #{type}
+		</if>
+		<if test="deviceCoding != null and deviceCoding != '' ">
+		 	and ((CASE
+			WHEN a.type = 1 THEN
+			CONCAT(a.device_coding,b.hotel_code,"C",a.code)
+			WHEN a.type = 2 THEN
+			CONCAT(a.device_coding,b.hotel_code,"S",a.department_id,a.code)
+			END ) LIKE CONCAT("%",#{deviceCoding},"%") or a.code LIKE CONCAT("%",#{deviceCoding},"%"))
+		</if>
+		<choose>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.id desc
+			</otherwise>
+		</choose>
+	</select>
+
+
+	<select id="getRoomsListByHotelId" resultType="LyHotelDeviceRelation">
+		select id,code from ly_hotel_device_relation where type = 1 and  hotel_id = #{hotelId} and code is not null  and connect_status = 1 and device_status = 1
+	</select>
+</mapper>

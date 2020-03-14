@@ -1,0 +1,73 @@
+package com.chunqiu.mrjuly.modules.install.model;
+import com.chunqiu.mrjuly.common.persistence.DataEntity;
+
+import java.util.Date;
+public class HotelUniqueCode extends DataEntity<HotelUniqueCode, Integer>{
+
+    private static final long serialVersionUID = 1L;
+    private Integer id;
+    private String hotelCode;
+    private String hotelName;
+    private Date  createDate;
+    private Date  updateDate;
+    private String deFlag;
+
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    @Override
+    public Integer getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getHotelCode() {
+        return hotelCode;
+    }
+
+    public void setHotelCode(String hotelCode) {
+        this.hotelCode = hotelCode;
+    }
+
+    public String getHotelName() {
+        return hotelName;
+    }
+
+    public void setHotelName(String hotelName) {
+        this.hotelName = hotelName;
+    }
+
+    @Override
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    @Override
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    @Override
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    @Override
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public String getDeFlag() {
+        return deFlag;
+    }
+
+    public void setDeFlag(String deFlag) {
+        this.deFlag = deFlag;
+    }
+}

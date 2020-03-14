@@ -1,0 +1,59 @@
+package com.chunqiu.mrjuly.modules.install.controller;
+
+import com.chunqiu.mrjuly.common.annotation.Log;
+import com.chunqiu.mrjuly.common.persistence.BaseController;
+import com.chunqiu.mrjuly.modules.install.model.Agreement;
+import com.chunqiu.mrjuly.modules.install.service.AgreementService;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Slf4j
+@Controller
+@RequestMapping(value = "${adminPath}/install/agreement")
+public class AgreementController extends BaseController {
+    @Autowired
+    private AgreementService agreementService;
+
+    /**
+     * 初始化协议页面
+     *
+     * @return
+     */
+    @Log("用户协议设置")
+    @RequestMapping("index")
+    @RequiresPermissions("install:agreement:view")
+    public String form(Agreement agreement, ModelMap model) {
+        Agreement agreement1 = agreementService.agreement();
+        model.addAttribute("agreement", agreement1);
+        return "install/agreement";
+    }
+
+    /**
+     * 保存用户协议
+     *
+     * @param agreement
+     * @param model
+     * @return
+     */
+    @Log("保存用户协议设置")
+    @RequestMapping("saveAgreement")
+    @RequiresPermissions("install:agreement:edit")
+    public String saveAgreement(Agreement agreement, ModelMap model) {
+        try {
+            Agreement agreement1 = agreementService.agreement();
+            if (agreement1 == null){
+                agreementService.save(agreement);
+            }else {
+                agreementService.updateAgreement(agreement);
+            }
+        } catch (Exception e) {
+            model.addAttribute("error", "保存失败！");
+            return form(agreement, model);
+        }
+        return "install/agreement";
+    }
+}

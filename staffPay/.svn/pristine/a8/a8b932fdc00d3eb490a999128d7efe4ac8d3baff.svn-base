@@ -1,0 +1,20 @@
+package com.chunqiu.mrjuly.modules.advertisingorderday.service;
+
+import javax.annotation.Resource;
+
+import com.chunqiu.mrjuly.common.persistence.CrudService;
+import org.springframework.stereotype.Service;
+import com.chunqiu.mrjuly.modules.advertisingorderday.model.AdvertisingOrderDay;
+import com.chunqiu.mrjuly.modules.advertisingorderday.dao.AdvertisingOrderDayDao;
+
+/**
+ * 我的订单Service
+ * @author 周天
+ * @version 2019-05-13
+ */
+@Service
+public class AdvertisingOrderDayService extends CrudService<AdvertisingOrderDayDao, AdvertisingOrderDay, Integer> {
+	@Resource
+	private AdvertisingOrderDayDao dao;
+
+}

@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>首页</title>
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="0">
+
+    <!--<link th:href="@{/h+/css/bootstrap.min.css}" rel="stylesheet">-->
+    <!--<link th:href="@{/h+/css/bootstrap.min14ed.css}" rel="stylesheet">-->
+    <!--<link th:href="@{/h+/css/font-awesome.min.css}" rel="stylesheet">-->
+
+    <link th:href="@{/h+/css/animate.min.css}" rel="stylesheet">
+    <!--<link th:href="@{/h+/css/style.min862f.css}" rel="stylesheet">-->
+
+    <!-- Morris -->
+    <link th:href="@{/h+/css/plugins/morris/morris-0.4.3.min.css}" rel="stylesheet">
+    <!-- Gritter -->
+    <link th:href="@{/h+/js/plugins/gritter/jquery.gritter.css}" rel="stylesheet">
+
+    <head th:include="init :: init"></head>
+
+    <script type='text/javascript' th:src='@{/js/webim.config.js}'></script>
+    <script type='text/javascript' th:src='@{/js/strophe-1.2.8.min.js}'></script>
+    <script type='text/javascript' th:src='@{/js/websdk-1.4.13.js}'></script>
+    <script type="text/javascript" >
+        var passWords = '123456';
+        $(function () {
+            showLoading();
+        });
+
+        function showLoading(){
+            if(0 != [[${user.roleType}]]){
+                //查询账号登录的平台权限
+                $.post('[[${ctx}]]/system/user/userList', {}, function (result) {
+                    //登录平台为
+                    if (result.roleType == 3){
+                        var headImg = "";
+                        var name = "";
+                        var shopNumber = result.shopNumber;
+                        if (result.headImg == null ){
+                            headImg = "/iamges/mrtx.png";
+                        }else {
+                            headImg =  result.headImg;
+                        }
+                        if (result.name == null){
+                            name = "暂无";
+                        } else {
+                            name = result.name;
+                        }
+                        initLayIm(headImg,name,shopNumber);
+                    }
+                    if (result.roleType == 1){
+                        //$("#primary").text("邻奌通总控系统平台");
+                        var splitName = titleName.split("");
+                        var titleHtml = "";
+                        for (var i = 0; i <splitName.length; i++){
+                        	titleHtml += "<span>";
+                            titleHtml += splitName[i];
+                            titleHtml += "</span>";
+                        }
+                    	$("#primary").html(titleHtml);
+                        $("#content-main").html("<iframe class=\"J_iframe\" name=\"iframe0\" width=\"100%\" height=\"100%\" src=\"system/setup/controlIndex\" frameborder=\"0\"\n" +
+                            "seamless data-id=\"/system/controlInde\"></iframe>")
+                        $("#welcome").html("<a href=\"javascript:;\" class=\"active J_menuTab \" data-id=\"/system/controlInde\">首页</a>");
+                    }else if (result.roleType == 2){
+                        //$("#primary").text("邻奌通酒店操作系统");
+                    	var titleName = result.name;
+                        var splitName = titleName.split("");
+                        var titleHtml = "";
+                        for (var i = 0; i <splitName.length; i++){
+                        	titleHtml += "<span>";
+                            titleHtml += splitName[i];
+                            titleHtml += "</span>";
+                        }
+                    	$("#primary").html(titleHtml);
+                    }else if (result.roleType == 3){
+                        //$("#primary").text("邻奌通在线商家操作系统");
+                    	var titleName = result.name;
+                        var splitName = titleName.split("");
+                        var titleHtml = "";
+                        for (var i = 0; i <splitName.length; i++){
+                        	titleHtml += "<span>";
+                            titleHtml += splitName[i];
+                            titleHtml += "</span>";
+                        }
+                    	$("#primary").html(titleHtml);
+                        $("#content-main").html("<iframe class=\"J_iframe\" name=\"iframe0\" width=\"100%\" height=\"100%\" src=\"shopinfo/MerchantsHomepage/index\" frameborder=\"0\"\n" +
+                            "seamless data-id=\"shopinfo/MerchantsHomepage/index\"></iframe>")
+                        $("#welcome").html("<a href=\"javascript:;\" class=\"active J_menuTab \" data-id=\"shopinfo/MerchantsHomepage/index\">首页</a>");
+                    }else if(result.roleType == 4){
+                        //$("#primary").text("邻奌通广告管理操作系统");
+                        var titleName = result.name;
+                        var splitName = titleName.split("");
+                        var titleHtml = "";
+                        for (var i = 0; i <splitName.length; i++){
+                        	titleHtml += "<span>";
+                            titleHtml += splitName[i];
+                            titleHtml += "</span>";
+                        }
+                    	$("#primary").html(titleHtml);
+                        $("#content-main").html("<iframe class=\"J_iframe\" name=\"iframe0\" width=\"100%\" height=\"100%\" src=\"adviertisement/AdvertisingPage/index\" frameborder=\"0\"\n" +
+                            "seamless data-id=\"adviertisement/AdvertisingPage/index\"></iframe>")
+                        $("#welcome").html("<a href=\"javascript:;\" class=\"active J_menuTab \" data-id=\"adviertisement/AdvertisingPage/index\">首页</a>");
+                    }
+                }, 'json');
+            }
+        }
+
+        //商家平台的聊天系统
+        function initLayIm(headImg,userNames,shopNumber) {
+            //layui绑定扩展
+            layui.config({
+                base: '/js/'
+            }).extend({
+                socket: 'socket',
+            });
+            layui.use(['layim', 'jquery', 'socket'], function (layim, socket) {
+                var $ = layui.jquery;
+                var socket = layui.socket;
+                var token = shopNumber;
+                var rykey = passWords;
+
+                socket.config({
+                    user: token,
+                    pwd: rykey ,
+                    layim: layim,
+                });
+
+                layim.config({
+                    init: {
+                        //配置客户信息
+                        mine: {
+                            "username": userNames //我的昵称
+                            ,"id": shopNumber //我的ID
+                            ,"remark": "  " //我的签名
+                            ,"avatar": headImg //我的头像
+                        }
+                    }
+                    //开启客服模式
+                    ,brief: false
+                    //主面板最小化后显示的名称
+                    ,title: userNames
+                    ,isfriend: false
+                    ,isgroup: false
+                    ,notice :true
+                    ,min: true
+                    ,right:"500PX"
+                    ,minRight: "700px"
+                    ,copyright: true
+                });
+            });
+        }
+
+        function openExit(){
+        	$("#exitSystem").attr("aria-expanded", true);
+        	$("#userDiv").addClass("open");
+        }
+        
+        function closeExit(){
+            setTimeout('closeExitDo()',3000);
+        }
+
+        function closeExitDo(){
+        	$("#exitSystem").attr("aria-expanded", false);
+        	$("#userDiv").removeClass("open");
+        }
+        
+    </script>
+<style type="text/css">
+.paper-title {
+    width: 800px;
+    margin: auto;
+}
+.title-row {
+    position: relative;
+    height: 50px;
+    z-index: 1;
+    clear: both;
+    margin-top:10px;
+    margin-bottom:5px;
+    text-align: center;
+}
+.title-row--intro {
+    padding-top: 20px;
+    font-size: 16px;
+    line-height: 28px;
+    font-weight: 300;
+    color: #fff;
+    opacity: 0.4;
+}
+.title-row--intro span {
+    font-size: 11px;
+}
+.fold-title {
+    font-size: 25px;
+}
+.fold-title span {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 50px;
+    margin: auto;
+    z-index: 2;
+    text-align: center;
+    color: #fff;
+    font-family: 'roboto condensed';
+    font-weight: 700;
+    font-size: 35.71429px;
+    line-height: 50px;
+    transform: skewY(-15deg);
+    transform-origin: 0 100%;
+    transition: all 0.2s;
+    cursor: default;
+}
+.fold-title span:after,
+.fold-title span:before {
+    display: block;
+    top: 0;
+    left: 0;
+    position: absolute;
+    background: #185a81;
+    height: 50px;
+    width: 40px;
+    content: ' ';
+    z-index: -1;
+    transition: all 0.2s;
+}
+.fold-title span:before {
+    background: rgba(0, 0, 0, 0.1);
+    transform: skewY(15deg);
+    transform-origin: 0 0;
+}
+.fold-title span:nth-child(even) {
+    background-color: #154e70;
+    transform: skewY(15deg);
+    transform-origin: 100% 100%;
+}
+.fold-title span:nth-child(even):after {
+    background-color: #154e70;
+}
+.fold-title span:nth-child(even):before {
+    transform-origin: 100% 0;
+    transform: skewY(-15deg);
+}
+.fold-title span.flat {
+    transform: skewY(0);
+}
+.fold-title span.flat:before {
+    transform: skewY(0);
+}
+.fold-title span.flat:nth-child(even):after {
+    background-color: #185a81;
+}
+.fold-title span.alt:after {
+    background-color: #b94a2c;
+}
+.fold-title span.alt:nth-child(even):after {
+    background-color: #a14026;
+}
+.fold-title span.alt.flat:nth-child(even):after {
+    background-color: #b94a2c;
+}    
+</style>
+</head>
+
+<body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden">
+
+<div id="wrapper">
+    <!--左侧导航开始-->
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="nav-close"><i class="fa fa-times-circle"></i>
+        </div>
+        <div class="sidebar-collapse collapse1" style="background-color:#001529">
+            <ul class="nav" id="side-menu">
+                <li class="nav-header" style="background-color: #002140 !important;" onmouseover = "openExit()"  onmouseout = "closeExit()">
+                    <div class="dropdown profile-element" id="userDiv">
+                        <span style="margin-top:1em;"><img alt="image" class="img-circle user-image" th:src="${user.headImg}" onerror="this.src='/images/default2.png'" /></span><span class="block m-t-xs"></span>
+                        <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                            <li ><a  th:href="@{${ctx}+'/login/logout'}">安全退出</a>
+                            </li>
+                        </ul>
+                        <a href="javascript:void(0);" id="exitSystem">
+                            <span class="clear user-name">
+                                <span class="block m-t-xs"><strong class="font-bold" th:text="${user.account}" style="font-size:16px !important"></strong></span>
+                            </span>
+                        </a>
+                        
+                    </div>
+                    <!-- <div class="logo-element">H+
+                    </div> -->
+                </li>
+                <!--${html }-->
+                <html th:utext="${html}"></html>
+
+            </ul>
+        </div>
+    </nav>
+    <!--左侧导航结束-->
+    <!--右侧部分开始-->
+    <div id="page-wrapper" class="gray-bg dashbard-1">
+        <div class="row border-bottom">
+            <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                <div class="title-header">
+                <!-- <button class="layui-btn layui-btn-lg layui-btn-radius layui-btn-normal" style="margin: 5px;" id ="primary" ></button> -->
+                <div class="paper-title">
+    				<h1 class="title-row fold-title" id="primary"></h1>
+				</div>
+                </div>
+                <!--<ul class="nav navbar-top-links navbar-right">
+                    <li class="dropdown hidden-xs">
+                       &lt;!&ndash; <a class="right-sidebar-toggle" aria-expanded="false">
+                            <i class="fa fa-tasks"></i>主题
+                        </a>&ndash;&gt;
+                    </li>
+                </ul>-->
+            </nav>
+        </div>
+        <div class="row content-tabs">
+            <button class="roll-nav roll-left J_tabLeft"><i class="fa fa-heart"></i>
+            </button>
+            <nav class="page-tabs J_menuTabs">
+                <div class="page-tabs-content" id="welcome">
+                    <a href="javascript:;" class="active J_menuTab " data-id="/welcome">首页</a>
+                </div>
+            </nav>
+            <!-- <button class="roll-nav roll-right J_tabRight"><i class="fa fa-forward"></i>
+            </button> -->
+            <div class="btn-group roll-nav roll-right">
+                <button class="dropdown J_tabClose" data-toggle="dropdown">操作<span class="caret"></span>
+
+                </button>
+                <ul role="menu" class="dropdown-menu dropdown-menu-right">
+                    <li class="J_editUserPwd"><a><i class="fa fa-key"></i> 修改密码</a>
+                    <li class="divider"></li>
+                    <li class="J_tabRefreshActive"><a>刷新当前选项卡</a></li>
+                    <li class="J_tabShowActive"><a>定位当前选项卡</a></li>
+                    <li class="divider"></li>
+                    <li class="J_tabCloseAll"><a>关闭全部选项卡</a></li>
+                    <li class="J_tabCloseOther"><a>关闭其他选项卡</a></li>
+                </ul>
+            </div>
+
+            <a th:href="@{${ctx}+'/login/logout'}" class="roll-nav roll-right J_tabExit"><i class="fa fa fa-sign-out"></i> 退出</a>
+        </div>
+        <div class="row J_mainContent" id="content-main">
+            <iframe class="J_iframe" name="iframe0" width="100%" height="100%" th:src="'/welcome'" frameborder="0" data-id="/welcome"
+                    seamless></iframe>
+        </div>
+        <div class="footer">
+            <div class="pull-right">&copy; 2018-2019 all rights reserved.
+            </div>
+        </div>
+    </div>
+    <!--右侧部分结束-->
+    <!--右侧边栏开始-->
+    <div id="right-sidebar">
+        <div class="sidebar-container">
+            <ul class="nav nav-tabs navs-3">
+                <li class="active">
+                    <a data-toggle="tab" href="#tab-1">
+                        <i class="fa fa-gear"></i> 主题
+                    </a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div id="tab-1" class="tab-pane active">
+                    <div class="sidebar-title">
+                        <h3> <i class="fa fa-comments-o"></i> 主题设置</h3>
+                        <small><i class="fa fa-tim"></i> 你可以从这里选择和预览主题的布局和样式，这些设置会被保存在本地，下次打开的时候会直接应用这些设置。</small>
+                    </div>
+                    <div class="skin-setttings">
+                        <div class="title">主题设置</div>
+                        <div class="setings-item">
+                            <span>收起左侧菜单</span>
+                            <div class="switch">
+                                <div class="onoffswitch">
+                                    <input type="checkbox" name="collapsemenu" class="onoffswitch-checkbox" id="collapsemenu">
+                                    <label class="onoffswitch-label" for="collapsemenu">
+                                        <span class="onoffswitch-inner"></span>
+                                        <span class="onoffswitch-switch"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="setings-item">
+                            <span>固定顶部</span>
+
+                            <div class="switch">
+                                <div class="onoffswitch">
+                                    <input type="checkbox" name="fixednavbar" class="onoffswitch-checkbox" id="fixednavbar">
+                                    <label class="onoffswitch-label" for="fixednavbar">
+                                        <span class="onoffswitch-inner"></span>
+                                        <span class="onoffswitch-switch"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="setings-item">
+                                <span>
+							        固定宽度
+							    </span>
+
+                            <div class="switch">
+                                <div class="onoffswitch">
+                                    <input type="checkbox" name="boxedlayout" class="onoffswitch-checkbox" id="boxedlayout">
+                                    <label class="onoffswitch-label" for="boxedlayout">
+                                        <span class="onoffswitch-inner"></span>
+                                        <span class="onoffswitch-switch"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="title">皮肤选择</div>
+                        <div class="setings-item default-skin nb">
+                            <span class="skin-name ">
+                                 <a href="#" class="s-skin-0">
+                                         默认皮肤
+                                 </a>
+                            </span>
+                        </div>
+                        <div class="setings-item  blue-skin nb">
+                            <span class="skin-name">
+                                <a href="#" class="s-skin-1">
+                                     蓝色主题
+                                </a>
+                            </span>
+                        </div>
+                        <div class="setings-item yellow-skin nb">
+                            <span class="skin-name ">
+                                <a href="#" class="s-skin-3">
+                                        黄色/紫色主题
+                                </a>
+                            </span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!--右侧边栏结束-->
+</div>
+<script type="text/javascript">
+$(".fold-title").on("mouseenter", "span", function() {
+    var n = $(this).index();
+    n++;
+    $(this).addClass('flat');
+    if ((n % 2 == 0)) {
+        $(this).prev().addClass('flat');
+    } else {
+        if (!$(this).hasClass('last')) {
+            $(this).next().addClass('flat');
+        }
+    }
+});
+$(".fold-title").on("mouseleave", "span", function() {
+    $('.flat').removeClass('flat');
+});
+</script>
+</body>
+</html>

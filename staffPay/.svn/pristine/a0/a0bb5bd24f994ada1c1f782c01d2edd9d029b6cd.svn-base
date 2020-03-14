@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>邻奌通后台管理系统</title>
+    <head th:include="init :: init"></head>
+
+    <link th:href="@{/layuiadmin/style/login.css}" rel="stylesheet">
+
+    <script type="text/javascript">
+        function validForm(){
+            $('#loginForm').validate({
+                submitHandler:function(form){
+                    //此处填写form提交的地址
+                    loading();
+                    form.method = 'post';
+                    form.action = '[[${ctx}]]/login/doLogin';
+                    form.submit();
+                }
+            });
+            $('#loginForm').submit();
+        }
+    </script>
+    <style>
+        .div-p{
+            letter-spacing:2.5px;
+            opacity: 0.8;
+        }
+        .div-a-zi{
+            font-size:16px
+        }
+    </style>
+</head>
+<body>
+    <div class="layadmin-user-login layadmin-user-display-show">
+         <div class="layadmin-user-login-main" style="margin-top: 41px;background-image: url(/images/back_touming.png);background-attachment: fixed;background-repeat: no-repeat;background-size: cover;-moz-background-size: cover;-webkit-background-size: cover;">
+             <div class="layadmin-user-login-box layadmin-user-login-header">
+                 <h2 style="color: white">邻奌通后台管理系统</h2>
+             </div>
+            <form id="loginForm" class="layadmin-user-login-box layadmin-user-login-body layui-form">
+                <div class="layui-form-item">
+                    <input type="text" name="loginName" required placeholder="用户名" class="layui-input">
+                </div>
+                <div class="layui-form-item">
+                    <input type="password" name="pwd" required placeholder="密码" class="layui-input">
+                </div>
+               <!-- <div class="layui-form-item">
+                    <div class="layui-row">
+                        <div class="layui-col-xs7">
+                            <label class="layadmin-user-login-icon layui-icon layui-icon-vercode" for="LAY-user-login-vercode"></label>
+                            <input type="text" name="vercode" id="LAY-user-login-vercode" lay-verify="required" placeholder="图形验证码" class="layui-input">
+                        </div>
+                        <div class="layui-col-xs5">
+                            <div style="margin-left: 10px;">
+                                <img src="https://www.oschina.net/action/user/captcha" class="layadmin-user-login-codeimg" id="LAY-user-get-vercode">
+                            </div>
+                        </div>
+                    </div>
+                </div>-->
+                <div class="layui-form-item">
+                    <button class="layui-btn layui-btn-fluid" style="background-color:#1089b6;" type="button" onclick="validForm()">登 录</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="layui-trans layadmin-user-login-footer" style="color: #C4C4C4;">
+            <a target="_Blank" href="http://www.linkinn.cn/index.html#overview1" style="color:#C4C4C4;position: relative;left: -170px;" class="div-a-zi">首页</a>
+            <a target="_Blank" href="http://www.linkinn.cn/joinUs.html" style="color:#C4C4C4;position: relative;left: -59px;" class="div-a-zi">申请加入</a>
+            <a target="_Blank" href="http://www.linkinn.cn/about.html" style="color:#C4C4C4;position: relative;left: 31px;" class="div-a-zi">关于我们</a>
+            <a target="_Blank" href="http://www.linkinn.cn/ContactCooperation.html" style="color:#C4C4C4;position: relative;left: 143px;" class="div-a-zi">联系我们</a>
+        </div>
+        <div style="width: 100%;position: absolute;color: #C4C4C4;font-size:13px;top: 100%;">
+            <p style="text-align: center;margin-bottom: 10px" th:text="'公司名称：'+${companyInfo.name}"></p>
+            <p style="text-align: center;margin-bottom: 10px">网络经营许可证&emsp;沪ICP备18013971号-1&emsp;Copyright2018-2019邻樱网Linkinn.cn版权所有</p>
+            <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=31011502008845">
+                <img src="/images/wangan.png" style="position: absolute;margin-left: 43%"/>
+                <p style="color: white;text-align: center">沪公网安备 31011502008845号</p>
+            </a>
+        </div>
+        <!--<div class="layui-trans layadmin-user-login-footer">
+            <p>© 2018-2019</p>
+        </div>-->
+
+        <!--<div class="ladmin-user-login-theme">
+          <script type="text/html" template>
+            <ul>
+              <li data-theme=""><img src="{{ layui.setter.base }}style/res/bg-none.jpg"></li>
+              <li data-theme="#03152A" style="background-color: #03152A;"></li>
+              <li data-theme="#2E241B" style="background-color: #2E241B;"></li>
+              <li data-theme="#50314F" style="background-color: #50314F;"></li>
+              <li data-theme="#344058" style="background-color: #344058;"></li>
+              <li data-theme="#20222A" style="background-color: #20222A;"></li>
+            </ul>
+          </script>
+        </div>-->
+
+    </div>
+
+    <!--<script type="text/javascript">
+        layui.use(['form'],function () {
+            var form = layui.form;
+
+            form.on('submit(user-login-submit)', function(data){
+                $.post('[[${ctx}]]/login/doLogin',data.field,function (result) {
+                   if(result.code == 0){
+                       location.href = '[[${ctx}]]/index';
+                   }else{
+                       alert('登录失败');
+                   }
+                });
+            });
+
+        });
+    </script>-->
+
+</body>
+</html>

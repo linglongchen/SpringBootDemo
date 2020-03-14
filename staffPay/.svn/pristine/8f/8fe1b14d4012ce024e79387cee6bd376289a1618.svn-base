@@ -1,0 +1,221 @@
+package com.chunqiu.mrjuly.modules.accountrecharge.controller;
+
+import com.chunqiu.mrjuly.common.annotation.Log;
+import com.chunqiu.mrjuly.common.persistence.BaseController;
+import com.chunqiu.mrjuly.common.utils.OssUtils.OSSClientUtils;
+import com.chunqiu.mrjuly.common.utils.UserUtils;
+import com.chunqiu.mrjuly.common.vo.Grid;
+import com.chunqiu.mrjuly.common.vo.GridParam;
+import com.chunqiu.mrjuly.common.vo.Json;
+import com.chunqiu.mrjuly.modules.accountrecharge.model.AccountRecharge;
+import com.chunqiu.mrjuly.modules.accountrecharge.service.AccountRechargeService;
+import com.chunqiu.mrjuly.modules.invoiceinfo.model.InvoiceInfo;
+import com.chunqiu.mrjuly.modules.invoiceinfo.model.PackageModel;
+import com.chunqiu.mrjuly.modules.invoiceinfo.service.InvoiceInfoService;
+import com.chunqiu.mrjuly.modules.system.model.BankInfo;
+import com.chunqiu.mrjuly.modules.system.service.SystemSetupService;
+
+import lombok.extern.slf4j.Slf4j;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * 账号充值Controller
+ * @author 状态
+ * @version 2019-03-14
+ */
+@Slf4j
+@Controller
+@RequestMapping(value = "${adminPath}/accountrecharge/accountRecharge")
+@Transactional
+public class AccountRechargeController extends BaseController {
+
+    @Autowired
+    private AccountRechargeService accountRechargeService;
+
+    @Autowired
+    private SystemSetupService systemSetupService;
+
+    @Autowired
+    private InvoiceInfoService invoiceInfoService;
+
+    /**
+     * @Description：账号充值列表页面
+     * @author 状态
+     */
+    @Log("打开账号充值列表页面")
+    @RequestMapping("index")
+    @RequiresPermissions("accountrecharge:accountRecharge:view")
+    public String index(){
+        return "accountrecharge/accountRechargeList";
+    }
+
+    /**
+     * @Description：账号充值列表数据
+     * @author 状态
+     */
+    @Log("获取账号充值列表数据")
+    @RequestMapping("list")
+    @ResponseBody
+    @RequiresPermissions("accountrecharge:accountRecharge:view")
+    public Grid list(AccountRecharge accountRecharge, GridParam param) {
+        accountRecharge.setObjectId(UserUtils.getUser().getBusinessId());
+        return accountRechargeService.findPage(accountRecharge, param);
+    }
+    /**
+     * @Description：账号充值表单页面--新增/编辑
+     * @author 状态
+     */
+    @Log("打开账号充值表单页面--新增/编辑")
+    @RequestMapping(value = "form")
+    @RequiresPermissions("accountrecharge:accountRecharge:view")
+    public String form(AccountRecharge accountRecharge, ModelMap model) {
+        //查询账户信息
+        BankInfo bankInfo = systemSetupService.bankInfo();
+        //查询所有银行信息
+        List<BankInfo> bankList = systemSetupService.bankList();
+        model.addAttribute("bankInfo",bankInfo);
+        model.addAttribute("bankList",bankList);
+        model.addAttribute("accountRecharge",accountRecharge);
+        return "accountrecharge/accountRechargeForm";
+    }
+    /**
+     * @Description：账号充值新增/编辑 保存方法
+     * @author 状态
+     */
+    @Log("新增/编辑账号充值")
+    @RequestMapping("saveAccountRecharge")
+    @RequiresPermissions("accountrecharge:accountRecharge:edit")
+    public String saveAccountRecharge(AccountRecharge accountRecharge, ModelMap model){
+        try{
+            accountRecharge.setObjectId(UserUtils.getUser().getBusinessId());
+            String voucher = OSSClientUtils.ossUploadPictures(accountRecharge.getVoucher());
+            accountRecharge.setVoucher(voucher);
+            accountRechargeService.save(accountRecharge);
+        }catch(Exception e){
+            log.error("保存失败！ msg={}", e.getMessage(), e);
+
+            model.addAttribute("error", "保存失败！");
+            return form(accountRecharge, model);
+        }
+        return successPath;
+    }
+    /**
+     * @Description：账号充值数据删除方法
+     * @author 状态
+     */
+    @Log("删除账号充值")
+    @RequestMapping("delAccountRecharge")
+    @ResponseBody
+    @RequiresPermissions("accountrecharge:accountRecharge:edit")
+    public Json delAccountRecharge(AccountRecharge accountRecharge){
+        Json json = new Json();
+        try{
+            accountRechargeService.delete(accountRecharge);
+            json.setSuccess(true);
+        }catch(Exception e){
+            log.error("删除失败！ msg={}", e.getMessage(), e);
+
+            json.setSuccess(false);
+            json.setMsg("删除失败！");
+        }
+        return json;
+    }
+
+    @Log("开票内容界面")
+    @RequestMapping("contentForm")
+    @RequiresPermissions("accountrecharge:accountRecharge:view")
+    public String contentForm(AccountRecharge accountRecharge, ModelMap modelMap) {
+        modelMap.addAttribute("accountRecharge",accountRecharge);
+        return "accountrecharge/invoiceContentsForm";
+    }
+
+    @Log("申请发票")
+    @RequestMapping("insertInvoice")
+    @RequiresPermissions("accountrecharge:accountRecharge:edit")
+    public String insertInvoice(AccountRecharge accountRecharge){
+        try{
+            int id = accountRecharge.getId();
+            int invoiceContents = accountRecharge.getInvoiceContents();
+            accountRecharge = accountRechargeService.get(accountRecharge);
+            //插入发票
+            accountRecharge.setAccountRechargeId(id);
+            accountRecharge.setInvoiceContents(invoiceContents);
+            accountRechargeService.insertInvoice(accountRecharge);
+            //更新发票状态
+            accountRecharge.setAccountRechargeId(id);
+            accountRechargeService.updateInvoiceStatus(accountRecharge);
+        }catch(Exception e){
+            //异常回滚
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            log.error("申请失败！ msg={}", e.getMessage(), e);
+        }
+        return successPath;
+    }
+
+    @Log("打开在线商家发票管理列表页面")
+    @RequestMapping("controlOverInvoices")
+    @RequiresPermissions("accountrecharge:accountRecharge:view")
+    public String controlOverInvoices(){
+        return "accountrecharge/controlOverInvoicesForm";
+    }
+
+    @Log("打开广告商发票管理列表页面")
+    @RequestMapping("advertiserControlOverInvoices")
+    @RequiresPermissions("accountrecharge:accountRecharge:view")
+    public String AdvertiserControlOverInvoices(){
+        return "accountrecharge/advertiserInvoiceManagementFrom";
+    }
+
+    /**
+     * @Description：发票管理列表数据
+     * @author 周天
+     */
+    @Log("获取发票管理列表数据")
+    @RequestMapping("listTwo")
+    @ResponseBody
+    @RequiresPermissions("accountrecharge:accountRecharge:view")
+    public Grid list(InvoiceInfo invoiceInfo, GridParam param) {
+        invoiceInfo.setObjectId(UserUtils.getUser().getBusinessId());
+        Grid grid = invoiceInfoService.findPage(invoiceInfo, param);
+        return grid;
+    }
+    
+    @Log("购买资源包页面")
+    @RequestMapping("buyPackagePage")
+    @RequiresPermissions("accountrecharge:accountRecharge:view")
+    public String buyPackagePage(){
+        return "accountrecharge/buyPackage";
+    }
+    
+    @Log("获取资源包列表")
+    @RequestMapping("packageList")
+    @ResponseBody
+    @RequiresPermissions("accountrecharge:accountRecharge:view")
+    public Grid packageList() {
+    	List<PackageModel> packageModels = new ArrayList<PackageModel>();
+    	PackageModel model = null;
+    	for (int i = 1; i < 7; i++) {
+    		model = new PackageModel();
+    		model.setDays(i * 5);
+    		model.setMoney(i * 50);
+    		model.setPackageName("广告" + model.getDays() + "日资源包");
+    		model.setId(i);
+    		packageModels.add(model);
+		}
+        Grid grid = new Grid();
+        grid.setRows(packageModels);
+        grid.setTotal(packageModels.size());
+        return grid;
+    }
+}

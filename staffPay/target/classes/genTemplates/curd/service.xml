@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+	<name>service</name>
+	<filePath>src/main/java/${packageName}/modules/${moduleName}/service/${subModuleName}</filePath>
+	<fileName>${ClassName}Service.java</fileName>
+	<content><![CDATA[
+package ${packageName}.modules.${moduleName}.service<#if subModuleName != "">.${subModuleName}</#if>;
+
+import javax.annotation.Resource;
+
+import com.boot.mrjuly.common.persistence.CrudService;
+<#list table.columnList as c>
+	<#if c.simpleJavaField == 'id' && c.simpleJavaType == 'Long'>
+import com.boot.mrjuly.common.utils.IDUtil;
+	</#if>
+</#list>
+import org.springframework.stereotype.Service;
+import ${packageName}.modules.${moduleName}.model<#if subModuleName != "">.${subModuleName}</#if>.${ClassName};
+import ${packageName}.modules.${moduleName}.dao<#if subModuleName != "">.${subModuleName}</#if>.${ClassName}Dao;
+
+/**
+ * ${functionName}Service
+ * @author ${functionAuthor}
+ * @version ${functionVersion}
+ */
+@Service
+public class ${ClassName}Service extends CrudService<${ClassName}Dao, ${ClassName}, <#list table.columnList as c><#if c.simpleJavaField == 'id'>${c.simpleJavaType}</#if></#list>> {
+	@Resource
+	private ${ClassName}Dao dao;
+
+	<#list table.columnList as c>
+		<#if c.simpleJavaField == 'id' && c.simpleJavaType == 'Long'>
+	/**
+	 * 保存数据（插入或更新）
+	 * @param entity
+	 */
+	public void save(${ClassName} entity) {
+		if (entity.getIsNewRecord()){
+			entity.setId(IDUtil.nextId());
+
+			entity.preInsert();
+			dao.insert(entity);
+		}else{
+			entity.preUpdate();
+			dao.update(entity);
+		}
+	}
+		</#if>
+	</#list>
+}]]>
+	</content>
+</template>

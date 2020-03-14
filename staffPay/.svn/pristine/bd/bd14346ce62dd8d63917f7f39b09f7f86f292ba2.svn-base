@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="bootstrap_table">
+    <!-- bootstrap table专属css和js -->
+    <link th:href="@{/h+/css/plugins/bootstrap-table/bootstrap-table.min.css}" rel="stylesheet">
+    <script th:src="@{/h+/js/plugins/bootstrap-table/bootstrap-table.min.js}"></script>
+    <script th:src="@{/h+/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js}"></script>
+    <script th:src="@{/h+/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js}"></script>
+
+    <script type="text/javascript" src="http://tajs.qq.com/stats?sId=9051096" charset="UTF-8"></script>
+
+    <script type="text/javascript">
+        function refreshTable(){
+            $('#table').bootstrapTable('refresh', {silent: true});
+        }
+
+        function refreshTable1(){
+            $('#table1').bootstrapTable('refresh', {silent: true});
+        }
+
+        function refreshTable2(){
+            $('#table2').bootstrapTable('refresh', {silent: true});
+        }
+    </script>
+</head>
+<body>
+
+</body>
+</html>

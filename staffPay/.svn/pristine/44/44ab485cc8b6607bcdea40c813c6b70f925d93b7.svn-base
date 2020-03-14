@@ -1,0 +1,253 @@
+package com.chunqiu.mrjuly.modules.devicematchinginfo.controller;
+
+import com.chunqiu.mrjuly.common.annotation.Log;
+import com.chunqiu.mrjuly.common.persistence.BaseController;
+import com.chunqiu.mrjuly.common.utils.UserUtils;
+import com.chunqiu.mrjuly.common.vo.Grid;
+import com.chunqiu.mrjuly.common.vo.GridParam;
+import com.chunqiu.mrjuly.common.vo.Json;
+import com.chunqiu.mrjuly.modules.devicematchinginfo.model.DeviceMatchingInfo;
+import com.chunqiu.mrjuly.modules.devicematchinginfo.service.DeviceMatchingInfoService;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * 设备匹配Controller
+ * @author 周天
+ * @version 2019-03-11
+ */
+@Slf4j
+@Controller
+@RequestMapping(value = "${adminPath}/devicematchinginfo/deviceMatchingInfo")
+@Transactional
+public class DeviceMatchingInfoController extends BaseController {
+
+	@Autowired
+	private DeviceMatchingInfoService deviceMatchingInfoService;
+
+	/**
+	 * @Description：设备匹配列表页面
+	 * @author 周天
+	 */
+	@Log("打开设备匹配列表页面")
+	@RequestMapping("index")
+	@RequiresPermissions("devicematchinginfo:deviceMatchingInfo:view")
+		public String index(){
+		return "devicematchinginfo/deviceMatchingInfoList";
+	}
+
+	/**
+	 * @Description：设备匹配列表数据
+	 * @author 周天
+	 */
+	@Log("获取设备匹配列表数据")
+	@RequestMapping("list")
+	@ResponseBody
+	@RequiresPermissions("devicematchinginfo:deviceMatchingInfo:view")
+	public Grid list(DeviceMatchingInfo deviceMatchingInfo, GridParam param) {
+		deviceMatchingInfo.setHotelCodeId(UserUtils.getUser().getHotelCodeId());
+		return deviceMatchingInfoService.findPage(deviceMatchingInfo, param);
+	}
+	/**
+	 * @Description：设备匹配表单页面--新增
+	 * @author 周天
+	 */
+	@Log("打开设备匹配表单页面--新增")
+	@RequestMapping(value = "form")
+	@RequiresPermissions("devicematchinginfo:deviceMatchingInfo:view")
+	public String form(DeviceMatchingInfo deviceMatchingInfo, ModelMap model) {
+		//查询服务端编号
+		DeviceMatchingInfo deviceMatchingInfo1 = new DeviceMatchingInfo();
+		deviceMatchingInfo1.setType(2);
+		deviceMatchingInfo1.setHotelCodeId(UserUtils.getUser().getHotelCodeId());
+		List<DeviceMatchingInfo> deviceMatchingInfoList =	deviceMatchingInfoService.serverSideListById(deviceMatchingInfo1);
+		model.addAttribute("serverSideList", deviceMatchingInfoList);
+
+		return "devicematchinginfo/deviceMatchingInfoForm";
+	}
+
+	/**
+	 * @Description：设备匹配表单页面--查看详情
+	 * @author 周天
+	 */
+	@Log("打开设备匹配表单页面--查看详情")
+	@RequestMapping(value = "formInfo")
+	@RequiresPermissions("devicematchinginfo:deviceMatchingInfo:view")
+	public String formInfo(DeviceMatchingInfo deviceMatchingInfo, ModelMap model) {
+		model.addAttribute("deviceMatchingInfo",deviceMatchingInfo);
+		return "devicematchinginfo/deviceMatchingInfoFormInfo";
+	}
+
+
+	@Log("获取服务端详情列表数据")
+	@RequestMapping("hotelClientList")
+	@ResponseBody
+	@RequiresPermissions("devicematchinginfo:deviceMatchingInfo:view")
+	public Grid hotelClientList(DeviceMatchingInfo deviceMatchingInfo, GridParam param) {
+		return deviceMatchingInfoService.hotelClientList(deviceMatchingInfo,param);
+	}
+
+
+	/**
+	 * @Description：设备匹配新增/编辑 保存方法
+	 * @author 周天
+	 */
+	@Log("新增/编辑设备匹配")
+	@RequestMapping("saveDeviceMatchingInfo")
+	@RequiresPermissions("devicematchinginfo:deviceMatchingInfo:edit")
+	public String saveDeviceMatchingInfo(DeviceMatchingInfo deviceMatchingInfo, ModelMap model){
+		try{
+			List<DeviceMatchingInfo> deviceMatchingInfoList = new ArrayList<>();
+			String[] idList = deviceMatchingInfo.getIdList().split(",");
+			for (int i = 0;i<idList.length;i++){
+				DeviceMatchingInfo deviceMatchingInfo1 = new DeviceMatchingInfo();
+				deviceMatchingInfo1.setHotelCodeId(UserUtils.getUser().getHotelCodeId());
+				deviceMatchingInfo1.setServerSideCodingId(deviceMatchingInfo.getServerSideCodingId());
+				deviceMatchingInfo1.setClientBianmaId(idList[i]);
+				deviceMatchingInfoList.add(deviceMatchingInfo1);
+			}
+			//新增绑定数据
+			deviceMatchingInfoService.insertDevice(deviceMatchingInfoList);
+			//更新绑定状态
+			deviceMatchingInfoService.updateDeviceStatus(deviceMatchingInfoList);
+		}catch(Exception e){
+			log.error("保存失败！ msg={}", e.getMessage(), e);
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			model.addAttribute("error", "保存失败！");
+			return form(deviceMatchingInfo, model);
+		}
+		return successPath;
+	}
+
+
+	/**
+	 * @Description：设备匹配数据删除方法
+	 * @author 周天
+	 */
+	@Log("删除设备匹配")
+	@RequestMapping("delDeviceMatchingInfo")
+	@ResponseBody
+	@RequiresPermissions("devicematchinginfo:deviceMatchingInfo:edit")
+		public Json delDeviceMatchingInfo(DeviceMatchingInfo deviceMatchingInfo){
+		Json json = new Json();
+		try{
+			deviceMatchingInfoService.delete(deviceMatchingInfo);
+			json.setSuccess(true);
+		}catch(Exception e){
+			log.error("删除失败！ msg={}", e.getMessage(), e);
+
+			json.setSuccess(false);
+			json.setMsg("删除失败！");
+		}
+		return json;
+	}
+
+	@Log("更改服务端设备状态")
+	@RequestMapping("updateClientStatus")
+	@ResponseBody
+	@RequiresPermissions("devicematchinginfo:deviceMatchingInfo:edit")
+	public Json updateClientStatus(DeviceMatchingInfo deviceMatchingInfo){
+		Json json = new Json();
+		try{
+			//更新状态
+			List<DeviceMatchingInfo>deviceMatchingInfoList = new ArrayList<>();
+			String [] idList = deviceMatchingInfo.getIdList().split(",");
+			for (int i = 0;i<idList.length;i++){
+				DeviceMatchingInfo deviceMatchingInfo1 = new DeviceMatchingInfo();
+				deviceMatchingInfo1.setId(Integer.valueOf(idList[i]));
+				deviceMatchingInfoList.add(deviceMatchingInfo1);
+			}
+			//删除匹配
+			List<DeviceMatchingInfo>delDeviceMatchingInfoList = new ArrayList<>();
+			String [] delList = deviceMatchingInfo.getDelList().split(",");
+			for (int i = 0;i<delList.length;i++){
+				DeviceMatchingInfo deviceMatchingInfo1 = new DeviceMatchingInfo();
+				deviceMatchingInfo1.setId(Integer.valueOf(delList[i]));
+				delDeviceMatchingInfoList.add(deviceMatchingInfo1);
+			}
+
+			//更新绑定状态
+			deviceMatchingInfoService.updateClientStatus(deviceMatchingInfoList);
+			//删除绑定记录
+			deviceMatchingInfoService.delClient(delDeviceMatchingInfoList);
+			json.setSuccess(true);
+		}catch(Exception e){
+			log.error("更改失败！ msg={}", e.getMessage(), e);
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			json.setSuccess(false);
+			json.setMsg("更改失败！");
+		}
+		return json;
+	}
+
+
+	@Log("获取客户端列表数据")
+	@RequestMapping("hotelCodeList")
+	@ResponseBody
+	@RequiresPermissions("devicematchinginfo:deviceMatchingInfo:view")
+	public Grid hotelCodeList(DeviceMatchingInfo deviceMatchingInfo, GridParam param) {
+		deviceMatchingInfo.setHotelCodeId(UserUtils.getUser().getHotelCodeId());
+		deviceMatchingInfo.setType(1);
+		return deviceMatchingInfoService.serverSideListById2(deviceMatchingInfo,param);
+	}
+
+
+	/**
+	 * @Description：通讯匹配列表页面
+	 * @author 周天
+	 */
+	@Log("打开通讯匹配列表页面")
+	@RequestMapping("communicationIndex")
+	@RequiresPermissions("devicematchinginfo:deviceMatchingInfo:view")
+	public String communicationIndex(){
+		return "devicematchinginfo/communicationList";
+	}
+
+	/**
+	 * @Description：通讯匹配列表数据
+	 * @author 周天
+	 */
+	@Log("获取通讯匹配列表数据")
+	@RequestMapping("communicationList")
+	@ResponseBody
+	@RequiresPermissions("devicematchinginfo:deviceMatchingInfo:view")
+	public Grid communicationList(DeviceMatchingInfo deviceMatchingInfo, GridParam param) {
+		deviceMatchingInfo.setHotelCodeId(UserUtils.getUser().getHotelCodeId());
+		return deviceMatchingInfoService.findCommunicationPage(deviceMatchingInfo, param);
+	}
+
+	@Log("更改通讯匹配设备状态")
+	@RequestMapping("updateMatchingStatus")
+	@ResponseBody
+	@RequiresPermissions("devicematchinginfo:deviceMatchingInfo:edit")
+	public Json updateMatchingStatus(DeviceMatchingInfo deviceMatchingInfo){
+		Json json = new Json();
+		try{
+			List<DeviceMatchingInfo>deviceMatchingInfoList = new ArrayList<>();
+			String [] idList = deviceMatchingInfo.getIdList().split(",");
+			for (int i = 0;i<idList.length;i++){
+				DeviceMatchingInfo deviceMatchingInfo1 = new DeviceMatchingInfo();
+				deviceMatchingInfo1.setId(Integer.valueOf(idList[i]));
+				deviceMatchingInfoList.add(deviceMatchingInfo1);
+			}
+			deviceMatchingInfoService.updateMatchingStatus(deviceMatchingInfo,deviceMatchingInfoList);
+			json.setSuccess(true);
+		}catch(Exception e){
+			log.error("更改失败！ msg={}", e.getMessage(), e);
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			json.setSuccess(false);
+			json.setMsg("更改失败！");
+		}
+		return json;
+	}
+}

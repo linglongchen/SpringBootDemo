@@ -1,0 +1,101 @@
+package com.chunqiu.mrjuly.modules.hotelinfo.model;
+
+import org.hibernate.validator.constraints.Length;
+import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import com.chunqiu.mrjuly.common.persistence.DataEntity;
+
+/**
+ * 客户端编码 服务端编码Entity
+ * @author dwl
+ * @version 2019-03-13
+ */
+public class ClientBianmaInfo extends DataEntity<ClientBianmaInfo, Integer> {
+	
+	private static final long serialVersionUID = 1L;
+	private Integer equipmentNumber;		// 酒店设备唯一编号id
+	private String equipmentName;		// 客户端和服务端填写的录入内容
+	private Integer type;		// 1.客户端编码 2.服务端编码
+	private Date dormancyDate;		// 休眠时间
+	private Integer status;		// 0未绑定 1已绑定
+	private Integer uniqueId;		// 对应机器唯一编码的主键id
+	private Integer activation;		// 是否激活设备 0.未激活 1.已激活
+	private Date activationDate;		// 激活时间
+	
+	public ClientBianmaInfo() {
+		super();
+	}
+
+	public ClientBianmaInfo(Integer id){
+		super(id);
+	}
+
+	public Integer getEquipmentNumber() {
+		return equipmentNumber;
+	}
+
+	public void setEquipmentNumber(Integer equipmentNumber) {
+		this.equipmentNumber = equipmentNumber;
+	}
+	
+	@Length(min=0, max=255, message="客户端和服务端填写的录入内容长度必须介于 0 和 255 之间")
+	public String getEquipmentName() {
+		return equipmentName;
+	}
+
+	public void setEquipmentName(String equipmentName) {
+		this.equipmentName = equipmentName;
+	}
+	
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
+	}
+	
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	public Date getDormancyDate() {
+		return dormancyDate;
+	}
+
+	public void setDormancyDate(Date dormancyDate) {
+		this.dormancyDate = dormancyDate;
+	}
+	
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+	
+	public Integer getUniqueId() {
+		return uniqueId;
+	}
+
+	public void setUniqueId(Integer uniqueId) {
+		this.uniqueId = uniqueId;
+	}
+	
+	public Integer getActivation() {
+		return activation;
+	}
+
+	public void setActivation(Integer activation) {
+		this.activation = activation;
+	}
+	
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	public Date getActivationDate() {
+		return activationDate;
+	}
+
+	public void setActivationDate(Date activationDate) {
+		this.activationDate = activationDate;
+	}
+	
+}

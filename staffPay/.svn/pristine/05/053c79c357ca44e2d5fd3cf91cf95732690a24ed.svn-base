@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chunqiu.mrjuly.modules.system.dao.SystemSetupDao">
+    <!-- 查询所有银行列表-->
+    <select id="bankList" resultType="BankInfo">
+      select id AS "bId",bank_name as "bankName" from  bank where  del_flag = '0';
+    </select>
+
+    <!--查询对开账户信息-->
+    <select id="bankInfo" resultType="BankInfo">
+       SELECT
+            a.id AS "bId",
+            a.real_name AS "name",
+            a.bank_card_number AS "bankNumber",
+            a.bank_id AS "bankId",
+            b.bank_name as "bankName"
+        FROM
+            public_account_number as a LEFT JOIN bank as b on a.bank_id = b.id;
+    </select>
+
+    <!--新增一个账户-->
+    <insert id="insertBank" parameterType="BankInfo">
+        INSERT INTO `public_account_number` (
+            `real_name`,
+            `bank_card_number`,
+            `bank_id`,
+             `create_by`,
+            `create_date`
+        )
+        VALUES
+            (
+                #{name},
+                #{bankNumber},
+                #{bankId},
+                #{createBy.id},
+                #{createDate}
+            );
+    </insert>
+
+    <!--更新对开账户信息-->
+    <update id="updateBankInfoById" parameterType="BankInfo">
+        UPDATE `public_account_number`
+            SET
+             `real_name` = #{name},
+             `bank_card_number` = #{bankNumber},
+             `bank_id` = #{bankId},
+             `update_date` = #{updateDate},
+             `update_by` = #{updateBy.id}
+            WHERE
+	      `id` = #{bId};
+    </update>
+
+    <!--判断是否存在该酒店-->
+    <select id="isHotel" parameterType="HotelCode" resultType="int">
+        select count(1) from hotel_unique_code where de_flag = '0'
+        <if test="type == 1">
+            and hotel_code = #{hotelCode}
+        </if>
+        <if test=" type == 2">
+            and hotel_name = #{hotelName}
+        </if>
+    </select>
+
+    <!--新增酒店信息-->
+    <insert id="insertSaveHotel" parameterType="HotelCode">
+        INSERT INTO `hotel_unique_code` (
+            `hotel_code`,
+            `hotel_name`,
+            `create_date`,
+            `create_by`
+        )
+        VALUES
+            (
+              #{hotelCode},
+               #{hotelName},
+               #{createDate},
+               #{createBy.id}
+            );
+
+    </insert>
+
+    <!--查询所有酒店设备编码信息-->
+    <select id="findList" resultType="HotelCode">
+        SELECT
+        a.id,
+        a.hotel_code AS "hotelCode",
+        a.hotel_name AS "hotelName",
+        CONCAT(Substring(GROUP_CONCAT(b.unique_encoding SEPARATOR ','),1,20),'.....')AS "uniqueEncoding"
+        FROM
+        (SELECT * FROM hotel_unique_code WHERE de_flag = '0') AS a
+        LEFT JOIN (SELECT * FROM code_binding WHERE del_flag = '0') AS c ON c.hotel_code_id = a.id
+        LEFT JOIN (SELECT * FROM unique_encoding WHERE de_flag = '0' AND type = 1 ) AS b ON c.unique_code_id = b.id
+        <choose>
+            <when test="orderBy != null and orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                GROUP BY a.hotel_code
+            </otherwise>
+        </choose>
+    </select>
+    <select id="getSelect" resultType="HotelCode">
+        select a.id,
+            a.hotel_code AS "hotelCode",
+            a.hotel_name AS "hotelName",
+          from hotel_unique_code AS a
+          where del_flag='0'
+    </select>
+
+
+    <!--详情页面查询当前前缀下绑定的设备编码-->
+    <select id="findCodeList" resultType="HotelCode">
+       SELECT
+            b.id,
+            c.id,
+            b.unique_encoding AS "uniqueEncoding"
+        FROM
+        hotel_unique_code AS a
+        LEFT JOIN code_binding AS c ON c.hotel_code_id = a.id
+        LEFT JOIN unique_encoding AS b ON c.unique_code_id = b.id
+        WHERE c.hotel_code_id = #{id}
+        and b.de_flag = '0'
+        and c.del_flag ='0'
+        and b.type = '1'
+        <if test="uniqueEncoding != null and uniqueEncoding != ''">
+            and b.unique_encoding LIKE CONCAT("%",#{uniqueEncoding},"%")
+        </if>
+        <choose>
+            <when test="orderBy != null and orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                order by c.id desc
+            </otherwise>
+        </choose>
+    </select>
+
+    <!--更新前缀编码-->
+    <update id="updateCodeById" parameterType="HotelCode">
+        UPDATE `hotel_unique_code`
+            SET
+             `hotel_code` = #{hotelCode},
+             `update_date` = #{updateDate},
+             `update_by` = #{updateBy.id}
+            WHERE
+                (`id` = #{id});
+    </update>
+
+    <!--判断是否有重复前缀编码-->
+    <select id="isNameByStr" parameterType="HotelCode" resultType="int">
+        select count(1) from hotel_unique_code where hotel_code = #{hotelCode} and  de_flag = '0';
+    </select>
+
+   <!--查询设备外壳编号-->
+    <select id="findShellCodingList" parameterType="HotelCode" resultType="HotelCode">
+        SELECT
+            a.id,
+            a.unique_encoding AS "uniqueEncoding",
+            c.hotel_code as "hotelCode",
+            c.hotel_name as "hotelName",
+            b.id as "codeId",
+            IF(b.del_flag = '0' AND c.de_flag = '0' AND a.de_flag = '0','0','1') AS 'type'
+        FROM
+            unique_encoding AS a
+        LEFT JOIN   (SELECT * FROM code_binding WHERE del_flag = '0' )AS b ON b.unique_code_id = a.id
+        LEFT JOIN (SELECT * FROM hotel_unique_code WHERE de_flag = '0' ) as c on c.id = b.hotel_code_id
+        WHERE
+        1 = 1
+         and a.de_flag = '0'
+        <if test="uniqueEncoding != null and uniqueEncoding != ''">
+            and a.unique_encoding  LIKE CONCAT("%",#{uniqueEncoding},"%")
+        </if>
+        <choose>
+            <when test="orderBy != null and orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                order by a.id desc
+            </otherwise>
+        </choose>
+    </select>
+
+    <!--新增外壳设备编号-->
+    <insert id="insertShellCoding" parameterType="list">
+        INSERT INTO unique_encoding (
+            unique_encoding,
+            create_date,
+            create_by
+        )
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.uniqueEncoding},
+            #{item.createDate},
+            #{item.createBy.id}
+            )
+        </foreach>
+            ON DUPLICATE KEY UPDATE unique_encoding =
+        VALUES
+	(unique_encoding);
+    </insert>
+
+    <!--查询所有酒店前缀编码-->
+    <select id="hotelCodingList" resultType="HotelCode">
+        select id,hotel_code as "hotelCode" from hotel_unique_code where de_flag = '0';
+    </select>
+
+    <!--单条归入设备编码-->
+    <insert id="SingleCode" parameterType="HotelCode">
+        INSERT INTO `code_binding` (
+            `hotel_code_id`,
+            `unique_code_id`,
+            `create_date`,
+            `create_by`
+        )
+        VALUES
+            (
+                #{hotelCode},
+                #{id},
+                #{updateDate},
+                #{updateBy.id}
+            );
+    </insert>
+
+    <!--更新外壳编号-->
+    <update id="updateShellCodeById" parameterType="HotelCode">
+         UPDATE `unique_encoding`
+                SET
+                 `type` = '1'
+                WHERE
+          (`id` = #{id});
+    </update>
+
+    <!--更新绑定后的前缀编码-->
+    <update id="updateCodeBindingById" parameterType="HotelCode">
+        UPDATE `code_binding`
+                SET
+                 `hotel_code_id` = #{hotelCode},
+                 `update_date` = #{updateDate},
+                 `update_by` = #{updateBy.id}
+                WHERE
+          (`id` = #{codeId});
+    </update>
+
+    <!--批量归入设备编号-->
+    <insert id="insertManyCodeById" parameterType="list">
+          INSERT INTO `code_binding` (
+            `hotel_code_id`,
+            `unique_code_id`,
+            `create_date`,
+            `create_by`
+        ) values
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.hotelCode},
+            #{item.id},
+            #{item.updateDate},
+            #{item.updateBy.id}
+            )
+        </foreach>
+    </insert>
+
+    <!--批量更新状态-->
+    <update id="updateManyCodeById" parameterType="list">
+            UPDATE `unique_encoding`
+            SET
+            `type` = '1'
+            WHERE
+          `id` in(
+        <foreach collection="list" item="item" index="index" open="" close="" separator=",">
+           #{item.id}
+        </foreach>
+        )
+    </update>
+
+    <!--删除外壳设备编号-->
+    <update id="deleteCodeById" parameterType="HotelCode">
+          UPDATE `unique_encoding`
+            SET
+             `de_flag` = '1'
+            WHERE
+              `id` = #{id};
+    </update>
+
+    <!--删除绑定编号-->
+    <update id="deleteBindingById" parameterType="HotelCode">
+          UPDATE `code_binding`
+            SET
+             `del_flag` = '1'
+            WHERE
+              `unique_code_id` = #{id};
+    </update>
+
+    <!--更改外壳设备绑定状态-->
+    <update id="breakEncodingById" parameterType="HotelCode">
+          UPDATE `unique_encoding`
+            SET
+             `type` = 0
+            WHERE
+              `id` = #{id};
+    </update>
+
+    <!--多条更新外壳设备状态-->
+    <update id="updateMultipleBreakById" parameterType="list">
+          UPDATE `unique_encoding`
+                SET
+                 `type` = 0
+                WHERE
+              `id` in
+        (
+        <foreach collection="list" item="item" index="index" open="" close="" separator=",">
+            #{item.id}
+        </foreach>
+        )
+    </update>
+
+    <!--多条删除绑定编号-->
+    <update id="deleteMultipleBreakById" parameterType="list">
+          UPDATE `code_binding`
+            SET
+             `del_flag` = '1'
+            WHERE
+              `unique_code_id` in
+              (
+        <foreach collection="list" item="item" index="index" open="" close="" separator=",">
+            #{item.id}
+        </foreach>
+              )
+    </update>
+
+    <!--更新前缀编码删除状态-->
+    <update id="updatePrefixCodeById" parameterType="HotelCode">
+        UPDATE `hotel_unique_code`
+            SET
+             `update_date` = #{updateDate},
+             `update_by` = #{updateBy.id},
+             `de_flag` = '1'
+            WHERE
+	        `id` = #{id};
+    </update>
+
+    <!--解绑当前前缀编码下的外壳编码-->
+    <update id="updateMatchingCodeById" parameterType="HotelCode">
+            UPDATE `code_binding`
+            SET
+             `del_flag` = '1',
+             `update_date` = #{updateDate},
+             `update_by` = #{updateBy.id}
+            WHERE
+                hotel_code_id = #{id}
+    </update>
+
+    <!--查询前缀编码下已经绑定的外壳编号id-->
+    <select id="hotelCodeIdById"  resultType="HotelCode">
+        select a.unique_code_id as "id" from  code_binding a where a.hotel_code_id = #{codeId} and  a.del_flag = '0';
+    </select>
+</mapper>

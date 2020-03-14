@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>操作成功</title>
+
+    <head th:include="init :: init"></head>
+</head>
+<body>
+    <script type="text/javascript">
+        var hotelAdStandard = [[${hotel.hotelAdStandard}]];
+        parent.closeLoading();
+        parent.layer.msg('保存成功', {icon : 1});
+        parent.layer.closeAll('iframe');
+    </script>
+</body>
+</html>

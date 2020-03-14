@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>三级菜单</title>
+
+    <head th:include="init :: init"></head>
+
+    <head th:include="init_bootstrap_table :: bootstrap_table"></head>
+
+    <head th:include="init_ueditor :: ueditor"></head>
+    <head th:include="init_city_picker :: city_picker"></head>
+
+    <script type="text/javascript">
+        // $(function(){
+        //     $("#hotelAdStandard").val( $("#first").val() +","+ $("#two").val() +","+ $("#three").val());
+        // })
+
+        function menu(type,eq){
+            $.post( '[[${ctx}]]/hotelinfo/hotelInfo/menuList',
+                {
+                    type : type,
+                    id:$(eq).val()
+                },
+                function (result) {
+                    if (type == 2){
+                        $("#two").empty();
+                        $("#three").empty();
+                        $("#two").trigger("chosen:updated");
+                        $("#three").trigger("chosen:updated");
+                        $.each(result,function(i) {
+                            $("#two").append("<option></option><option value="+result[i].id+">"+result[i].typeName+"</option>");
+                        });
+                        $("#two").trigger("chosen:updated");
+                    }else if (type == 3){
+                        $("#three").empty();
+                        $("#three").trigger("chosen:updated");
+                        $.each(result,function(i) {
+                            $("#three").append("<option></option><option value="+result[i].id+">"+result[i].typeName+"</option>");
+                        });
+                        $("#three").trigger("chosen:updated");
+                    }
+
+                });
+
+        }
+
+        //提交表单
+        function validForm(){
+            $("#hotelAdStandard").val( $("#first").val() +","+ $("#two").val() +","+ $("#three").val());
+            $('#signupForm1').validate({
+                submitHandler:function(form){
+                    loading();
+                    form.action = '[[${ctx}]]/hotelinfo/hotelInfo/returnMenu2';
+                    form.submit();
+                }
+            });
+            $('#signupForm1').submit();
+        }
+    </script>
+
+</head>
+<body class="gray-bg">
+<div class="wrapper animated fadeInRight">
+    <br>
+    <form id="signupForm1" class="layui-form form-horizontal m-t">
+        <input TYPE="hidden" id ="hotelAdStandard" name="hotelAdStandard">
+        <div class="layui-form-item col-lg-6 col-sm-12 col-xs-12"  >
+            <label class="col-xs-3 layui-form-label">一级菜单：</label>
+            <div class="col-xs-6">
+                <select id = "first" required th:onchange="'menu(2,this)'" class="chosen-select-deselect form-control layui-input" name="first" data-placeholder="请选择一级菜单" >
+                    <option th:each="menuList:${menuList }" th:value="${menuList.id }" th:text="${menuList.typeName }"></option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item col-lg-6 col-sm-12 col-xs-12"  >
+            <label class="col-xs-3 layui-form-label">二级菜单：</label>
+            <div class="col-xs-6">
+                <select required th:onchange="'menu(3,this)'" id ="two" class="chosen-select-deselect form-control layui-input" name="two" data-placeholder="请选择二级菜单" >
+                    <option th:each="menuList2:${menuList2 }" th:value="${menuList2.id }" th:text="${menuList2.typeName }"></option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item col-lg-6 col-sm-12 col-xs-12"  >
+            <label class="col-xs-3 layui-form-label">三级菜单：</label>
+            <div class="col-xs-6">
+                <select required id ="three"  class="chosen-select-deselect form-control layui-input" name="three" data-placeholder="请选择三级菜单" >
+                    <option th:each="menuList3:${menuList3 }" th:value="${menuList3.id }" th:text="${menuList3.typeName }"></option>
+                </select>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

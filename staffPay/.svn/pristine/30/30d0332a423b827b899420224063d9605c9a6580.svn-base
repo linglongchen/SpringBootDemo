@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chunqiu.mrjuly.modules.advertiserinfo.dao.AdvertiserInfoDao">
+
+    <sql id="advertiserInfoColumns">
+		a.id AS "id",
+		a.advertiser_number AS "advertiserNumber",
+		a.enterprise_number AS "enterpriseNumber",
+		a.validity_time AS "validityTime",
+		a.business_license AS "businessLicense",
+		a.remarks AS "remarks",
+		a.status AS "status",
+		a.mailbox AS "mailbox",
+		a.mobile AS "mobile",
+		a.taxpayers_number AS "taxpayersNumber",
+		a.account_balance AS "accountBalance",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.company_name as "companyName",
+		a.star_id as "starId" 
+	</sql>
+
+    <sql id="advertiserInfoJoins">
+    </sql>
+
+    <select id="get" resultType="AdvertiserInfo">
+        SELECT
+        <include refid="advertiserInfoColumns"/>
+        FROM advertiser_info a
+        <include refid="advertiserInfoJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="AdvertiserInfo">
+        SELECT
+        <include refid="advertiserInfoColumns"/>
+        FROM advertiser_info a
+        <include refid="advertiserInfoJoins"/>
+        <where>
+
+            <if test="advertiserName != null and advertiserName != ''">
+                AND a.company_name LIKE
+                <if test="dbName == 'oracle'">'%'||#{advertiserName}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{advertiserName}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{advertiserName},'%')</if>
+            </if>
+            <if test="advertiserNumber != null and advertiserNumber != ''">
+                AND a.advertiser_number = #{advertiserNumber}
+            </if>
+            <if test="enterpriseNumber != null and enterpriseNumber != ''">
+                AND a.enterprise_number = #{enterpriseNumber}
+            </if>
+            <if test="validityTime != null and validityTime != ''">
+                AND a.validity_time = #{validityTime}
+            </if>
+            <if test="businessLicense != null and businessLicense != ''">
+                AND a.business_license = #{businessLicense}
+            </if>
+            <if test="remarks != null and remarks != ''">
+                AND a.remarks = #{remarks}
+            </if>
+            <if test="status != null and status != ''">
+                AND a.status = #{status}
+            </if>
+            <if test="mailbox != null and mailbox != ''">
+                AND a.mailbox = #{mailbox}
+            </if>
+            <if test="mobile != null and mobile != ''">
+                AND a.mobile = #{mobile}
+            </if>
+            <if test="companyName != null and companyName != ''">
+                AND a.company_name = #{companyName}
+            </if>
+            <if test="taxpayersNumber != null and taxpayersNumber != ''">
+                AND a.taxpayers_number = #{taxpayersNumber}
+            </if>
+            <if test="accountBalance != null and accountBalance != ''">
+                AND a.account_balance = #{accountBalance}
+            </if>
+            <if test="createDate != null and createDate != ''">
+                AND a.create_date = #{createDate}
+            </if>
+        </where>
+        <choose>
+            <when test="orderBy != null and orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="AdvertiserInfo">
+        SELECT
+        <include refid="advertiserInfoColumns"/>
+        FROM advertiser_info a
+        <include refid="advertiserInfoJoins"/>
+        <where>
+
+        </where>
+        <choose>
+            <when test="orderBy != null and orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+    <insert id="insertForm" keyProperty="id" useGeneratedKeys="true">
+        insert into advertiser_master_info(
+        advertiser_name,
+        advertiser_number,
+        enterprise_number,
+        validity_time,
+        business_license,
+        create_date,
+        advertise_info_id
+        )values (
+        #{advertiserName},
+        #{advertiserNumber},
+        #{enterpriseNumber},
+        #{validityTime},
+		#{businessLicense},
+		#{createDate},
+		#{id}
+        )
+    </insert>
+
+    <insert id="insert" keyProperty="insertId" useGeneratedKeys="true">
+		INSERT INTO advertiser_info(
+						advertiser_number,
+						status,
+						mailbox,
+						mobile,
+						company_name,
+						taxpayers_number,
+						account_balance,
+						create_date,
+						create_by
+		) VALUES (
+						#{advertiserNumber},
+						1,
+						#{mailbox},
+						#{mobile},
+						#{companyName},
+						#{taxpayersNumber},
+						#{accountBalance},
+						#{createDate},
+						#{createBy.id}
+		)
+	</insert>
+
+    <update id="update">
+        UPDATE advertiser_info
+        <set>
+            <if test="advertiserName != null and advertiserName != ''">
+                advertiser_name = #{advertiserName},
+            </if>
+            <if test="advertiserNumber != null and advertiserNumber != ''">
+                advertiser_number = #{advertiserNumber},
+            </if>
+            <if test="enterpriseNumber != null and enterpriseNumber != ''">
+                enterprise_number = #{enterpriseNumber},
+            </if>
+            <if test="validityTime != null and validityTime != ''">
+                validity_time = #{validityTime},
+            </if>
+            <if test="businessLicense != null and businessLicense != ''">
+                business_license = #{businessLicense},
+            </if>
+            <if test="remarks != null and remarks != ''">
+                remarks = #{remarks},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="mailbox != null and mailbox != ''">
+                mailbox = #{mailbox},
+            </if>
+            <if test="mobile != null and mobile != ''">
+                mobile = #{mobile},
+            </if>
+            <if test="companyName != null and companyName != ''">
+                company_name = #{companyName},
+            </if>
+            <if test="taxpayersNumber != null and taxpayersNumber != ''">
+                taxpayers_number = #{taxpayersNumber},
+            </if>
+            <if test="accountBalance != null and accountBalance != ''">
+                account_balance = #{accountBalance},
+            </if>
+            <if test="freezeReason != null and freezeReason != ''">
+                freeze_reason = #{freezeReason},
+            </if>
+            <if test="mailbox != null and mailbox != ''">
+                mailbox = #{mailbox},
+            </if>
+            <if test="mobile != null and mobile != ''">
+                mobile = #{mobile},
+            </if>
+            <if test="companyName != null and companyName != ''">
+                company_name = #{companyName},
+            </if>
+            <if test="taxpayersNumber != null and taxpayersNumber != ''">
+                taxpayers_number = #{taxpayersNumber},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="delete">
+		DELETE FROM advertiser_info
+		WHERE id = #{id}
+	</update>
+
+
+    <update id="saveList" parameterType="list">
+        update advertiser_info
+        <set>
+            <foreach collection="list" separator="," item="item">
+                status=#{item.status},
+            </foreach>
+            <foreach collection="list" separator="," item="item">
+                freeze_reason = #{item.freezeReason}
+            </foreach>
+        </set>
+        where id in (
+        <foreach collection="list" separator="," item="item">
+            #{item.id}
+        </foreach>
+        )
+    </update>
+    <update id="relieveAdvertiserInfo" parameterType="list">
+        update advertiser_info
+        <set>
+            status=1
+        </set>
+        where id in (
+        <foreach collection="list" separator="," item="item">
+            #{item.id}
+        </foreach>
+        )
+    </update>
+    <select id="accountRechargeList" resultType="AccountRecharge">
+        select id AS "id",
+        remittance_flow_number AS "remittanceFlowNumber"
+        from account_recharge
+        where status=2 and type=2 and object_id=#{objectId} and cut_status=0
+    </select>
+    <select id="accountRechargeList2" resultType="AccountRecharge">
+        select id AS "id",
+        remittance_flow_number AS "remittanceFlowNumber"
+        from account_recharge
+        where status=2 and type=1 and object_id=#{objectId} and cut_status=0
+    </select>
+    <update id="cutStatus">
+        update account_recharge
+        set cut_status=1
+        where id=#{id}
+    </update>
+
+
+
+    <insert id="insertMyBill">
+        insert into my_bill_info(
+        status,
+        type,
+        amount_price,
+        remarks,
+        bill_of_origin_id,
+        object_id,
+        create_by
+        )values (
+        <choose>
+	        <when test="status != null">
+	            #{status},
+	        </when>
+	        <otherwise>
+	    		3,
+	        </otherwise>
+        </choose>
+        #{type},
+        #{amountPrice},
+        #{remarks},
+        #{billOfOriginId},
+        #{objectId},
+        #{createBy.id}
+        )
+
+    </insert>
+    <insert id="insertMyBill2">
+        insert into my_bill_info(
+        status,
+        type,
+        amount_price,
+        remarks,
+        bill_of_origin_id,
+        object_id,
+        create_by
+        )values (
+        <choose>
+	        <when test="status != null">
+	            #{status},
+	        </when>
+	        <otherwise>
+	    		4,
+	        </otherwise>
+        </choose>
+        #{type},
+        #{amountPrice},
+        #{remarks},
+        #{billOfOriginId},
+        #{objectId},
+         #{createBy.id}
+        )
+
+    </insert>
+    <insert id="insertFlow">
+        insert into flow_sheet_info(
+        flow_sheet_platform,
+        merchant_name,
+        merchant_code,
+        operation_mode,
+        operating_amount,
+        account_amount,
+        remarks,
+        object_id,
+        create_by
+        )values (
+        #{flowSheetPlatform},
+        #{merchantName},
+        #{merchantCode},
+        #{operationMode},
+        #{operatingAmount},
+        #{accountAmount},
+        #{remarks},
+        #{objectId},
+        #{createBy.id}
+        )
+    </insert>
+    <select id="getMasterNum" resultType="AdvertiserInfo">
+        select id,advertiser_number
+        from advertiser_master_info
+        where advertise_info_id=#{id}
+    </select>
+    <update id="saveUpload">
+        update advertising_upload
+        <set>
+            <if test="nowPrice != null">
+                now_price =#{nowPrice},
+            </if>
+            <if test="nowPrice2 != null">
+                now_price2 =#{nowPrice2},
+            </if>
+            <if test="updateBy != null and updateBy != ''">
+                update_by =#{updateBy.by},
+            </if>
+            <if test="status != null ">
+                status =#{status},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+	<update id="updateStar">
+        update advertiser_info 
+        set star_id = #{starId} 
+        where id=#{id} 
+    </update>
+    
+    <update id="updateByPrimaryKeySelective" parameterType="com.chunqiu.mrjuly.modules.advertiserinfo.model.AdvertiserInfo" >
+    update advertiser_info
+    <set >
+      <if test="advertiserNumber != null" >
+        advertiser_number = #{advertiserNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="mailbox != null" >
+        mailbox = #{mailbox,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="companyName != null" >
+        company_name = #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="taxpayersNumber != null" >
+        taxpayers_number = #{taxpayersNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="accountBalance != null" >
+        account_balance = #{accountBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        create_by = #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        update_by = #{updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="freezeReason != null" >
+        freeze_reason = #{freezeReason,jdbcType=VARCHAR},
+      </if>
+      <if test="validityTime != null" >
+        validity_time = #{validityTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="businessLicense != null" >
+        business_license = #{businessLicense,jdbcType=VARCHAR},
+      </if>
+      <if test="enterpriseNumber != null" >
+        enterprise_number = #{enterpriseNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null" >
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="advertiserName != null" >
+        advertiser_name = #{advertiserName,jdbcType=VARCHAR},
+      </if>
+      <if test="starId != null" >
+        star_id = #{starId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

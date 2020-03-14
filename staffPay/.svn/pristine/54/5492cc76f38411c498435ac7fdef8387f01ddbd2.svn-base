@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:fragment="myfooter">
+
+<script type="text/javascript">
+    $(function () {
+        $('#affiche2').attr("style","display:none");
+        $.get('[[${ctx}]]/hotelinfo/hotelInfo/getNewTime',function (data) {
+            var date = new Date().toLocaleDateString();
+            var date2 = new Date(data).toLocaleDateString();
+            if (date===date2){
+                (function () {
+                    var timer = setTimeout(this.marquee, 500);
+                }());
+            }else{
+            }
+        });
+
+
+
+
+        $.get('[[${ctx}]]/install/notice1/getNotice',function (result) {
+            var result2 = result.data;
+            if (result2!=null && result2!=""){
+                var con = result.data;
+                if (con!=null && con!=""){
+                    $('#affiche2').attr("style","display:block");
+                    $("#affiche").attr("style","display:none");
+                    $('#content').text(con);
+                }
+            }
+        });
+
+
+        $.post('[[${ctx}]]/system/user/userList', {}, function (result) {
+            if (result.roleType == 3 || result.roleType == 4) {
+                $("#name").text(result.name);
+                $("#account").text(result.account + "元");
+                if (result.roleType == 3) {
+                    $(".footer-button").attr("onclick", "shop();")
+                    $(".footer-shop").attr("onclick", "shoppinsgCart();")
+                } else if (result.roleType == 4) {
+                    $(".footer-button").attr("onclick", "adver();")
+                    /* $("#buyPackage").attr("onclick", "buyPackage();") */
+                    $("#paymentIn").attr("onclick", "paymentIn();")
+                    $(".footer-shop").attr("onclick", "advertiserCart();")
+                }
+
+            } else if (result.roleType == 1 || result.roleType == 0) {
+                $(".footer").css("display", "none");
+            } else if (result.roleType == 2) {
+                $(".footer-div1").css("display", "none");
+                $(".footer-a").text("活动到期");
+            }
+        }, 'json');
+    })
+
+
+    function adver() {
+        layer.open({
+            type: 2,
+            title: '公司账户',
+            area : ['90%','90%'],
+            content: '[[${ctx}]]/accountrecharge/accountRecharge/form?type=2', //这里content是一个DOM
+            btn: ['保存', '关闭'],
+            closeBtn: '1',
+            shadeClose: false,//点击遮罩层关闭
+            shade: [0.8, '#393D49'],
+            yes: function (index, layero) {
+                var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                iframeWin.validForm();
+            },btn2 : function(index, layero){
+                layer.confirm('关闭或退出不会对您的编辑操作进行保存！',{icon:"3",title:"提示"},function(index1){
+                    layer.close(index1);
+                    layer.close(index);
+                    var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                    iframeWin.btn2From();
+                    return true;
+                });
+                return false;
+            },cancel : function(index, layero) {
+                layer.confirm('关闭或退出不会对您的编辑操作进行保存！',{icon:"3",title:"提示"},function(index1){
+                    layer.close(index1);
+                    layer.close(index);
+                    var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                    iframeWin.cancelFrom();
+                    return true;
+                });
+                return false;
+            }
+
+
+        });
+    }
+    
+    function buyPackage() {
+        layer.open({
+            type: 2,
+            title: '充值',
+            area: ['100%', '100%'],
+            content: '[[${ctx}]]/accountrecharge/accountRecharge/buyPackagePage', //这里content是一个DOM
+            btn: [],
+            closeBtn: '2',
+            shadeClose: true,//点击遮罩层关闭
+            shade: [0.8, '#393D49'],
+            yes: function (index, layero) {
+                var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                iframeWin.validForm();
+            }
+        });
+    }
+    
+    function paymentIn() {
+        window.open("[[${ctx}]]/alipay/paymentInPage");
+    }
+
+    function shop() {
+        layer.open({
+            type: 2,
+            title: '公司账户',
+            area : ['90%','90%'],
+            content: '[[${ctx}]]/accountrecharge/accountRecharge/form?type=1', //这里content是一个DOM
+            btn: ['保存', '关闭'],
+            closeBtn: '1',
+            shadeClose: false,//点击遮罩层关闭
+            shade: [0.8, '#393D49'],
+            yes: function (index, layero) {
+                var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                iframeWin.validForm();
+            },btn2 : function(index, layero){
+                layer.confirm('关闭或退出不会对您的编辑操作进行保存！',{icon:"3",title:"提示"},function(index1){
+                    layer.close(index1);
+                    layer.close(index);
+                    var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                    iframeWin.btn2From();
+                    return true;
+                });
+                return false;
+            },cancel : function(index, layero) {
+                layer.confirm('关闭或退出不会对您的编辑操作进行保存！',{icon:"3",title:"提示"},function(index1){
+                    layer.close(index1);
+                    layer.close(index);
+                    var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                    iframeWin.cancelFrom();
+                    return true;
+                });
+                return false;
+            }
+
+
+        });
+    }
+
+
+    function shoppinsgCart() {
+        $('#signupHeadForm').validate({
+            submitHandler: function (form) {
+                loading();
+                form.action = '[[${ctx}]]/advertisingcart/advertisingCart/index';
+                form.submit();
+            }
+        });
+        $('#signupHeadForm').submit();
+        closeLoading();
+    }
+
+
+    function advertiserCart() {
+        $('#signupHeadForm').validate({
+            submitHandler: function (form) {
+                loading();
+                form.action = '[[${ctx}]]/advertisingcart/advertisingCart/adverIndex';
+                form.submit();
+            }
+        });
+        $('#signupHeadForm').submit();
+        closeLoading();
+    }
+</script>
+<style>
+    .footer {
+        height: 62%;
+        padding-left: 20px
+    }
+
+    .div-class-src {
+        border-radius: 5px;
+        background-color: #e8e5e5;
+        width: 190px;
+    }
+
+</style>
+<div>
+    <div class="footer">
+        <form id="signupHeadForm" class="layui-form form-horizontal m-t">
+        </form>
+        <div class="footer-div1" style="float: left">
+            <label id="name" style="margin-left: 34px;">暂无</label>
+           <!-- <label style="margin-left: 24px;"><img th:src="@{/images/star.png}"></label>
+            <label><img th:src="@{/images/star.png}"></label>
+            <label><img th:src="@{/images/star.png}"></label>-->
+            <label style="margin-left: 24px;">账户余额:</label>
+            <label id="account">0元</label>
+            <label style="margin-left: 14px;" class="footer-button">
+                <button class="btn btn-primary " type="button">转账充值</button>
+            </label>
+            <label style="margin-left: 14px;" id="paymentIn">
+                <button class="btn btn-primary" type="button">支付宝充值</button>
+            </label>
+            <label style="margin-left: 14px;" class="footer-shop"><img th:src="@{/images/shop.png}"></label>
+        </div>
+        <label style="float: right;width: 190px" >
+            <div class="div-class-src" id="affiche2">
+                <div class="affiche_text col-lg-6 col-sm-12 col-xs-12" >
+                    <img th:src="@{/images/laba1.png}">
+                    <i id="content"></i>
+                </div>
+            </div>
+            <div class="div-class-src" id="affiche">
+                <div class="affiche_text col-lg-6 col-sm-12 col-xs-12" >
+                    <img th:src="@{/images/laba1.png}">
+                    您有新的订单了
+                </div>
+            </div>
+        </label>
+    </div>
+</div>
+<style>
+    #affiche {
+        display: block;
+        width: 190px;
+        height: 30px;
+        float: right;
+        position: relative;
+        overflow: hidden;
+    }
+    #affiche2 {
+        display: block;
+        width: 190px;
+        height: 30px;
+        float: right;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .affiche_text {
+        position: absolute;
+        line-height: 30px;
+        display: block;
+        word-break: keep-all;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        margin-right: 30px;
+    }
+</style>
+</body>
+<script type="text/javascript">
+    function marquee() {
+        var scrollWidth = $('#affiche').width();
+        var textWidth = $('.affiche_text').width();
+        var i = scrollWidth;
+        setInterval(function () {
+            i--;
+            if (i < -textWidth) {
+                i = scrollWidth;
+            }
+            $('.affiche_text').animate({'left': i + 'px'}, 20);
+        }, 20);
+    }
+</script>
+</html>

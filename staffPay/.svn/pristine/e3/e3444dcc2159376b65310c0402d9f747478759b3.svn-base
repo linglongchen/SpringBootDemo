@@ -1,0 +1,173 @@
+package com.chunqiu.mrjuly.modules.advertisingorder.dao;
+
+import com.chunqiu.mrjuly.common.persistence.CrudDao;
+import com.chunqiu.mrjuly.modules.advertiserinfo.model.AdvertiserInfo;
+import com.chunqiu.mrjuly.modules.advertisingcart.model.AdvertisingCart;
+import com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder;
+import com.chunqiu.mrjuly.modules.adviertisement.model.AdviertisementType;
+import com.chunqiu.mrjuly.modules.flowsheetinfo.model.FlowSheetInfo;
+import com.chunqiu.mrjuly.modules.hotelinfo.model.HotelInfo;
+import com.chunqiu.mrjuly.modules.install.model.CouponInfo;
+import com.chunqiu.mrjuly.modules.install.model.NoticeInfo;
+import org.apache.poi.ss.formula.functions.T;
+
+import java.util.List;
+
+/**
+ * 广告订单DAO接口
+ *
+ * @author 周天
+ * @version 2019-03-21
+ */
+public interface AdvertisingOrderDao extends CrudDao<AdvertisingOrder, Integer> {
+
+    int updateStatus(AdvertisingOrder advertisingOrder);
+
+    int selCou(NoticeInfo noticeInfo);
+
+    int selCount(AdvertisingOrder advertisingOrder);
+
+    int selCount1(AdvertisingOrder advertisingOrder);
+
+    int selDisCount(AdvertisingOrder advertisingOrder);
+
+    int selDisCount1(AdvertisingOrder advertisingOrder);
+
+
+    AdvertisingOrder getSum(AdvertisingOrder advertisingOrder);
+
+    AdvertisingOrder getSum1(AdvertisingOrder advertisingOrder);
+
+    AdvertisingOrder getSum2(AdvertisingOrder advertisingOrder);
+
+    AdvertisingOrder getSum3(AdvertisingOrder advertisingOrder);
+
+    AdvertisingOrder getSum4(AdvertisingOrder advertisingOrder);
+
+    AdvertisingOrder getSum5(AdvertisingOrder advertisingOrder);
+
+    AdvertisingOrder getTotal(AdvertisingOrder advertisingOrder);
+
+    AdvertisingOrder getTotal1(AdvertisingOrder advertisingOrder);
+
+    int selTime(AdvertisingOrder advertisingOrder);
+
+    AdvertisingOrder getSum6(AdvertisingOrder advertisingOrder);
+
+    AdvertisingOrder getSum7(AdvertisingOrder advertisingOrder);
+
+    AdvertisingOrder getSum8(AdvertisingOrder advertisingOrder);
+
+    int selDisCount2(AdvertisingOrder advertisingOrder);
+
+    AdvertisingOrder getTotal2(AdvertisingOrder advertisingOrder);
+
+    int selState(AdvertisingOrder advertisingOrder);
+
+    AdvertisingOrder getStateSum(AdvertisingOrder advertisingOrder);
+
+    AdvertisingOrder getStateSum1(AdvertisingOrder advertisingOrder);
+
+    AdvertisingOrder getStateSum2(AdvertisingOrder advertisingOrder);
+
+    int selDisCount3(AdvertisingOrder advertisingOrder);
+
+    AdvertisingOrder getTotal3(AdvertisingOrder advertisingOrder);
+
+    List<AdvertisingOrder> selAll(AdvertisingOrder advertisingOrder);
+
+    List<AdvertiserInfo> selAll1(AdvertiserInfo advertiserInfo);
+
+    List<AdvertisingOrder> selNum(AdvertisingOrder advertisingOrder);
+
+    AdvertisingOrder selAllIn(AdvertisingOrder advertisingOrder);
+
+    List<AdvertisingOrder> selContent(AdvertisingOrder advertisingOrder);
+
+    List<AdvertisingOrder> advertisingOrderList(AdvertisingOrder advertisingOrder);
+
+    int updateAdverPrice(AdvertisingOrder advertisingOrder);
+
+    int updateOrderPrice(AdvertisingOrder advertisingOrder);
+
+    int updatePosition(AdvertisingOrder advertisingOrder);
+
+    int updateOrderById(AdvertisingOrder advertisingOrder);
+
+    int updateCouponById(AdvertisingOrder advertisingOrder);
+
+    List<AdvertisingOrder> advertisingOrderListByBefore(AdvertisingOrder advertisingOrder);
+
+    int updatePosition2(AdvertisingOrder advertisingOrder);
+
+
+    int updatePosition3(AdvertisingOrder advertisingOrder);
+
+    int insertFlowSheetList(FlowSheetInfo flowSheetInfo);
+
+
+    List<AdvertisingOrder> successPurchase(AdvertisingOrder advertisingOrder);
+
+
+    public List<T> findList2(AdvertisingOrder advertisingOrder);
+
+    AdvertisingOrder getDetail(AdvertisingOrder advertisingOrder);
+
+    public List<AdvertisingOrder> orderDetailList(AdvertisingOrder advertisingOrder);
+
+    public List<AdvertisingOrder> getOrderNum(Integer objectId);
+
+    public List<AdvertisingOrder> getOrderNum2(Integer objectId);
+
+    public int uploadAdvertisement(AdvertisingOrder advertisingOrder);
+
+    public int uploadAdvertisement2(AdvertisingOrder advertisingOrder);
+
+    public int getType(AdvertisingOrder advertisingOrder);
+
+    List<AdvertisingOrder> productionAdvertisingList();
+
+
+    int rechargePrice(AdvertisingCart advertisingCart);
+
+    List<AdvertisingOrder> releaseRecordDataList(AdvertisingOrder advertisingOrder);
+
+
+    List<AdviertisementType> getType3();
+
+
+    AdvertisingOrder advertisingOrderInfo(AdvertisingOrder advertisingOrder);
+
+    AdvertisingOrder orderNumberData(AdvertisingOrder advertisingOrder);
+
+    List<AdvertisingOrder> advertisingOrderExcel(AdvertisingOrder advertisingOrder);
+
+
+    List<AdvertisingOrder> AdvertisingOrderHotelList(AdvertisingOrder advertisingOrder);
+
+    List<AdvertisingOrder> overviewOrderList(AdvertisingOrder advertisingOrder);
+
+    List<AdvertisingOrder> analysisOfAdvertisingDataList(AdvertisingOrder advertisingOrder);
+
+    List<AdvertisingOrder> orderCLickList(AdvertisingOrder advertisingOrder);
+
+    AdvertisingOrder getTypeData(String ordernumber);
+
+    AdvertisingOrder getOrder(AdvertisingOrder advertisingOrder);
+
+    Integer orderNum(AdvertisingCart advertisingCart);
+    Integer orderNum2(AdvertisingCart advertisingCart);
+
+    AdvertisingOrder advertisingOrderInfoById (AdvertisingOrder advertisingOrder);
+
+    List<HotelInfo> hotelInfo();
+
+    int updateHotelUpload(AdvertisingOrder advertisingOrder);
+
+    List<AdvertisingOrder>orderPriceListById(List<AdvertisingOrder> advertisingOrderList);
+
+    CouponInfo couponInfoById(Integer id);
+    
+    Double getOrderMaxPriceByCondition(AdvertisingOrder condition);
+}
+

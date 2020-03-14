@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <title>优惠券编辑使用说明</title>
+
+    <head th:include="init :: init"></head>
+    <head th:include="init_ueditor :: ueditor"></head>
+    <head th:include="init_city_picker :: city_picker"></head>
+
+    <script type="text/javascript">
+        //保存优惠券使用说明
+        function validForm(){
+            $('#signupForm').validate({
+                submitHandler:function(form){
+                    loading();
+                    form.action = '[[${ctx}]]/install/coupon/saveUse';
+                    form.submit();
+                }
+            });
+            $('#signupForm').submit();
+            closeLoading();
+        }
+
+    </script>
+
+</head>
+<body class="gray-bg">
+<div class="wrapper animated fadeInRight">
+    <div class="ibox-content">
+        <div class="row">
+            <form id="signupForm" class="layui-form form-horizontal m-t" action="">
+                <input type="hidden" name="cid" th:value="${id}">
+                <div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+                    <div class="col-xs-12 col-lg-6 col-sm-12">
+                        <textarea name="couponExplain" th:text="${couponExplain}" placeholder="请输入内容" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

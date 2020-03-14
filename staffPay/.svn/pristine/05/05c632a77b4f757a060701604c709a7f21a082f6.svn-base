@@ -1,0 +1,100 @@
+package com.chunqiu.mrjuly.modules.advertiserinfo.model;
+
+import com.chunqiu.mrjuly.common.persistence.DataEntity;
+
+public class FlowSheetInfo2 extends DataEntity<FlowSheetInfo2,Integer> {
+    private Integer id;
+    private Integer flowSheetPlatform;  //流水单平台 1.广告商 2.在线商家
+    private String merchantName;        //商户名称
+    private String merchantCode;       //商户编号
+    private Integer operationMode;      //操作方式
+    private Float operatingAmount;    //操作金额
+    private Float accountAmount;            //账号金额
+    private String createDate2;
+    private String remarks;         //备注
+    private Integer objectId;           //商家或广告商主键id
+
+    @Override
+    public Integer getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getFlowSheetPlatform() {
+        return flowSheetPlatform;
+    }
+
+    public void setFlowSheetPlatform(Integer flowSheetPlatform) {
+        this.flowSheetPlatform = flowSheetPlatform;
+    }
+
+    public String getMerchantName() {
+        return merchantName;
+    }
+
+    public void setMerchantName(String merchantName) {
+        this.merchantName = merchantName;
+    }
+
+    public String getMerchantCode() {
+        return merchantCode;
+    }
+
+    public void setMerchantCode(String merchantCode) {
+        this.merchantCode = merchantCode;
+    }
+
+    public Integer getOperationMode() {
+        return operationMode;
+    }
+
+    public void setOperationMode(Integer operationMode) {
+        this.operationMode = operationMode;
+    }
+
+    public Float getOperatingAmount() {
+        return operatingAmount;
+    }
+
+    public void setOperatingAmount(Float operatingAmount) {
+        this.operatingAmount = operatingAmount;
+    }
+
+    public Float getAccountAmount() {
+        return accountAmount;
+    }
+
+    public void setAccountAmount(Float accountAmount) {
+        this.accountAmount = accountAmount;
+    }
+
+    public String getCreateDate2() {
+        return createDate2;
+    }
+
+    public void setCreateDate2(String createDate2) {
+        this.createDate2 = createDate2;
+    }
+
+    @Override
+    public String getRemarks() {
+        return remarks;
+    }
+
+    @Override
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
+    public Integer getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(Integer objectId) {
+        this.objectId = objectId;
+    }
+}

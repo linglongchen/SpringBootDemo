@@ -1,0 +1,32 @@
+package com.chunqiu.mrjuly.modules.foregroundConfiguration.dao;
+
+import com.chunqiu.mrjuly.common.persistence.CrudDao;
+import com.chunqiu.mrjuly.modules.foregroundConfiguration.model.PositionInfo;
+import com.chunqiu.mrjuly.modules.foregroundConfiguration.model.ReceptionInfo;
+import com.chunqiu.mrjuly.modules.hotelinfo.model.HotelInfo;
+
+import java.util.List;
+
+/**
+ * 前台配置DAO接口
+ * @author chen
+ * @version 2019-03-15
+ */
+public interface ReceptionInfoDao extends CrudDao<ReceptionInfo, Integer> {
+
+    int insertContactInfo(ReceptionInfo receptionInfo);
+
+    ReceptionInfo receptionVideoInfo();
+
+    int insertPositionInfo(PositionInfo positionInfo);
+
+    int updatePositionInfo(PositionInfo positionInfo);
+
+    List<PositionInfo> positionList(PositionInfo positionInfo);
+
+    List<HotelInfo> selAddress(HotelInfo hotelInfo);
+
+    List<ReceptionInfo> getAll();
+
+
+}

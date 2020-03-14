@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chunqiu.mrjuly.modules.lyhoteladvertprice.dao.LyHotelAdvertPriceDao">
+    
+	<sql id="lyHotelAdvertPriceColumns">
+		a.id AS "id",
+		a.hotel_id AS "hotelId",
+		a.upload_id AS "uploadId",
+		a.picture_price AS "picturePrice",
+		a.video_price AS "videoPrice",
+		a.picture_total_price AS "pictureTotalPrice",
+		a.video_total_price AS "videoTotalPrice",
+		a.create_time AS "createTime",
+		a.is_hotel AS "isHotel"
+	</sql>
+	
+	<sql id="lyHotelAdvertPriceJoins">
+	</sql>
+    
+	<select id="get" resultType="LyHotelAdvertPrice">
+		SELECT 
+			<include refid="lyHotelAdvertPriceColumns"/>
+		FROM ly_hotel_advert_price a
+		<include refid="lyHotelAdvertPriceJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="LyHotelAdvertPrice">
+		SELECT
+			f.sort,
+			<include refid="lyHotelAdvertPriceColumns"/>
+		FROM ly_hotel_advert_price a left join advertising_upload as f on f.id = a.upload_id
+		<include refid="lyHotelAdvertPriceJoins"/>
+		<where>
+			AND a.hotel_id = #{hotelId}
+		</where>
+		<choose>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				order by f.sort asc
+			</otherwise>
+		</choose>
+	</select>
+
+
+	<select id="spaceFindList" resultType="LyHotelAdvertPrice">
+		SELECT a.id ,a.sort from advertising_upload as a
+		<where>
+			AND a.hotel_id = #{hotelId}
+		</where>
+		<choose>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				order by a.sort asc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="LyHotelAdvertPrice">
+		SELECT 
+			<include refid="lyHotelAdvertPriceColumns"/>
+		FROM ly_hotel_advert_price a
+		<include refid="lyHotelAdvertPriceJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO ly_hotel_advert_price(
+								hotel_id,
+						upload_id,
+						picture_price,
+						video_price,
+						picture_total_price,
+						video_total_price,
+						create_time,
+						is_hotel
+		) VALUES (
+								#{hotelId},
+						#{uploadId},
+						#{picturePrice},
+						#{videoPrice},
+						#{pictureTotalPrice},
+						#{videoTotalPrice},
+						#{createTime},
+						#{isHotel}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE ly_hotel_advert_price 
+		<set>
+			<if test="picturePrice != null">
+				picture_price = #{picturePrice},
+			</if>
+			<if test="videoPrice != null ">
+				video_price = #{videoPrice},
+			</if>
+			<if test="pictureTotalPrice != null ">
+				picture_total_price = #{pictureTotalPrice},
+			</if>
+			<if test="videoTotalPrice != null ">
+				video_total_price = #{videoTotalPrice},
+			</if>
+			<if test="isHotel != null">
+				is_hotel = #{isHotel},
+			</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM ly_hotel_advert_price
+		WHERE id = #{id}
+	</update>
+
+
+
+	<select id="getHotelNameList" resultType="HotelInfo">
+		SELECT
+			a.hotel_code_id AS "id",
+			a.hotel_name AS "hotelName"
+		FROM
+			hotel_info AS a
+		WHERE
+			a.hotel_code_id IN (SELECT
+					hotel_id
+				FROM
+					ly_hotel_advert_price)
+	</select>
+
+
+	<select id="getNotHotelNameList" resultType="HotelInfo">
+			SELECT
+				a.hotel_code_id as "id",
+				a.hotel_name AS "hotelName"
+			FROM
+				hotel_info AS a
+				WHERE
+					a.hotel_code_id not in (SELECT hotel_id FROM ly_hotel_advert_price )
+	</select>
+
+
+	<update id="updateHotelStatusById">
+	UPDATE `ly_hotel_advert_price`
+		SET
+		 `is_hotel` = #{isHotel}
+		WHERE
+			`id` = #{id};
+	</update>
+
+
+	<insert id="insertHotelPriceByList" parameterType="list">
+		insert into
+		ly_hotel_advert_price
+		(hotel_id, upload_id,picture_price,video_price,picture_total_price,video_total_price,create_time,is_hotel)
+		values
+		<foreach collection="list" item="item" index="index" separator=",">
+			(#{item.hotelId}, #{item.uploadId},#{item.picturePrice},#{item.videoPrice},#{item.pictureTotalPrice},#{item.videoTotalPrice},
+			now(),0)
+		</foreach>
+	</insert>
+	
+	<select id="selectByCondition" resultType="LyHotelAdvertPrice" >
+		SELECT 
+			<include refid="lyHotelAdvertPriceColumns"/>
+		FROM ly_hotel_advert_price a
+		<where>
+			<if test="hotelId != null">
+				AND hotel_id = #{hotelId} 
+			</if>
+			<if test="uploadId != null ">
+				AND upload_id = #{uploadId} 
+			</if>
+		</where>
+		
+	</select>
+</mapper>

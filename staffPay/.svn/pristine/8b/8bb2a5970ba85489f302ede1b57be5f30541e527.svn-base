@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chunqiu.mrjuly.modules.shopinfo.dao.LyHotelMarketBusinessRelationDao" >
+  <resultMap id="BaseResultMap" type="com.chunqiu.mrjuly.modules.shopinfo.model.LyHotelMarketBusinessRelation" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="market_id" property="marketId" jdbcType="BIGINT" />
+    <result column="business_id" property="businessId" jdbcType="BIGINT" />
+    <result column="type" property="type" jdbcType="TINYINT" />
+    <result column="binding_date" property="bindingDate" jdbcType="TIMESTAMP" />
+    <result column="untie_date" property="untieDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, market_id, business_id, type, binding_date, untie_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from ly_hotel_market_business_relation
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from ly_hotel_market_business_relation
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insertSelective" parameterType="com.chunqiu.mrjuly.modules.shopinfo.model.LyHotelMarketBusinessRelation" >
+    insert into ly_hotel_market_business_relation
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="marketId != null" >
+        market_id,
+      </if>
+      <if test="businessId != null" >
+        business_id,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="bindingDate != null" >
+        binding_date,
+      </if>
+      <if test="untieDate != null" >
+        untie_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="marketId != null" >
+        #{marketId,jdbcType=BIGINT},
+      </if>
+      <if test="businessId != null" >
+        #{businessId,jdbcType=BIGINT},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=TINYINT},
+      </if>
+      <if test="bindingDate != null" >
+        #{bindingDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="untieDate != null" >
+        #{untieDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.chunqiu.mrjuly.modules.shopinfo.model.LyHotelMarketBusinessRelation" >
+    update ly_hotel_market_business_relation
+    <set >
+      <if test="marketId != null" >
+        market_id = #{marketId,jdbcType=BIGINT},
+      </if>
+      <if test="businessId != null" >
+        business_id = #{businessId,jdbcType=BIGINT},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=TINYINT},
+      </if>
+      <if test="bindingDate != null" >
+        binding_date = #{bindingDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="untieDate != null" >
+        untie_date = #{untieDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="selectMarketList" resultType="com.chunqiu.mrjuly.modules.shopinfo.model.MarketListModel"
+  	parameterType="com.chunqiu.mrjuly.modules.shopinfo.model.MarketListModel">
+    SELECT 
+    	a.id AS userId, 
+    	IFNULL(f.shop_name,a.account) AS marketName, 
+    	a.id AS marketId, 
+    	COUNT(d.id) AS bindNum, 
+    	COUNT(e.id) AS hotelNum, 
+    	a.business_id AS shopId, 
+		IFNULL(f.account,0) AS balance, 
+		f.`status` AS freeze, 
+		g.star AS starLevel, 
+		f.shop_tel AS shopTel, 
+		f.shop_number AS shopNumber 
+	FROM admin_user a 
+	LEFT JOIN ly_hotel_market_business_relation d ON d.market_id = a.id AND d.type = 1 
+	LEFT JOIN shop_hotel e ON a.business_id = e.shop_id AND e.`status` = 3 
+	LEFT JOIN shop_info f ON a.business_id = f.id 
+	LEFT JOIN ly_config_star g ON f.star_id = g.id 
+	WHERE a.business_type = 2 
+	<if test="marketName != null and marketName != ''" >
+		AND (c.`name` like concat('%',#{marketName,jdbcType=VARCHAR},'%') OR 
+			f.shop_number like concat('%',#{marketName,jdbcType=VARCHAR},'%')) 
+    </if>
+	<if test="hotelId != null" >
+		AND e.hotel_code_id = #{hotelId,jdbcType=BIGINT} 
+    </if>
+	<if test="freeze != null" >
+		AND f.`status` = #{freeze,jdbcType=TINYINT} 
+    </if>
+	GROUP BY a.id 
+  </select>
+  
+   <select id="selectMarketBindShops" resultType="com.chunqiu.mrjuly.modules.shopinfo.model.MarketBindShopInfo"
+            parameterType="com.chunqiu.mrjuly.modules.shopinfo.model.MarketBindShopCondition">
+		SELECT 
+		  c.business_logo AS shopLogo,
+		  b.business_id AS shopId,
+		  d.shop_name AS shopName,
+		  d.`status` AS freeze,
+		  d.shop_address AS shopAddress 
+        FROM ly_hotel_market_business_relation a 
+        LEFT JOIN admin_user b ON a.business_id = b.id 
+        LEFT JOIN shop_renovation_info c ON b.business_id = c.shop_id 
+        LEFT JOIN shop_info d ON b.business_id = d.id 
+        WHERE a.type = 1 AND a.market_id = #{marketId,jdbcType=BIGINT} 
+	</select>
+	
+   <select id="selectMarketUnbindShops" resultType="com.chunqiu.mrjuly.modules.shopinfo.model.MarketBindShopInfo"
+            parameterType="com.chunqiu.mrjuly.modules.shopinfo.model.MarketBindShopCondition">
+		SELECT 
+			c.business_logo AS shopLogo, 
+			a.id AS shopId, 
+			a.shop_name AS shopName, 
+			a.`status` AS freeze, 
+			a.shop_address AS shopAddress 
+		FROM shop_info a 
+		LEFT JOIN admin_user b ON a.id = b.business_id 
+		LEFT JOIN shop_renovation_info c ON a.id = c.shop_id 
+		WHERE b.business_type = 1 AND b.role_type = 3 
+		AND b.id NOT IN (
+			SELECT temp.business_id 
+			FROM ly_hotel_market_business_relation temp 
+			WHERE temp.type = 1) 
+	</select>
+	
+	 <select id="selectByMarketIdAndShopId" resultMap="BaseResultMap"
+	 	parameterType="com.chunqiu.mrjuly.modules.shopinfo.model.MarketBindShopCondition">
+	    SELECT 
+	    <include refid="Base_Column_List" />
+	    FROM ly_hotel_market_business_relation 
+	    WHERE market_id = #{marketId,jdbcType=BIGINT} 
+	    	AND business_id = #{shopId,jdbcType=BIGINT} 
+  </select>
+</mapper>

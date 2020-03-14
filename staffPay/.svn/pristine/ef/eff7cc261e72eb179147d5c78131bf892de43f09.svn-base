@@ -1,0 +1,84 @@
+package com.chunqiu.mrjuly.modules.descriptionsettings.model;
+
+import org.hibernate.validator.constraints.Length;
+
+import com.chunqiu.mrjuly.common.persistence.DataEntity;
+
+import java.util.List;
+
+/**
+ * 使用说明Entity
+ * @author 周天
+ * @version 2019-03-12
+ */
+public class DescriptionSettings extends DataEntity<DescriptionSettings, Integer> {
+
+	private static final long serialVersionUID = 1L;
+	private String pic;		// 图片
+	private String content;		// 编辑文字
+	private String instructions;		// 使用说明（设备使用模块字段，前端不展示）
+	private Integer type;		// 1.安全说明 2.部门名册 3.设备使用
+	private Integer hotelCodeId;		// 酒店前缀编号id
+
+	private List<String> picList;//存储图片
+
+	public List<String> getPicList() {
+		return picList;
+	}
+
+	public void setPicList(List<String> picList) {
+		this.picList = picList;
+	}
+
+	public DescriptionSettings() {
+		super();
+	}
+
+	public DescriptionSettings(Integer id){
+		super(id);
+	}
+
+	@Length(min=0, max=255, message="图片长度必须介于 0 和 255 之间")
+	public String getPic() {
+		return pic;
+	}
+
+	public void setPic(String pic) {
+		this.pic = pic;
+	}
+
+	@Length(min=0, max=255, message="编辑文字长度必须介于 0 和 255 之间")
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	@Length(min=0, max=255, message="使用说明（设备使用模块字段，前端不展示）长度必须介于 0 和 255 之间")
+	public String getInstructions() {
+		return instructions;
+	}
+
+	public void setInstructions(String instructions) {
+		this.instructions = instructions;
+	}
+
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
+	}
+
+	public Integer getHotelCodeId() {
+		return hotelCodeId;
+	}
+
+	public void setHotelCodeId(Integer hotelCodeId) {
+		this.hotelCodeId = hotelCodeId;
+	}
+
+}

@@ -1,0 +1,39 @@
+package com.chunqiu.mrjuly.modules.accountrecharge.service;
+
+import javax.annotation.Resource;
+
+import com.chunqiu.mrjuly.common.persistence.CrudService;
+import org.springframework.stereotype.Service;
+import com.chunqiu.mrjuly.modules.accountrecharge.model.AccountRecharge;
+import com.chunqiu.mrjuly.modules.accountrecharge.dao.AccountRechargeDao;
+
+/**
+ * 账号充值Service
+ * @author 状态
+ * @version 2019-03-14
+ */
+@Service
+public class AccountRechargeService extends CrudService<AccountRechargeDao, AccountRecharge, Integer> {
+	@Resource
+	private AccountRechargeDao dao;
+
+	/**
+	 * 插入发票
+	 * @param accountRecharge
+	 * @return
+	 */
+	public int insertInvoice(AccountRecharge accountRecharge){
+		accountRecharge.preInsert();
+		return  dao.insertInvoice(accountRecharge);
+	}
+
+	/**
+	 * 更新发票状态
+	 * @param accountRecharge
+	 * @return
+	 */
+	public int updateInvoiceStatus(AccountRecharge accountRecharge){
+		accountRecharge.preUpdate();
+		return dao.updateInvoiceStatus(accountRecharge);
+	}
+}

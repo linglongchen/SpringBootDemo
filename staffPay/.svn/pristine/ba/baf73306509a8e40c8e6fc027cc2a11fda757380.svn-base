@@ -1,0 +1,28 @@
+package com.chunqiu.mrjuly.modules.install.dao;
+
+import com.chunqiu.mrjuly.common.persistence.CrudDao;
+import com.chunqiu.mrjuly.modules.install.model.Bank;
+import com.chunqiu.mrjuly.modules.install.model.NoticeInfo;
+import com.chunqiu.mrjuly.modules.install.model.PrizeInfo;
+
+import java.util.List;
+
+/**
+ * 奖品设置的dao层
+ */
+public interface PrizeInfoDao extends CrudDao<PrizeInfo, Integer> {
+
+    int updateType(PrizeInfo prizeInfo);
+
+    PrizeInfo findType(PrizeInfo prizeInfo);
+
+    List<PrizeInfo> prizeInfoList();
+
+    List<PrizeInfo>participant();
+
+    int NoticeInfo(NoticeInfo noticeInfo);
+
+    int updatePrize(PrizeInfo prizeInfo);
+
+    int delPrize();
+}

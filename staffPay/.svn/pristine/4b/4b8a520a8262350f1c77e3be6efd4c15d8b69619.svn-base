@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>在线商家内容匹配</title>
+
+    <head th:include="init :: init"></head>
+
+    <script type="text/javascript">
+
+        //提交表单
+        function validForm() {
+            var url = $('#advertisingUrl').val();
+            var reg = /^([hH][tT]{2}[pP]:\/\/|[hH][tT]{2}[pP][sS]:\/\/)(([A-Za-z0-9-~]+)\.)+([A-Za-z0-9-~\/])+$/;
+            if (!reg.test(url)) {
+                showMsgError("这网址不是以http://https://开头，请重新输入！");
+                return false;
+            } else {
+                $('#signupForm').validate({
+                    submitHandler: function (form) {
+                        loading();
+                        form.action = '[[${ctx}]]/advertisingorder/advertisingOrder/uploadTest2';
+                        form.submit();
+                    }
+                });
+                $('#signupForm').submit();
+                closeLoading();
+                layer.closeAll();
+            }
+        }
+
+        $(function () {
+            if ($('#success').val() == 1) {
+                showMsgSuccess("上传成功");
+            }
+
+
+            $('#num2').hide();
+            $('.num5').hide();
+            if ($('#num').val()!=null && $('#num').val()!=""){
+                $('#num2').show();
+                $('.num5').hide();
+            }else{
+                $('#num2').hide();
+                $('.num5').show();
+                $('#id1').removeAttr("name");
+            }
+        })
+
+
+        function getAdType(){
+            layer.open({
+                type: 2,
+                title : '三级菜单',
+                area : ['60%','90%'],
+                content: '[[${ctx}]]/hotelinfo/hotelInfo/menuIndex2', //这里content是一个DOM
+                btn : ['保存','关闭'],
+                closeBtn : '2',
+                shadeClose : false,//点击遮罩层关闭
+                shade : [0.8, '#393D49'],
+                yes : function(index, layero){
+                    var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                    iframeWin.validForm();
+                },btn2 : function(index, layero){
+                    exitBombSow(index);
+                    return false;
+                },cancel : function(index, layero) {
+                    exitBombSow(index);
+                    return false;
+                }
+            });
+        }
+        function hotelAdStandard7(hotelAdStandard,hotelAdStandardId){
+            var value = hotelAdStandardId.substring(4);
+            $("#hotelAdStandardId").val(value);
+            $("#hotelAdStandard").val(hotelAdStandard);
+        }
+
+    </script>
+</head>
+<style>
+    .upload2{
+        display: none;
+    }
+    .upload{
+        display: block;
+    }
+</style>
+<body class="gray-bg">
+<div class="wrapper animated fadeInRight">
+    <div class="ibox-content">
+        <div class="row">
+            <form id="signupForm" class="layui-form form-horizontal m-t" enctype="multipart/form-data" method="post">
+                <input th:value="${success}" id="success" type="hidden">
+                <input th:value="${advertisingOrder?.deliveryType}" id="type" type="hidden" name="type">
+                <input type="hidden" th:value="${advertisingOrder?.hotelCodeId}" name="hotelCodeId">
+                <input type="hidden" th:value="${advertisingOrder?.uploadId}" id="uploadId2" name="uploadId">
+                <input type="hidden" th:value="${advertisingOrder?.id}" id="id1" name="id">
+                <input type="hidden" id="ordernumber">
+                <input id="uploadCount" type="hidden" th:value="${advertisingOrder?.uploadCount}" name="uploadCount">
+                <input type="hidden" id="uploadTime" th:value="${uploadTime}">
+                <!--<input type="hidden" th:value="${advertisingOrder?.objectId}" name="objectId">-->
+                <div class="layui-inline">
+                    <div class="layui-input-inline">
+                        <label class="col-xs-3 layui-form-label">订单号:</label>
+                        <div class="col-xs-2" id="num2">
+                            <div class="layui-input-inline">
+                                <input type="text" id="num" readonly name="ordernumber"
+                                       class="layui-input" autocomplete="off" style="width: 350px"
+                                       th:value="${advertisingOrder?.ordernumber}">
+                            </div>
+                        </div>
+                        <div class="num5 col-xs-2">
+                            <select onchange="get()" class="chosen-select-deselect form-control layui-input"
+                                    id="uploadId" name="id"
+                                    data-placeholder="请选择订单号"
+                                    th:data-url="${ctx} + '/advertisingorder/advertisingOrder/getOrderNum'"
+                                    th:data-value="${advertisingOrder?.id}" data-key="id"
+                                    data-label="ordernumber" style="width: 350px" >
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <div class="layui-input-inline">
+                        <label class="col-xs-3 layui-form-label">广告类型:</label>
+                        <div class="col-xs-2">
+                            <div class="layui-input-inline">
+                                <input type="hidden" name="type3Id"  id="hotelAdStandardId">
+                                <a href="javascript:getAdType()"><input id="hotelAdStandard" style="cursor:pointer;width: 200px" readonly autocomplete="off"  placeholder="请输入广告类型" type="text" required class="layui-input">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item col-lg-12 col-sm-12 col-xs-12">
+                    <label class="col-xs-3 layui-form-label">投放日期:</label>
+                    <div class="col-xs-2">
+                        <div class="layui-input-inline">
+                            <input type="text" id="date" placeholder="投放日期" autocomplete="off" disabled
+                                   class="layui-input" lay-date="date" lay-format="yyyy-MM-dd"
+                                   th:value="${advertisingOrder?.putInTime2}" style="width: 200px">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item col-lg-12 col-sm-12 col-xs-12">
+                    <label class="col-xs-3 layui-form-label">投放类型:</label>
+                    <div class="col-xs-6">
+                        <input type="text" id="type2" disabled placeholder="投放类型" class="layui-input" autocomplete="off" style="width: 100px" th:value="${advertisingOrder.stateName}">
+                    </div>
+                </div>
+                <div class="layui-form-item col-lg-12 col-sm-12 col-xs-12">
+                    <label class="col-xs-3 layui-form-label"><i class="required">*</i>内容上传：</label>
+                    <div class="col-xs-6">
+                        <button type="button" class="upload layui-btn" id="test2">
+                            <i class="layui-icon">&#xe67c;</i>上传文件
+                        </button>
+                        <button type="button" class="upload2 layui-btn" id="test3">
+                            <i class="layui-icon">&#xe67c;</i>上传文件
+                        </button>
+                        <input name="advertisingContent" class="layui-input" placeholder="点击上传图片或视频" autocomplete="off"
+                               id="advertisingContent" type="hidden" required>
+                    </div>
+                </div>
+                <div class="layui-form-item col-lg-12 col-sm-12 col-xs-12">
+                    <b style="color: red">*视频建议上传 mp4，rm，rmvb，mov，mtv，avi，3gp，amv，dmv，flv 的格式!</b>
+                    <br>
+                    <b style="color: red" th:text="'*上传视频广告时长'+${uploadTime}+'秒!'"></b>
+                    <br>
+                    <b style="color: red" th:text="'*上传图文广告大小'+${picSize}+'MB!'"></b>
+                    <br>
+                    <b style="color: red" th:text="'*上传视频广告大小'+${videoSize}+'MB!'"></b>
+                </div>
+                <div class="layui-form-item col-lg-12 col-sm-12 col-xs-12" id="imgContent" style="display: none">
+                    <label class="col-xs-3 layui-form-label">图片：</label>
+                    <div class="col-xs-6">
+                        <img style="width:600px;height:300px;" id="img">
+                    </div>
+                </div>
+                <div class="layui-form-item col-lg-12 col-sm-12 col-xs-12" id="videoContent" style="display: none">
+                    <label class="col-xs-3 layui-form-label">视频：</label>
+                    <div class="col-xs-6">
+                        <video controls="controls" style="max-width:600px;max-height:300px;" id="video"></video>
+                    </div>
+                </div>
+                <div class="layui-form-item col-lg-12 col-sm-12 col-xs-12">
+                    <label class="col-xs-3 layui-form-label"><i class="required">*</i>文字描述：</label>
+                    <div class="col-xs-6">
+                        <textarea name="advertisingDescription" required
+                                  class="layui-textarea" placeholder="文字描述（前台不显示）" autocomplete="off" type="text"
+                                  style="width: 600px;height: 150px"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item col-lg-12 col-sm-12 col-xs-12">
+                    <label class="col-xs-3 layui-form-label"><i class="required">*</i>链接地址：</label>
+                    <div class="col-xs-6">
+                        <input name="advertisingUrl" id="advertisingUrl"
+                               class="layui-input" placeholder="请输入以http://https://开头的链接地址" autocomplete="off" type="text" required style="width: 600px">
+                    </div>
+                </div>
+                <div class="layui-form-item col-lg-12 col-sm-12 col-xs-12">
+                    <label class="col-xs-3 layui-form-label"><i class="required">*</i>链接描述：</label>
+                    <div class="col-xs-6">
+                        <textarea name="urlDescription" required
+                                  class="layui-textarea" placeholder="链接描述（前台不显示）" autocomplete="off" type="text"
+                                  style="width: 600px;height: 150px"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item col-lg-12 col-sm-12 col-xs-12">
+                    <div style="width: 43.666667%;">
+
+                        <button class="btn btn-primary " style="float: right" type="button" onclick="validForm()"><i
+                                class="fa"></i>&nbsp;保存
+                        </button>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    function pic() {
+        layui.use('upload', function () {
+            var upload = layui.upload;
+            //执行实例
+            var uploadInst = upload.render({
+                elem: '#test2' //绑定元素
+                , accept: 'file'
+                , size: 10240
+                , url: '[[${ctx}]]/upload/ossSpringUpload' //上传接口
+                , done: function (res) {
+                    if ($("#advertisingContent").val()!=""){
+                        $.post('[[${ctx}]]/upload/deleteFile', {
+                            file: $("#advertisingContent").val()
+                        }, function (result) {
+                        });
+                    }
+                    if (res.success != true) {
+                        showMsgError(res.msg);
+                        return;
+                    }
+
+
+                    //上传完毕回调
+                    if (res.success == true) {
+                        showMsgSuccess('上传成功!');
+                    } else {
+                        showMsgError(res.msg);
+                    }
+                    $('#advertisingContent').val(res.data[1]);
+                    $("#type").val(res.type);
+                    if (res.type == 1) {
+                        document.getElementById("imgContent").style.display = "block";
+                        document.getElementById("videoContent").style.display = "none";
+                        $('#img').attr("src", res.data[0]);
+                    } else {
+                        document.getElementById("videoContent").style.display = "block";
+                        document.getElementById("imgContent").style.display = "none";
+                        $('#video').attr("src", res.data[0]);
+                    }
+                }
+                , error: function (res) {
+                    //请求异常回调
+                    if (res.success == false) {
+                        showMsgError("上传失败");
+                    }
+                }
+            });
+        });
+    }
+    function vid() {
+        layui.use('upload', function () {
+            var upload2 = layui.upload;
+            //执行实例
+            var uploadInst2 = upload2.render({
+                elem: '#test3' //绑定元素
+                , accept: 'file'
+                , size: 30720
+                , url: '[[${ctx}]]/upload/ossSpringUpload1' //上传接口
+                , done: function (res) {
+                    if ($("#advertisingContent").val()!=""){
+                        $.post('[[${ctx}]]/upload/deleteFile', {
+                            file: $("#advertisingContent").val()
+                        }, function (result) {
+                        });
+                    }
+                    if (res.success != true) {
+                        showMsgError(res.msg);
+                        return;
+                    }
+
+
+                    //上传完毕回调
+                    $('#advertisingContent').val(res.data[1]);
+                    $("#type").val(res.type);
+                    if (res.type == 1) {
+                        document.getElementById("imgContent").style.display = "block";
+                        document.getElementById("videoContent").style.display = "none";
+                        $('#img').attr("src",res.data[0]);
+                        if (res.success == true) {
+                            showMsgSuccess('上传成功!');
+                        } else {
+                            showMsgError(res.msg);
+                        }
+                    } else {
+                        document.getElementById("videoContent").style.display = "block";
+                        document.getElementById("imgContent").style.display = "none";
+                        $('#video').attr("src", res.data[0]);
+                        setTimeout(function () {
+                            var uploadTime = $("#uploadTime").val();
+                            var video_time = document.getElementById("video").duration;
+                            var time_length = Math.floor(video_time);//转为整型
+                            if (time_length>uploadTime){
+                                showMsgError("请上传小于" + uploadTime + "秒的视频");
+                                $('#video').attr("src", "");
+                                document.getElementById("videoContent").style.display = "none";
+                                $.post('[[${ctx}]]/upload/deleteFile', {
+                                    file: $("#advertisingContent").val()
+                                }, function (result) {
+                                });
+                                $('#advertisingContent').val("");
+                            }else {
+                                if (res.success == true) {
+                                    showMsgSuccess('上传成功!');
+                                } else {
+                                    showMsgError(res.msg);
+                                }
+                            }
+                        },800);
+                    }
+                }
+                , error: function (res) {
+                    //请求异常回调
+                    if (res.success == false) {
+                        showMsgError("上传失败");
+                    }
+                }
+            });
+        });
+        var img = $('#img').attr("src");
+        var video = $('#video').attr("src");
+        if (img!=null && img!=""){
+            var extenstion = img.substring(img.lastIndexOf(".")).toLowerCase();
+            if (extenstion == ".jpg" || extenstion == ".jpeg" || extenstion == ".bmp" || extenstion == ".png") {
+                //上传文件是图片
+                $('#imgContent').show();
+                $('#videoContent').hide();
+            } else if (extenstion == ".rm" || extenstion == ".rmvb" || extenstion == ".mov" || extenstion == ".mtv" || extenstion == ".avi" || extenstion == ".3gp" || extenstion == ".amv" || extenstion == ".dmv" || extenstion == ".flv" || extenstion == ".mp4") {
+                //上传文件是视频
+                $('#videoContent').show();
+                $('#imgContent').hide();
+            }
+        }
+    }
+    function get() {
+        $('#ordernumber').val($("#uploadId").find("option:selected").text());
+        $('#ordernumber').attr("name","ordernumber");
+        $('#num').attr("name","ordernumber2");
+        $.ajax({
+            type: "GET",
+            url: "[[${ctx}]]/advertisingorder/advertisingOrder/getTypeData",
+            data: {ordernumber: $('#ordernumber').val()},
+            dataType: "json",
+            success: function (data) {
+                if (data.deliveryType == 1) {
+                    $('#type2').val("图文");
+                } else {
+                    $('#type2').val("视频");
+                }
+                $('#date').val(data.putInTime2);
+                $('#type4').val(data.stand);
+                if ($('#type2').val()!=null && $('#type2').val()!="") {
+                    if ($('#type2').val()==="图文"){
+                        // $('.upload').attr("id", "test2");
+                        $('#test2').attr("style","display:block");
+                        $('#test3').attr("style","display:none");
+                        pic();
+
+                    }else{
+                        // $('#test2').attr("id", "test3");
+                        $('#test3').attr("style","display:block");
+                        $('#test2').attr("style","display:none");
+                        vid();
+                    }
+                }
+            }
+        });
+
+
+
+
+        // $.get('[[${ctx}]]/advertisingorder/advertisingOrder/getType?id=' + $('#uploadId').val() + '', function (data) {
+        //     if (data == 1) {
+        //
+        //     } else {
+        //
+        //     }
+        // });
+
+
+
+        var img = $('#img').attr("src");
+        var video = $('#video').attr("src");
+        if (img!=null && img!=""){
+            var extenstion = img.substring(img.lastIndexOf(".")).toLowerCase();
+            if (extenstion == ".jpg" || extenstion == ".jpeg" || extenstion == ".bmp" || extenstion == ".png") {
+                //上传文件是图片
+                $('#imgContent').show();
+                $('#videoContent').hide();
+            } else if (extenstion == ".rm" || extenstion == ".rmvb" || extenstion == ".mov" || extenstion == ".mtv" || extenstion == ".avi" || extenstion == ".3gp" || extenstion == ".amv" || extenstion == ".dmv" || extenstion == ".flv" || extenstion == ".mp4") {
+                //上传文件是视频
+                $('#videoContent').show();
+                $('#imgContent').hide();
+            }
+        }
+    }
+    $(function () {
+        if ($('#type').val() == 1) {
+            $('#test2').show();
+            $('#test3').hide();
+            pic();
+          /*  layui.use('upload', function () {
+                var upload = layui.upload;
+                //执行实例
+                var uploadInst = upload.render({
+                    elem: '#test2' //绑定元素
+                    , accept: 'file'
+                    , size: 10240
+                    , url: '[[${ctx}]]/api/upload/springUpload2' //上传接口
+                    , done: function (res) {
+                        //上传完毕回调
+                        if (res.success == true) {
+                            showMsgSuccess('上传成功');
+                        } else {
+                            showMsgError(res.msg);
+                        }
+                        $('#advertisingContent').val(res.data);
+                        if (res.type == 1) {
+                            document.getElementById("imgContent").style.display = "block";
+                            document.getElementById("videoContent").style.display = "none";
+                            $('#img').attr("src", res.data);
+                        } else {
+                            document.getElementById("videoContent").style.display = "block";
+                            document.getElementById("imgContent").style.display = "none";
+                            $('#video').attr("src", res.data);
+                        }
+                    }
+                    , error: function (res) {
+                        //请求异常回调
+                        if (res.success == false) {
+                            showMsgError("上传失败");
+                        }
+                    }
+                });
+            });*/
+        } else if ($('#type').val() == 2) {
+            $('#test2').hide();
+            $('#test3').show();
+            vid();
+            // $('#test2').attr("id", "test3");
+          /*  layui.use('upload', function () {
+                var upload = layui.upload;
+                //执行实例
+                var uploadInst = upload.render({
+                    elem: '#test3' //绑定元素
+                    , accept: 'file'
+                    , size: 30720
+                    , url: '[[${ctx}]]/api/upload/springUpload3' //上传接口
+                    , done: function (res) {
+                        //上传完毕回调
+                        if (res.success == true) {
+                            showMsgSuccess('上传成功');
+                        } else {
+                            showMsgError(res.msg);
+                        }
+                        $('#advertisingContent').val(res.data);
+                        if (res.type == 1) {
+                            document.getElementById("imgContent").style.display = "block";
+                            document.getElementById("videoContent").style.display = "none";
+                            $('#img').attr("src", res.data);
+                        } else {
+                            document.getElementById("videoContent").style.display = "block";
+                            document.getElementById("imgContent").style.display = "none";
+                            $('#video').attr("src", res.data);
+                            setTimeout(function () {
+                                var video_time = document.getElementById("video").duration;
+                                var time_length=Math.floor(video_time);//转为整型
+                                if (time_length>15){
+                                    showMsgError("请上传小于15秒的视频");
+                                    $('#video').attr("src", "");
+                                }
+                            },800);
+                        }
+                    }
+                    , error: function (res) {
+                        //请求异常回调
+                        if (res.success == false) {
+                            showMsgError("上传失败");
+                        }
+                    }
+                });
+            });*/
+        } else {
+            return;
+        }
+
+        var img = $('#img').attr("src");
+        var video = $('#video').attr("src");
+        if (img!=null && img!=""){
+            var extenstion = img.substring(img.lastIndexOf(".")).toLowerCase();
+            if (extenstion == ".jpg" || extenstion == ".jpeg" || extenstion == ".bmp" || extenstion == ".png") {
+                //上传文件是图片
+                $('#imgContent').show();
+                $('#videoContent').hide();
+            } else if (extenstion == ".rm" || extenstion == ".rmvb" || extenstion == ".mov" || extenstion == ".mtv" || extenstion == ".avi" || extenstion == ".3gp" || extenstion == ".amv" || extenstion == ".dmv" || extenstion == ".flv" || extenstion == ".mp4") {
+                //上传文件是视频
+                $('#videoContent').show();
+                $('#imgContent').hide();
+            }
+        }
+    });
+</script>
+</html>

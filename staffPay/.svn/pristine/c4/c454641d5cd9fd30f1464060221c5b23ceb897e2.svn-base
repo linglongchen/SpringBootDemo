@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.chunqiu.mrjuly.modules.hotelinfo.dao.LyHotelDeviceActivateDao">
+	<resultMap id="BaseResultMap"
+		type="com.chunqiu.mrjuly.modules.hotelinfo.model.LyHotelDeviceActivate">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="hotel_id" property="hotelId" jdbcType="INTEGER" />
+		<result column="device_id" property="deviceId" jdbcType="INTEGER" />
+		<result column="room_id" property="roomId" jdbcType="INTEGER" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="activate_date" property="activateDate"
+			jdbcType="DATE" />
+		<result column="status" property="status" jdbcType="TINYINT" />
+		<result column="agree_status" property="agreeStatus" jdbcType="TINYINT" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="join_status" property="joinStatus" jdbcType="TINYINT" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, hotel_id, device_id, room_id, name, activate_date,
+		status,
+		agree_status, create_time, join_status
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from ly_hotel_device_activate
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		ly_hotel_device_activate
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<insert id="insertSelective"
+		parameterType="com.chunqiu.mrjuly.modules.hotelinfo.model.LyHotelDeviceActivate">
+		insert into ly_hotel_device_activate
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="hotelId != null">
+				hotel_id,
+			</if>
+			<if test="deviceId != null">
+				device_id,
+			</if>
+			<if test="roomId != null">
+				room_id,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="activateDate != null">
+				activate_date,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="agreeStatus != null">
+				agree_status,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="joinStatus != null">
+				join_status,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=BIGINT},
+			</if>
+			<if test="hotelId != null">
+				#{hotelId,jdbcType=INTEGER},
+			</if>
+			<if test="deviceId != null">
+				#{deviceId,jdbcType=INTEGER},
+			</if>
+			<if test="roomId != null">
+				#{roomId,jdbcType=INTEGER},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="activateDate != null">
+				#{activateDate,jdbcType=DATE},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=TINYINT},
+			</if>
+			<if test="agreeStatus != null">
+				#{agreeStatus,jdbcType=TINYINT},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="joinStatus != null">
+				#{joinStatus,jdbcType=TINYINT},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.chunqiu.mrjuly.modules.hotelinfo.model.LyHotelDeviceActivate">
+		update ly_hotel_device_activate
+		<set>
+			<if test="hotelId != null">
+				hotel_id = #{hotelId,jdbcType=INTEGER},
+			</if>
+			<if test="deviceId != null">
+				device_id = #{deviceId,jdbcType=INTEGER},
+			</if>
+			<if test="roomId != null">
+				room_id = #{roomId,jdbcType=INTEGER},
+			</if>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="activateDate != null">
+				activate_date = #{activateDate,jdbcType=DATE},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=TINYINT},
+			</if>
+			<if test="agreeStatus != null">
+				agree_status = #{agreeStatus,jdbcType=TINYINT},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="joinStatus != null">
+				join_status = #{joinStatus,jdbcType=TINYINT},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<select id="selectRecordsByCondition" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from ly_hotel_device_activate a 
+		where a.status = 1 
+		and a.agree_status = 1 
+		and a.join_status = 1 
+		<if test="activateDate != null">
+			and activate_date = #{activateDate,jdbcType=DATE} 
+		</if>
+	</select>
+</mapper>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>展业申请</title>
+<head th:include="init :: init"></head>
+<style type="text/css">
+.layui-form-label {
+	width: 160px;
+}
+</style>
+<script type="text/javascript">
+	layui.use('laydate', function() {
+		var laydate = layui.laydate;
+		laydate.render({
+			elem: '#leaseTerm',
+			trigger: 'click',
+			isInitValue: false,
+			min:minDate()
+		});
+	});
+	
+	//设置最小可选的日期
+	function minDate(){
+		var now = new Date();
+		return now.getFullYear()+"-" + (now.getMonth()+1) + "-" + now.getDate();
+	}
+
+
+	$(function(){
+	    var hotelName = "[[${hotelInfo?.hotelName}]]";
+	    $("#hotelName").text(hotelName);
+	    var hotelAddress = "[[${hotelInfo?.hotelAddress}]]";
+	    $("#hotelAddress").text(hotelAddress);
+	    var distance = "[[${distance}]]";
+	    $("#distance").text(distance);
+	});
+
+	//提交表单
+	function apply() {
+		var id = $("#id").val();
+		var hotelCodeId = $("#hotelCodeId").val();
+		var leaseTerm = $("#leaseTerm").val();
+		if (leaseTerm == null || leaseTerm == "") {
+			showMsgError("请选择展业结束日期！");
+			return;
+		}
+		
+		$.ajax({
+            type: "post",
+            url: '[[${ctx}]]/shophotel/shopHotel/saveRenewal',
+            data: {
+            	"hotelCodeId":hotelCodeId,"leaseTerm":leaseTerm,"openingType":2,"id":id
+            	},  //此处data是你的酒店类型参数  1表示你具体参数值  自己改一下
+            cache: false,
+            async: true,
+            dataType: "json",
+            success: function (data) {
+            	if (data) {
+	            	showMsgSuccess('续期成功，请耐心等待酒店审核！');
+	            	var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+	            	parent.layer.close(index); //再执行关闭
+            	} else {
+            		showMsgError('续期失败！');
+            	}
+            }
+        });
+	};
+	
+</script>
+
+</head>
+<body class="gray-bg">
+	<div class="wrapper animated fadeInRight" style="height: 100%">
+		<div class="ibox-content" style="height: 100%">
+			<div class="row">
+				<form id="applyHotel" class="layui-form form-horizontal m-t">
+					<input type="hidden" name="id" id="id" th:value="${shopHotel.id}">
+					<input type="hidden" name="hotelCodeId" id="hotelCodeId" th:value="${hotelInfo.hotelCodeId}">
+					<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+	                    <label class="col-xs-3 layui-form-label">酒店名称：</label>
+	                    <div class="col-xs-6">
+	                        <label id="hotelName" class="col-xs-3 layui-form-label"></label>
+	                    </div>
+                	</div>
+					<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+                        <label class="col-xs-3 layui-form-label">酒店地址：</label>
+                        <div class="col-xs-6">
+                            <label id="hotelAddress" class="col-xs-3 layui-form-label" style="width:300px;"></label>
+                        </div>
+                    </div>
+					<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+                        <label class="col-xs-3 layui-form-label">与酒店距离(km)：</label>
+                        <div class="col-xs-6">
+                            <label id="distance" class="col-xs-3 layui-form-label" style="width:80px;"></label>
+                        </div>
+                    </div>
+					<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+                        <label class="col-xs-3 layui-form-label">展业状态：</label>
+	                    <div class="col-xs-6">
+	                        <label id="openingType" class="col-xs-3 layui-form-label" style="width:80px;">续租</label>
+                        </div>
+                    </div>
+					<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+                        <label class="col-xs-3 layui-form-label">展业结束日期：</label>
+                        <div class="col-xs-6">
+                            <input required type="date" name="leaseTerm" id="leaseTerm" placeholder="请选择日期" autocomplete="off" class="layui-input" lay-date="date" lay-format="yyyy-MM-dd" readonly >
+                        </div>
+                    </div>
+                    <button class="btn btn-primary " style="margin-left: 15px;position: absolute;right: 30px;bottom: 10px;" id="btn" type="button" data-toggle="modal" onclick="apply()"> <i class="fa fa-save"></i>&nbsp;提交</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

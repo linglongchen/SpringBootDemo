@@ -1,0 +1,207 @@
+package com.chunqiu.mrjuly.modules.advertiserinfo.service;
+
+import com.chunqiu.mrjuly.common.enums.BillTypeEnum;
+import com.chunqiu.mrjuly.common.enums.PlatformTypeEnum;
+import com.chunqiu.mrjuly.common.persistence.CrudService;
+import com.chunqiu.mrjuly.common.utils.UserUtils;
+import com.chunqiu.mrjuly.modules.accountrecharge.model.AccountRecharge;
+import com.chunqiu.mrjuly.modules.advertiserinfo.dao.AdvertiserInfoDao;
+import com.chunqiu.mrjuly.modules.advertiserinfo.model.AccountMoney;
+import com.chunqiu.mrjuly.modules.advertiserinfo.model.AdvertiserInfo;
+import com.chunqiu.mrjuly.modules.advertiserinfo.model.FlowSheetInfo2;
+import com.chunqiu.mrjuly.modules.adviertisement.model.AdvertisementUpload;
+import com.chunqiu.mrjuly.modules.mybill.model.MyBillInfo;
+
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+
+import java.util.List;
+
+/**
+ * 广告商管理Service
+ *
+ * @author chen
+ * @version 2019-03-14
+ */
+@Service
+public class AdvertiserInfoService extends CrudService<AdvertiserInfoDao, AdvertiserInfo, Integer> {
+    @Resource
+    private AdvertiserInfoDao dao;
+
+
+    /**
+     * 保存冻结信息
+     * @param list
+     */
+    public void saveList(List<AdvertiserInfo> list) {
+        dao.saveList(list);
+    }
+
+    /**
+     * 解冻广告商管理
+     * @param list
+     */
+    public void relieveAdvertiserInfo(List<AdvertiserInfo> list) {
+        dao.relieveAdvertiserInfo(list);
+    }
+
+    /**
+     * 根据广告商获取打款数据
+     * @param objectId
+     * @return
+     */
+    public List<AccountRecharge> accountRechargeList(Integer objectId) {
+        return dao.accountRechargeList(objectId);
+    }
+
+    /**
+     * 根据商家id获取汇款单号
+     * @param objectId
+     * @return
+     */
+    public List<AccountRecharge> accountRechargeLis2(Integer objectId) {
+        return dao.accountRechargeList2(objectId);
+    }
+
+    /**
+     * 广告主登记保存信息
+     * @param advertiserInfo
+     * @return
+     */
+    public int insertForm(AdvertiserInfo advertiserInfo) {
+        return dao.insertForm(advertiserInfo);
+    }
+
+    /**
+     * 保存打款信息
+     * @param accountMoney
+     */
+    public void saveAccountRecharge(AccountMoney accountMoney) {
+        FlowSheetInfo2 flowSheetInfo2 = new FlowSheetInfo2();
+        AdvertiserInfo advertiserInfo2 = new AdvertiserInfo();
+        advertiserInfo2 = dao.get(accountMoney.getAdvertiserInfoId());
+        if (advertiserInfo2.getAccountBalance() != null) {
+            flowSheetInfo2.setAccountAmount(advertiserInfo2.getAccountBalance() + accountMoney.getPrice());
+            flowSheetInfo2.setCreateDate2(accountMoney.getCreateDate());
+            flowSheetInfo2.setObjectId(accountMoney.getAdvertiserInfoId());
+            flowSheetInfo2.setOperatingAmount(accountMoney.getPrice());
+            flowSheetInfo2.setFlowSheetPlatform(1);
+            flowSheetInfo2.setMerchantCode(advertiserInfo2.getAdvertiserNumber());
+            flowSheetInfo2.setMerchantName(advertiserInfo2.getCompanyName());
+            flowSheetInfo2.setOperationMode(1);
+            flowSheetInfo2.setRemarks(accountMoney.getRemarks());
+            flowSheetInfo2.setCreateBy(UserUtils.getUser());
+            dao.insertFlow(flowSheetInfo2);
+            MyBillInfo myBillInfo = new MyBillInfo();
+            myBillInfo.setAmountPrice(accountMoney.getPrice());
+            myBillInfo.setBillOfOriginId(accountMoney.getBillOfOriginId());
+            myBillInfo.setType(2);
+            myBillInfo.setStatus(3);
+            myBillInfo.setRemarks(accountMoney.getRemarks());
+            myBillInfo.setStartTime(accountMoney.getCreateDate());
+            myBillInfo.setObjectId(accountMoney.getAdvertiserInfoId());
+            myBillInfo.setCreateBy(UserUtils.getUser());
+            myBillInfo.preInsert();
+            dao.insertMyBill(myBillInfo);
+            AdvertiserInfo advertiserInfo = new AdvertiserInfo();
+            advertiserInfo.setId(accountMoney.getAdvertiserInfoId());
+            advertiserInfo.setAccountBalance(advertiserInfo2.getAccountBalance() + accountMoney.getPrice());
+            dao.update(advertiserInfo);
+            dao.cutStatus(Integer.parseInt(accountMoney.getBillOfOriginId()));
+        }
+    }
+
+
+    /**
+     * 保存扣款信息
+     * @param accountMoney
+     */
+    public void saveCutAccountRecharge(AccountMoney accountMoney) {
+    	//充扣流水业务,开始
+        FlowSheetInfo2 AdvertiserFlowSheetInfo = new FlowSheetInfo2();
+        AdvertiserInfo advertiserInfo = new AdvertiserInfo();
+        advertiserInfo = dao.get(accountMoney.getAdvertiserInfoId());
+        AdvertiserFlowSheetInfo.setAccountAmount(advertiserInfo.getAccountBalance() - accountMoney.getPrice());
+        //默认数据库函数CURRENT_TIMESTAMP
+//        AdvertiserFlowSheetInfo.setCreateDate2(accountMoney.getCreateDate());
+        AdvertiserFlowSheetInfo.setObjectId(advertiserInfo.getId());
+        AdvertiserFlowSheetInfo.setOperatingAmount(accountMoney.getPrice());
+        AdvertiserFlowSheetInfo.setFlowSheetPlatform(PlatformTypeEnum.ADVERTISER.getType());
+        AdvertiserFlowSheetInfo.setMerchantCode(advertiserInfo.getAdvertiserNumber());
+        AdvertiserFlowSheetInfo.setMerchantName(advertiserInfo.getCompanyName());
+        AdvertiserFlowSheetInfo.setOperationMode(accountMoney.getType());
+        AdvertiserFlowSheetInfo.setRemarks(accountMoney.getRemarks());
+        AdvertiserFlowSheetInfo.setCreateBy(UserUtils.getUser());
+        dao.insertFlow(AdvertiserFlowSheetInfo);
+        //充扣流水业务,结束
+        
+        //账户账单业务,开始
+        MyBillInfo myBillInfo = new MyBillInfo();
+//        myBillInfo.setBillOfOriginId(UserUtils.getUser().getBusinessId());
+        myBillInfo.setCreateBy(UserUtils.getUser());
+        myBillInfo.setAmountPrice(accountMoney.getPrice());
+        myBillInfo.setType(2);
+        myBillInfo.setStatus(getBillTypeByPaymentType(accountMoney.getType()));
+        myBillInfo.setRemarks(accountMoney.getRemarks());
+        //默认数据库函数CURRENT_TIMESTAMP
+//        myBillInfo.setStartTime(accountMoney.getCreateDate());
+        myBillInfo.setObjectId(advertiserInfo.getId());
+        dao.insertMyBill2(myBillInfo);
+        //账户账单业务,结束
+        
+        //账户余额更新,开始
+        AdvertiserInfo updateAdvertiserInfo = new AdvertiserInfo();
+        updateAdvertiserInfo.setId(advertiserInfo.getId());
+        updateAdvertiserInfo.setAccountBalance(advertiserInfo.getAccountBalance() - accountMoney.getPrice());
+        dao.update(updateAdvertiserInfo);
+        //账户余额更新,结束
+    }
+
+    /**
+     * 获取广告主编号
+     * @param advertiserInfo
+     * @return
+     */
+    public List<AdvertiserInfo> getMasterNum(AdvertiserInfo advertiserInfo) {
+        return dao.getMasterNum(advertiserInfo);
+    }
+
+    public void saveUpload(AdvertisementUpload advertisementUpload) {
+        dao.saveUpload(advertisementUpload);
+    }
+    
+    /**
+     * 更新广告商星级
+     * @param advertiserInfo 
+     * @return 更新的行数
+     * @author wy
+     */
+    public int updateStar(AdvertiserInfo advertiserInfo){
+    	return dao.updateStar(advertiserInfo);
+    }
+    
+    /**
+     * 根据扣款类型获取账单类型
+     * @author wy
+     */
+    private int getBillTypeByPaymentType(int pType){
+    	int result = 0;
+    	switch (pType) {
+		case 2:
+			result = BillTypeEnum.RENT.getType();
+			break;
+		case 3:
+			result = BillTypeEnum.RENT_OTHER.getType();
+			break;
+		default:
+			result = BillTypeEnum.RENT.getType();
+			break;
+		}
+    	return result;
+    }
+    
+    public int updateByPrimaryKeySelective(AdvertiserInfo advertiserInfo) {
+    	return dao.updateByPrimaryKeySelective(advertiserInfo);
+    }
+}

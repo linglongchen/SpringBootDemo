@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>广告订单管理</title>
+
+	<head th:include="init :: init"></head>
+
+	<script type="text/javascript">
+		$(function(){
+			var status = "[[${status}]]";
+			if (status == 1){
+			    var advertisingOrder =  "[[${advertisingOrder?.id}]]";
+			    closeLoading();
+                layer.confirm('您当前输入的价格已经大于一口价的价格,是否以一口价竞拍当前广告位？', function () {
+                    parent.loading();
+                    $.post('[[${ctx}]]/advertisingorder/advertisingOrder/saveAdvertisingPriceOrder ', {
+                        id:advertisingOrder
+                    }, function (result) {
+                        closeLoading();
+						parent.layer.closeAll('iframe');
+                        parent.refreshTable();
+                    }, 'json');
+                });
+			}
+
+		});
+
+
+		//提交表单
+		function validForm(){
+		    if ($("#priceTypePrice").val() == null || $("#priceTypePrice").val() == ""){
+		        showMsgError("请填写价格！");
+		        return;
+			}
+			$('#signupForm').validate({
+		        submitHandler:function(form){
+		            loading();
+		            form.action = '[[${ctx}]]/advertisingorder/advertisingOrder/saveAdvertisingOrder';
+					form.submit();
+		        }
+			});
+		    $('#signupForm').submit();
+		}
+	</script>
+</head>
+<body class="gray-bg">
+	<div class="wrapper animated fadeInRight">
+    	<div class="ibox-content">
+    		<div class="row" style="height: 367px;overflow: hidden">
+    			<form id="signupForm" class="layui-form form-horizontal m-t">
+    			<input type="hidden" name="id" th:value="${advertisingOrder.id}">
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">当前价：</label>
+				        <div class="col-xs-6">
+    						<input name="priceTypePrice" id ="priceTypePrice" onkeyup="this.value=this.value.replace(/[^0-9\.]/g,'')"  onafterpaste="this.value=this.value.replace(/[^0-9]/g,'')" class="layui-input"  placeholder="请输入当前价" autocomplete="off" th:min="${advertisingOrder.priceTypePrice}" type="number" step="0.1" th:value="${advertisingOrder.priceTypePrice}" maxlength="255">
+    					</div>
+				    </div>
+    			</form>
+    		</div>
+    	</div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chunqiu.mrjuly.modules.foregroundConfiguration.dao.ReceptionInfoDao">
+	<insert id="insertContactInfo">
+		INSERT INTO `contact_info` (
+			`identity`,
+			`name`,
+			`telephone`,
+			`mail_box`,
+			`create_date`
+		)
+		VALUES
+			(
+				#{identity},
+				#{name},
+				#{telephone},
+				#{mailBox},
+				now()
+			);
+	</insert>
+
+	<sql id="receptionInfoColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.telephone AS "telephone",
+		a.identity AS "identity",
+		a.mail_box AS "mailBox",
+		a.create_date AS "createDate",
+		a.del_flag AS "delFlag"
+	</sql>
+
+	<sql id="receptionInfoJoins">
+	</sql>
+
+	<select id="findList" resultType="ReceptionInfo">
+		SELECT
+		<include refid="receptionInfoColumns"/>
+		FROM contact_info a
+		<include refid="receptionInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="name != null and name != ''">
+				AND a.name LIKE
+				<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+	</select>
+
+	<update id="delete">
+		UPDATE contact_info SET
+		del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<select id="receptionVideoInfo" resultType="ReceptionInfo">
+			select id,video from website_video_info;
+	</select>
+
+
+	<insert id="insert">
+		INSERT INTO `website_video_info` ( `video`, `create_date`, `create_by`) VALUES ( #{video}, now(), #{createBy.id});
+	</insert>
+
+	<update id="update">
+		UPDATE `website_video_info`
+			SET
+			 `video` = #{video},
+			 `update_date` = now(),
+			 `update_by` = #{updateBy.id}
+			WHERE
+				id = #{id}
+	</update>
+
+	<select id="get" resultType="PositionInfo">
+		SELECT id,position_name,position_description FROM position_info WHERE id=#{id}
+	</select>
+	<select id="getAll" resultType="ReceptionInfo">
+		select <include refid="receptionInfoColumns"/>
+		from contact_info a
+	</select>
+
+	<insert id="insertPositionInfo">
+		INSERT INTO `position_info` (
+			`position_name`,
+			`job_requirements`,
+			`position_description`,
+			`create_date`,
+			`create_by`
+		)
+		VALUES
+			( #{positionName},#{jobRequirements}, #{positionDescription}, now(), #{createBy.id});
+	</insert>
+
+	<update id="updatePositionInfo">
+		UPDATE `position_info`
+			SET
+			 `position_name` = #{positionName},
+			 `job_requirements` = #{jobRequirements},
+			 `position_description` = #{positionDescription},
+			 `update_date` = now(),
+			 `update_by` = #{updateBy.id}
+			WHERE
+				id = #{id}
+	</update>
+
+	<select id="positionList" resultType="PositionInfo">
+			select id,position_name as "positionName",job_requirements AS "jobRequirements", position_description as "positionDescription",create_date as "createDate" from  position_info
+		<where>
+			del_flag = #{DEL_FLAG_NORMAL}
+			<if test="positionName != null and positionName != ''">
+				AND position_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{positionName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{positionName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{positionName},'%')</if>
+			</if>
+		</where>
+
+		<choose>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			order by id desc
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="selAddress" resultType="HotelInfo">
+		SELECT * FROM hotel_info
+	</select>
+
+</mapper>

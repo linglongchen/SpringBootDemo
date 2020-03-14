@@ -1,0 +1,26 @@
+package com.chunqiu.mrjuly.modules.install.dao;
+
+import com.chunqiu.mrjuly.common.persistence.CrudDao;
+import com.chunqiu.mrjuly.modules.install.model.FeedbackType;
+
+import java.util.List;
+
+/**
+ * 平台投诉类别设置
+ */
+public interface FeedbackTypeDao extends CrudDao<FeedbackType, Integer> {
+
+    /**
+     * 检测类型是否重复
+     * @param feedbackType
+     * @return
+     */
+    int checkFeedbackType(FeedbackType feedbackType);
+
+    List<FeedbackType> getAll(Integer id);
+
+    List<FeedbackType> findAll(FeedbackType feedbackType);
+
+    /*新增用户类别投诉*/
+    int insertType(FeedbackType feedbackType);
+}

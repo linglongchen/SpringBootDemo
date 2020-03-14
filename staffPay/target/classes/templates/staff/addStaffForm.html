@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>职工管理管理</title>
+
+	<head th:include="init :: init"></head>
+
+	<script type="text/javascript">
+
+		//提交表单
+		function validForm(){
+			$('#signupForm').validate({
+		        submitHandler:function(form){
+		            loading();
+		            form.action = '[[${ctx}]]/staff/staff/saveStaff';
+					form.submit();
+		        }
+			});
+		    $('#signupForm').submit();
+		}
+		
+		
+		// function changeProject() {
+		// 	let id = $('#project').val()
+		// 	$.ajax({
+		// 		url:'[[${ctx}]]/project/project/getProjectInfo',
+		// 		dataType:'json',
+		// 		type:'post',
+		// 		async:true,
+		// 		data:{
+		// 			id:id
+		// 		},
+		// 		success:function (result) {
+		// 			let arrList = result.nature.split(",");
+		// 			console.log(arrList)
+		// 			for (let i = 0; i < arrList.length; i++) {
+		// 				let data = arrList[i];
+		// 				console.log(data)
+		// 				let html = '<div id="lableIndex"  class="layui-form-item col-lg-6 col-sm-12 col-xs-12">' +
+		// 						'<label class="col-xs-3 layui-form-label">'+data+'：</label>' +
+		// 						'        <div class="col-xs-6" >' +
+		// 						'    <input id="'+i+'" name="nature" class="layui-input" th:value="" placeholder="请输入工作数量" autocomplete="off" type="text"  maxlength="255">' +
+		// 						'    </div>' +
+		// 						'    </div>';
+		// 				$('#lableIndex').append(html);
+		// 				// $('#'+i+'').val(data)
+		// 			}
+		// 		},
+		// 		error:function (error) {
+		// 			console.log(error)
+		// 		}
+		// 	})
+		// }
+	</script>
+</head>
+<body class="gray-bg">
+	<div class="wrapper animated fadeInRight">
+    	<div class="ibox-content">
+    		<div class="row">
+    			<form id="signupForm" class="layui-form form-horizontal m-t">
+    			<input type="hidden" name="id" th:value="${staff.id}">
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">姓名：</label>
+				        <div class="col-xs-6">
+    						<input name="name" class="layui-input" th:value="${staff.name}" placeholder="请输入姓名" autocomplete="off" type="text"  maxlength="255">
+    					</div>
+				    </div>
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">所属区域：</label>
+				        <div class="col-xs-6">
+    						<input name="area" class="layui-input" th:value="${staff.area}" placeholder="请输入所属区域" autocomplete="off" type="text"  maxlength="255">
+    					</div>
+				    </div>
+<!--					<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">-->
+<!--						<label class="col-xs-3 layui-form-label">工资日期：</label>-->
+<!--						<div class="col-xs-6">-->
+<!--							&lt;!&ndash;-->
+<!--                                日期下拉选择框，其中lay-date的取值范围是date和datetime，如果有其他需要可以参考官网后修改代码-->
+<!--                                lay-formatt表示显示的时间格式，当lay-date为date时，默认为yyyy-MM-dd，当lay-date为datetime时，默认为yyyy-MM-dd HH:mm:ss-->
+<!--                                注意：使用该空间需要包含id属性-->
+<!--                            &ndash;&gt;-->
+<!--							<input type="text" name="date" id="date" value="" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input" lay-date="date" lay-format="yyyy-MM-dd" readonly>-->
+<!--						</div>-->
+<!--					</div>-->
+<!--					<div id="lableIndex" class="layui-form-item col-lg-6 col-sm-12 col-xs-12">-->
+<!--						<label class="col-xs-3 layui-form-label">选择项目：</label>-->
+<!--						<div class="col-xs-6 layui-form">-->
+<!--							&lt;!&ndash;-->
+<!--                                 data-value : 数据加载完成的默认的key值-->
+<!--                                 data-url ：加载数据的url地址-->
+<!--                                 data-key : option的value值对应的字段-->
+<!--                                 data-label ： option的name值对应的字段-->
+<!--                             &ndash;&gt;-->
+<!--							<select id="project" class="chosen-select form-control layui-input" data-placeholder="请选择选择项目" data-value="" th:data-url="${ctx} + '/project/project/getSelect'"-->
+<!--									data-key="id" data-label="projectName" onchange="changeProject()">-->
+
+<!--							</select>-->
+<!--						</div>-->
+<!--					</div>-->
+    			</form>
+    		</div>
+    	</div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,30 @@
+package com.chunqiu.mrjuly.modules.hotelinfo.dao;
+
+import com.chunqiu.mrjuly.common.persistence.CrudDao;
+import com.chunqiu.mrjuly.modules.hotelinfo.model.DepartmentInfoList;
+
+import java.util.List;
+
+/**
+ * 部门列表DAO接口
+ * @author 周天
+ * @version 2019-03-06
+ */
+public interface DepartmentInfoDao extends CrudDao<DepartmentInfoList, Integer> {
+
+    int updateStatusById(DepartmentInfoList departmentInfoList);
+
+    List<DepartmentInfoList> serviceModeList(DepartmentInfoList departmentInfoList);
+
+    List<DepartmentInfoList> serverNumberById(DepartmentInfoList departmentInfoList);
+
+    int updateStatusByListId( List<DepartmentInfoList> departmentInfoList);
+
+    int updateStatusByListIdNot( List<DepartmentInfoList> departmentInfoList);
+
+    List<DepartmentInfoList> departmentInfoListById(List<DepartmentInfoList> departmentInfoLists);
+
+    /*查询所有的信息*/
+    List<DepartmentInfoList> findAll(DepartmentInfoList departmentInfoList);
+
+}

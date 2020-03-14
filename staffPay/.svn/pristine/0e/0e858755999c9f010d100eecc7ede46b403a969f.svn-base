@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chunqiu.mrjuly.modules.install.dao.NoticeInfoDao">
+
+	<sql id="noticeInfoColumns">
+		a.id AS "id",
+		a.notice_title AS "noticeTitle",
+		a.notice_content AS "noticeContent",
+		a.notice_roll AS "noticeRoll",
+		a.notice_form AS "noticeForm",
+		a.target AS "target",
+		a.type AS "type",
+		a.scheduled_release_time AS "scheduledReleaseTime",
+		a.circular_endTime AS "circularEndTime",
+		a.room_number AS "roomNumber",
+		a.hotel_code_id AS "hotelCodeId",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.del_flag AS "delFlag",
+		a.timeSn
+	</sql>
+
+	<sql id="noticeInfoJoins">
+	</sql>
+
+	<select id="get" resultType="NoticeInfo">
+		SELECT
+		<include refid="noticeInfoColumns"/>
+		FROM notice_info a
+		<include refid="noticeInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="NoticeInfo">
+		SELECT
+		<include refid="noticeInfoColumns"/>
+		FROM notice_info a
+		<include refid="noticeInfoJoins"/>
+		<where>
+			a.target!=4 AND
+			a.type=1
+			<if test="dateBegin!=null and dateBegin!=''">
+				AND a.create_date &gt;=#{dateBegin}
+			</if>
+			<if test="dateEnd!=null and dateEnd!=''">
+				AND a.create_date &lt;=#{dateEnd}
+			</if>
+		</where>
+		<choose>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				group by a.timeSn
+				ORDER BY a.create_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO notice_info(
+		notice_title,
+		notice_content,
+		notice_roll,
+		notice_form,
+		scheduled_release_time,
+		target,
+		type,
+		create_by,
+		create_date,
+		object_id,
+		timeSn
+		) VALUES
+		<foreach collection="noticeList" item="item" index="index" separator=",">
+			(#{noticeTitle},
+			#{noticeContent},
+			#{noticeRoll},
+			#{noticeForm},
+			#{scheduledReleaseTime},
+			#{target},
+			1,
+			#{createBy.id},
+			#{createDate},
+			#{item.id},
+			#{timeSn})
+		</foreach>
+
+	</insert>
+
+	<update id="update">
+		UPDATE notice_info
+		<set>
+			<if test="noticeTitle != null and noticeTitle != ''">
+				notice_title = #{noticeTitle},
+			</if>
+			<if test="noticeContent != null and noticeContent != ''">
+				notice_content = #{noticeContent},
+			</if>
+			<if test="noticeRoll != null and noticeRoll != ''">
+				notice_roll = #{noticeRoll},
+			</if>
+			<if test="noticeForm != null and noticeForm != ''">
+				notice_form = #{noticeForm},
+			</if>
+			<if test="target != null and target != ''">
+				target = #{target},
+			</if>
+			<if test="scheduledReleaseTime != null">
+				scheduled_release_time = #{scheduledReleaseTime},
+			</if>
+			<if test="createDate != null">
+				create_date = #{createDate},
+			</if>
+				update_by = #{updateBy.id},
+				update_date = #{updateDate},
+		</set>
+		WHERE target = #{targetId} and type = 1
+	</update>
+
+
+	<delete id="updateObjectId">
+		delete  FROM  notice_info where target = #{targetId} and type = #{type} and  timeSn = #{timeSn}
+	</delete>
+	<select id="getNotice" resultType="NoticeInfo">
+		SELECT
+		<include refid="noticeInfoColumns"/>
+		FROM
+		notice_info a
+		WHERE
+		a.object_id =#{objectId}
+		AND a.target =#{target}
+		AND a.type = 1
+		AND a.is_read = 0
+		AND date_format(a.create_date,'%y-%m-%d')  =  date_format(now(),'%y-%m-%d')
+		AND a.notice_form = 1
+		UNION ALL
+		SELECT
+		<include refid="noticeInfoColumns"/>
+		FROM
+		notice_info a
+		WHERE
+		a.object_id =#{objectId}
+		AND a.target =#{target}
+		AND a.type =1
+		AND a.is_read = 0
+		AND a.scheduled_release_time &lt;= now() and a.notice_form = 2
+		UNION ALL
+		SELECT
+		<include refid="noticeInfoColumns"/>
+		FROM
+		notice_info a
+		WHERE
+		a.object_id =#{objectId}
+		AND a.target =#{target}
+		AND a.type = 2
+		AND a.is_read = 0
+		AND a.create_date &lt;=now() and now()&lt;=circular_endTime
+		AND a.notice_form is NULL
+		ORDER BY createDate desc
+		LIMIT 1
+	</select>
+</mapper>

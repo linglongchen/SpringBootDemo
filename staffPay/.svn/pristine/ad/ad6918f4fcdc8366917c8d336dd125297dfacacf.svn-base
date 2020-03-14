@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <title>弹框设置</title>
+
+    <head th:include="init :: init"></head>
+    <head th:include="init_ueditor :: ueditor"></head>
+    <head th:include="init_city_picker :: city_picker"></head>
+
+    <script type="text/javascript">
+        //保存优惠券使用说明
+        function editSave(){
+            $('#signupForm').validate({
+                submitHandler:function(form){
+                    loading();
+                    form.action = '[[${ctx}]]/mine/frame/saveSetting';
+                    form.submit();
+                }
+            });
+            $('#signupForm').submit();
+            var thirdPartyReminder = $("#thirdPartyReminder").val();
+            var safeExit = $("#safeExit").val();
+            if (thirdPartyReminder == "" || thirdPartyReminder == null){
+                showMsgError("当前提示信息未完善!");
+                return;
+            } else if (safeExit == "" || safeExit == null){
+                showMsgError("当前提示信息未完善!");
+                return;
+            } else if (thirdPartyReminder != "" || thirdPartyReminder != null && safeExit != "" || safeExit != null){
+                showMsgSuccess("保存成功!");
+                closeLoading();
+            }
+        }
+
+        function blu() {
+            $('#hiddenContent').val($('#thirdPartyReminder').val());
+            $('#hiddenContent1').val($('#safeExit').val());
+        }
+    </script>
+
+</head>
+<body class="gray-bg">
+<div class="wrapper animated fadeInRight">
+    <div class="ibox-content">
+        <div class="row">
+            <form id="signupForm" class="layui-form form-horizontal m-t" action="">
+                <input id="hiddenContent" type="hidden">
+                <input id="hiddenContent1" type="hidden">
+                <input type="hidden" name="cid" th:value="${id}">
+                <div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+                    <label class="col-xs-7 layui-form-label" style="width: 165px;font-weight:bold;font-size:13px;">进入第三方软件提示</label>
+                    <div class="col-xs-12 col-lg-6 col-sm-12" style="margin-left: -165px;margin-top: 46px;">
+                        <textarea onkeyup="blu()" id="thirdPartyReminder" name="thirdPartyReminder" th:text="${thirdPartyReminder}" placeholder="未设置，系统默认提示：即将打开第三方软件" class="layui-textarea" required style="height: 185px;width: 185%;"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item col-lg-6 col-sm-12 col-xs-12" style="margin-left: 6px;margin-top: 75px;">
+                    <label class="col-xs-7 layui-form-label" style="margin-top: -48px;margin-left: -14px;width: 165px;font-weight:bold;font-size:13px;">安全退出弹框提示</label>
+                    <div class="col-xs-12 col-lg-6 col-sm-12">
+                        <textarea onkeyup="blu()" id="safeExit" name="safeExit" th:text="${safeExit}" placeholder="未设置，系统默认提示：已注销" class="layui-textarea" required style="height: 185px;width: 185%;"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item col-lg-6 col-sm-12 col-xs-12" style="margin-left: 23px;">
+                    <button class="btn btn-primary " type="button" onclick="editSave()"><i class="fa fa-save"></i>&nbsp;确认</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

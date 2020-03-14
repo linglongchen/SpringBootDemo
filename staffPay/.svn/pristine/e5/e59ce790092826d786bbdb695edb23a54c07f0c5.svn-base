@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>反馈管理</title>
+    <link href="https://cdn.staticfile.org/twitter-bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+    <head th:include="init :: init"></head>
+    <head th:include="init_bootstrap_table :: bootstrap_table"></head>
+
+    <script type="text/javascript">
+
+    </script>
+</head>
+<body layadmin-themealias="default">
+<div class="layui-fluid animated fadeInRight">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+            <div class="layui-form-item form-head">
+                <table class="layui-table" lay-even="" lay-skin="nob">
+                    <tr>
+                        <th>反馈时间</th>
+                        <td name="createDate" th:text="${#dates.format(feedbackInfo.createDate, 'yyyy-MM-dd')}"></td>
+                    </tr>
+                    <tr>
+                        <th>反馈类别</th>
+                        <td id="name" th:text="${feedbackInfo.name}"></td>
+                    </tr>
+                    <tr>
+                        <th>内容</th>
+                        <td name="feedbackContent" th:text="${feedbackInfo.feedbackContent}"></td>
+                    </tr>
+                    <tr>
+                        <th>平台</th>
+                        <td name="feebackPlatform" id="feebackPlatform" th:text="${feebackPlatform}"></td>
+                    </tr>
+                    <tr>
+                        <th>商户名称</th>
+                        <td name="roleName" id="roleName" th:text="${feedbackInfo.roleName}"></td>
+                    </tr>
+                </table>
+            </div>
+
+            <table id="table">
+
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

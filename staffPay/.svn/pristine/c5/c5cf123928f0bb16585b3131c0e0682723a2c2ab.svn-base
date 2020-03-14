@@ -1,0 +1,112 @@
+package com.chunqiu.mrjuly.modules.flowsheetinfo.model;
+
+import com.chunqiu.mrjuly.common.persistence.DataEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.hibernate.validator.constraints.Length;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.math.BigDecimal;
+
+/**
+ * 充扣流水单Entity
+ * @author chen
+ * @version 2019-03-15
+ */
+public class FlowSheetInfo extends DataEntity<FlowSheetInfo, Integer> {
+	
+	private static final long serialVersionUID = 1L;
+	private Integer flowSheetPlatform;		// 流水单平台 1.广告商 2.在线商家 
+	private String merchantName;		// 商户名称
+	private String merchantCode;		// 商户编号
+	private Integer operationMode;		// 操作方式  1.充值  2.扣款
+	private BigDecimal operatingAmount;		// 操作金额
+	private BigDecimal accountAmount;		// 账号金额
+	private Integer objectId;		// 商家或广告商主键id
+	private String userName;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private String date;
+
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public FlowSheetInfo() {
+		super();
+	}
+
+	public FlowSheetInfo(Integer id){
+		super(id);
+	}
+
+	public Integer getFlowSheetPlatform() {
+		return flowSheetPlatform;
+	}
+
+	public void setFlowSheetPlatform(Integer flowSheetPlatform) {
+		this.flowSheetPlatform = flowSheetPlatform;
+	}
+	
+	@Length(min=0, max=255, message="商户名称长度必须介于 0 和 255 之间")
+	public String getMerchantName() {
+		return merchantName;
+	}
+
+	public void setMerchantName(String merchantName) {
+		this.merchantName = merchantName;
+	}
+	
+	@Length(min=0, max=11, message="商户编号长度必须介于 0 和 11 之间")
+	public String getMerchantCode() {
+		return merchantCode;
+	}
+
+	public void setMerchantCode(String merchantCode) {
+		this.merchantCode = merchantCode;
+	}
+	
+	public Integer getOperationMode() {
+		return operationMode;
+	}
+
+	public void setOperationMode(Integer operationMode) {
+		this.operationMode = operationMode;
+	}
+	
+	public BigDecimal getOperatingAmount() {
+		return operatingAmount;
+	}
+
+	public void setOperatingAmount(BigDecimal operatingAmount) {
+		this.operatingAmount = operatingAmount;
+	}
+	
+	public BigDecimal getAccountAmount() {
+		return accountAmount;
+	}
+
+	public void setAccountAmount(BigDecimal accountAmount) {
+		this.accountAmount = accountAmount;
+	}
+	
+	public Integer getObjectId() {
+		return objectId;
+	}
+
+	public void setObjectId(Integer objectId) {
+		this.objectId = objectId;
+	}
+	
+}

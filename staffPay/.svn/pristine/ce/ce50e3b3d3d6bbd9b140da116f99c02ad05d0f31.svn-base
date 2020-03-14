@@ -1,0 +1,18 @@
+package com.chunqiu.mrjuly.modules.mine.dao;
+
+import com.chunqiu.mrjuly.common.persistence.CrudDao;
+import com.chunqiu.mrjuly.modules.mine.model.FrameSetting;
+
+import java.util.List;
+
+/**
+ * 弹框设置
+ */
+public interface FrameSettingDao extends CrudDao<FrameSetting, Integer>{
+
+    List<FrameSetting> getAll(Integer id);
+
+    int insertUse(FrameSetting frameSetting);
+
+    int updateUse(FrameSetting frameSetting);
+}

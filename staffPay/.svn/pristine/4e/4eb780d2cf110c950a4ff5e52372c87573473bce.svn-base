@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>我的订单数据统计</title>
+
+    <head th:include="init :: init"></head>
+    <head th:include="init_bootstrap_table :: bootstrap_table"></head>
+
+    <script type="text/javascript">
+        $(function(){
+            $('#table').bootstrapTable({
+                undefinedText : '',//defined的默认显示文本
+                striped : true,//条纹
+                method : 'get',
+                url : '[[${ctx}]]/install/customerOrder/list2?objectId='+$('#objectId').val(),
+                pagination : true,//显示分页
+                sidePagination : 'server',//定义分页为服务器端分页
+                pageNumber : 1,//起始页数
+                pageSize : 20,//默认显示行数
+                pageList : [20, 50, 100 ,200],//可选分页数
+                singleSelect : false,//多选
+                showFooter: true,
+                totalRow: true,
+                height : 'auto',
+                columns: [
+                    {
+                        field: 'orderSn',
+                        title: '订单号',
+                        halign : 'center',
+                        align : 'left',
+                        totalRowText: '合计'
+                    }, {
+                        field: 'hotelInfo.hotelName',
+                        title: '酒店',
+                        halign : 'center',
+                        align : 'left'
+                    },{
+                        field: 'orderRoom',
+                        title: '下单房号',
+                        halign : 'center',
+                        align : 'left'
+                    },{
+                        field: 'createDate',
+                        title: '下单时间',
+                        halign : 'center',
+                        align : 'left',
+                        format:'yyyy-MM-dd HH:mm:ss'
+
+                    },{
+                        field: 'shopGoodsInfo.goodsName',
+                        title: '商品',
+                        halign : 'center',
+                        align : 'left'
+                    },   {
+                        field: 'goodsNum',
+                        title: '数量',
+                        halign : 'center',
+                        align : 'left',
+                        sort: true,
+                        totalRow: true,
+                        footerFormatter: function (value) {
+                            var count = 0;
+                            for (var i in value) {
+                                if(value[i].goodsNum !=null){
+                                    count += value[i].goodsNum;
+                                }
+                            }
+                            return count.toFixed(0);//保留0位小数
+                        }
+
+                    }, {
+                        field: 'goodsTotalPrice',
+                        title: '金额(元)',
+                        halign : 'center',
+                        align : 'left',
+                        sort: true,
+                        totalRow: true,
+                        footerFormatter: function (value) {
+                            var count = 0;
+                            for (var x in value) {
+                                if(value[x].goodsTotalPrice !=null){
+                                    count += value[x].goodsTotalPrice;
+                                }
+                            }
+                            return count.toFixed(2);//保留两位小数
+                        }
+                    },  {
+
+                        field: 'serviceMode.serviceMode',
+                        title: '服务方式',
+                        halign : 'center',
+                        align : 'left'
+                    }],
+                onLoadSuccess : function(data){
+                    if(data.total == 0){
+                        $('#table').bootstrapTable('removeAll');
+                    }
+                }
+            });
+        });
+
+        function editCustomerOrder(id,status,createDate){
+            layer.confirm('您确定要更改状态吗？',function(){
+                parent.loading();
+                $.post('[[${ctx}]]/install/customerOrder/isPut',{
+                    id : id,status:status,dateString:createDate
+                },function(result){
+                    closeLoading();
+                    layer.closeAll();
+                    if(result.success){
+                        showMsgSuccess('更改成功');
+                        refreshTable();
+                    }else{
+                        showMsgError(result.msg);
+                    }
+                },'json');
+            });
+        }
+
+
+
+
+        function exportExcel() {
+            var url = '[[${ctx}]]/install/customerOrder/export1';
+            $('<form method="get" action="' + url + '"></form>').appendTo('body').submit().remove();
+        }
+
+        //根据订单状态
+        function search(){
+            var param = $('#searchForm').serialize();
+            $('#table').bootstrapTable('refresh', {url : '[[${ctx}]]/install/customerOrder/list2?' + param});
+        }
+    </script>
+</head>
+<body layadmin-themealias="default">
+<div class="layui-fluid animated fadeInRight">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+            <div class="layui-form-item form-head">
+                <form id="searchForm" class="layui-form">
+                    <input type="hidden" th:value="${shopInfo.id}" id="objectId" name="objectId">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">日期：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="createDate" id="createDate" placeholder="请选择日期" autocomplete="off" class="layui-input" lay-date="date" lay-format="yyyy-MM " readonly>
+                        </div>
+                    </div>
+                    <div class="layui-input-inline">
+                        <select name="serviceMode2" data-placeholder="请选择服务方式" class="chosen-select-deselect form-control layui-input">
+                            <option></option>
+                            <option value="">全部</option>
+                            <option value="预约到店">预约到店</option>
+                            <option value="由店铺送达">由店铺送达</option>
+                        </select>
+                    </div>
+                    <div class="layui-inline">
+                        <button class="btn btn-primary " type="button" onclick="search()"><i class="fa fa-search"></i>&nbsp;筛选</button>
+                    </div>
+                </form>
+            </div>
+            <div style="padding-bottom: 10px;">
+                <button id="exprot" class="btn btn-primary " type="button" onclick="exportExcel()"><i class="fa fa-share-square-o"></i>&nbsp;导出</button>
+            </div>
+
+
+            <table id="table">
+
+
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

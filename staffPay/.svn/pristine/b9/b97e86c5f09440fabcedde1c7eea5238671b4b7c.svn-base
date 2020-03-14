@@ -1,0 +1,29 @@
+package com.chunqiu.mrjuly.modules.getaccommodation.service;
+
+import com.chunqiu.mrjuly.common.persistence.CrudService;
+import com.chunqiu.mrjuly.modules.getaccommodation.dao.GetAccommodationDao;
+import com.chunqiu.mrjuly.modules.getaccommodation.model.GetAccommodation;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.List;
+
+/**
+ * 酒店激活号统计Service
+ * @author zt
+ * @version 2019-03-26
+ */
+@Service
+public class GetAccommodationService extends CrudService<GetAccommodationDao, GetAccommodation, Integer> {
+	@Resource
+	private GetAccommodationDao dao;
+
+	/**
+	 * 酒店激活号
+	 * @param getAccommodation
+	 * @return
+	 */
+	public List<GetAccommodation> getAccommodationList(GetAccommodation getAccommodation){
+		return dao.getAccommodationList(getAccommodation);
+	}
+}

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chunqiu.mrjuly.modules.install.dao.ComplaintsDao">
+
+	<sql id="complaintsColumns">
+		a.id AS "id",
+		a.complaints_type as"complaintsType",
+		a.complaint_content as"complaintContent",
+		a.is_feedback as "isFeedback",
+		a.feedback_mode as "feedbackMode",
+		a.contact_information as"contactInformation",
+		a.feedback_room as"feedbackRoom",
+		a.feedback_type as"feedbackType",
+		a.object_id as"objectId",
+		a.create_date as"createDate",
+		a.hotel_code_id as"hotelCodeId"
+	</sql>
+	<sql id="complaintsJoins">
+
+	</sql>
+
+	<select id="get" resultType="Complaints">
+		SELECT
+		<include refid="complaintsColumns"/>
+		FROM notice_info a
+		<include refid="complaintsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="Complaints">
+		SELECT
+		<include refid="complaintsColumns"/>
+		FROM notice_info a
+		<include refid="complaintsJoins"/>
+	</select>
+</mapper>

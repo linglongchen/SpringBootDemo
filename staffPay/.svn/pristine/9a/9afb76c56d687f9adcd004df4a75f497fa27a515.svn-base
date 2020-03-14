@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chunqiu.mrjuly.modules.advertisingcart.dao.AdvertisingCartDao">
+
+	<sql id="advertisingCartColumns">
+		a.id AS "id",
+		a.hotel_code_id AS "hotelCodeId",
+		a.put_in_time AS "putInTime",
+		a.delivery_type AS "deliveryType",
+		a.quantity_delivered AS "quantityDelivered",
+		a.auction_amount AS "auctionAmount",
+		a.price_type AS "priceType",
+		a.type AS "type",
+		a.object_id AS "objectId",
+		a.del_flag AS "delFlag",
+		a.delivery_type_starting_price as "deliveryTypeStartingPrice",
+		a.price_type_price as "priceTypePrice",
+		a.upload_id as "uploadId"
+	</sql>
+
+	<sql id="advertisingCartJoins">
+	</sql>
+
+	<select id="get" resultType="AdvertisingCart">
+		SELECT
+			<include refid="advertisingCartColumns"/>
+		FROM advertising_cart a
+		<include refid="advertisingCartJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="getInfo" resultType="AdvertisingOrder">
+		SELECT
+		  b.sort,
+		  c.hotel_code as "hotelCode",
+		<include refid="advertisingCartColumns"/>
+		FROM advertising_cart a left join advertising_upload as b on b.id = a.upload_id
+		left join hotel_unique_code as c on c.id = a.hotel_code_id
+		<include refid="advertisingCartJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="AdvertisingCart">
+		SELECT
+			b.hotel_name as "hotelName",
+			b.hotel_code_id as "hotelCodeId",
+			<include refid="advertisingCartColumns"/>
+		FROM advertising_cart a left  join  hotel_info b on a.hotel_code_id = b.hotel_code_id
+
+		<include refid="advertisingCartJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="type!= null">
+			and	 a.type  =  #{type}
+			</if>
+			<if test="objectId!= null">
+			and	 a.object_id  = #{objectId}
+			</if>
+		</where>
+		<choose>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			order by a.id desc
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="AdvertisingCart">
+		SELECT
+			<include refid="advertisingCartColumns"/>
+		FROM advertising_cart a
+		<include refid="advertisingCartJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			order by a.id desc
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO advertising_cart(
+						hotel_code_id,
+						delivery_type,
+						quantity_delivered,
+						auction_amount,
+						price_type,
+						type,
+						object_id,
+						del_flag,
+						delivery_type_starting_price,
+						price_type_price,
+						upload_id,
+						put_in_time
+
+		) VALUES (
+						#{hotelCodeId},
+						#{deliveryType},
+						#{quantityDelivered},
+						#{auctionAmount},
+						#{priceType},
+						#{type},
+						#{objectId},
+						#{delFlag},
+						#{deliveryTypeStartingPrice},
+						#{priceTypePrice},
+						#{uploadId},
+						#{putInTime}
+
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE advertising_cart
+		<set>
+			<if test="hotelCodeId != null">
+				hotel_code_id = #{hotelCodeId},
+			</if>
+			<if test="putInTime != null and putInTime != ''">
+				put_in_time = #{putInTime},
+			</if>
+			<if test="deliveryType != null">
+				delivery_type = #{deliveryType},
+			</if>
+			<if test="quantityDelivered != null">
+				quantity_delivered = #{quantityDelivered},
+			</if>
+			<if test="auctionAmount != null and auctionAmount != ''">
+				auction_amount = #{auctionAmount},
+			</if>
+			<if test="auctionStatus != null">
+				auction_status = #{auctionStatus},
+			</if>
+			<if test="payStatus != null">
+				pay_status = #{payStatus},
+			</if>
+			<if test="participationStatus != null">
+				participation_status = #{participationStatus},
+			</if>
+			<if test="priceType != null">
+				price_type = #{priceType},
+			</if>
+			<if test="type != null">
+				type = #{type},
+			</if>
+			<if test="objectId != null">
+				object_id = #{objectId},
+			</if>
+			<if test="delFlag != null and delFlag != ''">
+				del_flag = #{delFlag},
+			</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		UPDATE advertising_cart SET
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<select id="sysParameterInfo" resultType="SysParameter">
+		select min_account_balance as "minAccountBalance" ,educt_account_balance as "eductAccountBalance",min_auction_price as "minAuctionPrice",educt_prepay_ad as "eductPrepayAd",over_days_orders as "overDaysOrders" from  sys_parameter;
+	</select>
+
+
+	<select id="advertisementUploadInfo" resultType="AdvertisementUpload">
+			select id,now_price as "nowPrice",now_price2 as "nowPrice2",status from  advertising_upload where id = #{uploadId};
+	</select>
+
+
+	<insert id="insertOrder" parameterType="list">
+		INSERT INTO `advertising_order` (
+		`ordernumber`,
+		`create_date`,
+		`put_in_time`,
+		`create_by`,
+		`type`,
+		`hotel_code_id`,
+		`delivery_type`,
+		`delivery_type_starting_price`,
+		`quantity_delivered`,
+		`auction_amount`,
+		`auction_status`,
+		`pay_status`,
+		`price_type`,
+		`price_type_price`,
+		`object_id`,
+		`upload_id`
+		)
+		VALUES
+		<foreach collection ="list" item="item" index= "index" separator =",">
+			(
+			#{item.ordernumber},
+			now(),
+			#{item.putInTime},
+			#{item.createBy.id},
+			#{item.type},
+			#{item.hotelCodeId},
+			#{item.deliveryType},
+			#{item.deliveryTypeStartingPrice},
+			#{item.quantityDelivered},
+			#{item.auctionAmount},
+			#{item.auctionStatus},
+			#{item.payStatus},
+			#{item.priceType},
+			#{item.priceTypePrice},
+			#{item.objectId},
+			#{item.uploadId}
+			)
+		</foreach>
+
+	</insert>
+
+	<update id="updateAdverStatus" parameterType="list">
+		UPDATE `advertising_upload`
+		SET
+		 `status` = 0
+		WHERE
+		id in (
+		<foreach collection="list" separator="," item="item">
+			<if test="item.priceType == 2">
+				#{item.uploadId}
+			</if>
+			<if test="item.priceType != 2">
+				0
+			</if>
+		</foreach>
+		)
+	</update>
+
+	<update id="deleteCart" parameterType="list">
+		UPDATE `advertising_cart`
+		SET
+		`del_flag` = 1
+		WHERE
+		id in (
+		<foreach collection="list" separator="," item="item">
+			#{item.id}
+		</foreach>
+		)
+	</update>
+
+	<update id="updateHotelPosition" parameterType="AdvertisingCart">
+		UPDATE `hotel_info`
+		SET
+		`advertisement_num` = advertisement_num - 1
+		WHERE
+		hotel_code_id = #{hotelCodeId}
+	</update>
+
+	<update id="updateUserAccount">
+		<if test="type == 1">
+			update shop_info set account = account - #{auctionAmount}  WHERE id = #{id};
+		</if>
+		<if test="type == 2">
+			update advertiser_info set account_balance = account_balance - #{auctionAmount} WHERE id = #{id};
+		</if>
+		<if test="type == 3">
+			update shop_info set account = account - #{auctionAmount}  WHERE id = #{id};
+		</if>
+		<if test="type == 4">
+			update advertiser_info set account_balance = account_balance - #{auctionAmount} WHERE id = #{id};
+		</if>
+	</update>
+
+	<select id="getUpload" resultType="Integer">
+		select count(*)
+		from advertising_upload
+		where id=#{id} and status=0
+	</select>
+	<select id="getCard" resultType="Integer">
+		select count(*)
+		from  advertising_cart
+		where upload_id=#{uploadId} and object_id=#{objectId} and type=#{type} and hotel_code_id=#{hotelCodeId} and del_flag=0 and date_format(put_in_time,'%Y-%m-%d')=#{date}
+	</select>
+
+
+	<select id="couponInfo" resultType="CouponInfo">
+			SELECT
+				a.id,
+				b.preferential_quota AS "preferentialQuota",
+				b.closing_date AS "closingDate",
+				a.coupon_id as "couponId"
+			FROM
+				coupon_user_list AS a
+			LEFT JOIN coupon_info AS b ON b.id = a.coupon_id
+			WHERE a.type = #{type} AND a.object_id = #{objectId} and a.del_flag = '0' and closing_date &gt; now();
+	</select>
+
+
+	<insert id="insertMessageInfo">
+		INSERT INTO notice_info(
+		notice_title,
+		notice_content,
+		notice_roll,
+		circular_endTime,
+		target,
+		type,
+		create_by,
+		create_date,
+		object_id,
+		timeSn
+		)
+		VALUES
+			(#{noticeTitle},
+			#{noticeContent},
+			#{noticeRoll},
+			#{circularEndTime},
+			#{target},
+			2,
+			#{createBy.id},
+			#{createDate},
+			#{objectId},
+			#{timeSn})
+	</insert>
+
+	<select id="auctionOrderInfo" resultType="AdvertisingOrder">
+		SELECT
+			a.delivery_type AS "deliveryType",
+			b.hotel_name as "hotelName",
+			a.type,
+			a.object_id as "objectId"
+		FROM
+			advertising_order as a LEFT JOIN hotel_info as b on b.hotel_code_id = a.hotel_code_id
+		WHERE
+			a.hotel_code_id = #{hotelCodeId}
+		AND a.upload_id = #{uploadId}
+		AND a.pay_status = 0
+		AND a.auction_status = 2
+    	AND a.put_in_time = #{putInTime}
+		ORDER BY
+			a.id DESC
+		LIMIT 1,
+		 2
+	</select>
+	<select id="checkShopInfo" resultType="java.lang.Integer">
+		select count(*)
+		from shop_hotel
+		where shop_id=#{shopId} and hotel_code_id=#{hotelCodeId} and status=3
+	</select>
+
+	<select id="priceTypePrice" resultType="Float">
+			SELECT IFNULL(
+			(SELECT
+			price_type_price
+			FROM
+			advertising_order
+			WHERE
+			hotel_code_id = #{hotelCodeId}
+			AND upload_id = #{uploadId}
+			AND delivery_type = #{deliveryType}
+			AND price_type = 1
+			AND auction_status = 2
+			AND pay_status = 0
+			AND put_in_time = #{putInTime}
+			AND del_flag = '0'
+			ORDER BY price_type_price DESC
+			LIMIT 1)
+			,0) AS "priceTypePrice"
+	</select>
+
+	<select id="countOrderSusccessById" resultType="Integer">
+		SELECT
+			count(id)
+		FROM
+			advertising_order
+		WHERE
+			hotel_code_id = #{hotelCodeId}
+		AND upload_id = #{uploadId}
+		AND put_in_time = #{putInTime}
+		AND auction_status = 3
+		AND pay_status IN (1, 2)
+	</select>
+
+	<update id="updateOrderStatusById">
+		UPDATE `advertising_order`
+				SET
+				`auction_status` = 1,
+				`pay_status` = 0
+				WHERE
+				hotel_code_id = #{hotelCodeId}
+				AND upload_id = #{uploadId}
+				AND put_in_time = #{putInTime}
+				AND price_type = 1
+	</update>
+
+	<select id="orderCartPriceById" resultType="AdvertisingCart">
+		SELECT
+		<include refid="advertisingCartColumns"/>
+		FROM advertising_cart a
+		<include refid="advertisingCartJoins"/>
+		WHERE a.id IN
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item.id}
+		</foreach>
+	</select>
+</mapper>

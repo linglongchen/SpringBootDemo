@@ -1,0 +1,126 @@
+package com.chunqiu.mrjuly.modules.advertisingcartday.model;
+
+import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import java.math.BigDecimal;
+
+import com.chunqiu.mrjuly.common.persistence.DataEntity;
+
+/**
+ * 我的购物车列表Entity
+ * @author 周天
+ * @version 2019-05-13
+ */
+public class AdvertisingCartDay extends DataEntity<AdvertisingCartDay, Integer> {
+	
+	private static final long serialVersionUID = 1L;
+	private Integer hotelCodeId;		// 投放酒店前缀编码id
+	private Date putInTime;		// 投放日期
+	private Integer deliveryType;		// 投放类型 1.图文 2.视频
+	private BigDecimal deliveryTypeStartingPrice;		// 投放类型的起拍价
+	private Integer quantityDelivered;		// 投放数量
+	private BigDecimal auctionAmount;		// 竞拍金额
+	private Integer priceType;		// 价格类型 1.当前价 2.一口价
+	private BigDecimal priceTypePrice;		// 价格类型的价格（当前价的价格或者一口价的价格）
+	private Integer type;		// 1.在线商家 2.广告商
+	private Integer objectId;		// 广告商id/在线商家id
+	private Integer uploadId;		// 选中广告位id
+	
+	public AdvertisingCartDay() {
+		super();
+	}
+
+	public AdvertisingCartDay(Integer id){
+		super(id);
+	}
+
+	public Integer getHotelCodeId() {
+		return hotelCodeId;
+	}
+
+	public void setHotelCodeId(Integer hotelCodeId) {
+		this.hotelCodeId = hotelCodeId;
+	}
+	
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	public Date getPutInTime() {
+		return putInTime;
+	}
+
+	public void setPutInTime(Date putInTime) {
+		this.putInTime = putInTime;
+	}
+	
+	public Integer getDeliveryType() {
+		return deliveryType;
+	}
+
+	public void setDeliveryType(Integer deliveryType) {
+		this.deliveryType = deliveryType;
+	}
+	
+	public BigDecimal getDeliveryTypeStartingPrice() {
+		return deliveryTypeStartingPrice;
+	}
+
+	public void setDeliveryTypeStartingPrice(BigDecimal deliveryTypeStartingPrice) {
+		this.deliveryTypeStartingPrice = deliveryTypeStartingPrice;
+	}
+	
+	public Integer getQuantityDelivered() {
+		return quantityDelivered;
+	}
+
+	public void setQuantityDelivered(Integer quantityDelivered) {
+		this.quantityDelivered = quantityDelivered;
+	}
+	
+	public BigDecimal getAuctionAmount() {
+		return auctionAmount;
+	}
+
+	public void setAuctionAmount(BigDecimal auctionAmount) {
+		this.auctionAmount = auctionAmount;
+	}
+	
+	public Integer getPriceType() {
+		return priceType;
+	}
+
+	public void setPriceType(Integer priceType) {
+		this.priceType = priceType;
+	}
+	
+	public BigDecimal getPriceTypePrice() {
+		return priceTypePrice;
+	}
+
+	public void setPriceTypePrice(BigDecimal priceTypePrice) {
+		this.priceTypePrice = priceTypePrice;
+	}
+	
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
+	}
+	
+	public Integer getObjectId() {
+		return objectId;
+	}
+
+	public void setObjectId(Integer objectId) {
+		this.objectId = objectId;
+	}
+	
+	public Integer getUploadId() {
+		return uploadId;
+	}
+
+	public void setUploadId(Integer uploadId) {
+		this.uploadId = uploadId;
+	}
+	
+}

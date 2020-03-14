@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>业务表管理列表</title>
+    <head th:include="init :: init"></head>
+    <head th:include="init_bootstrap_table :: bootstrap_table"></head>
+
+    <script type="text/javascript">
+        $(function(){
+            $('#table').bootstrapTable({
+                undefinedText : '',//defined的默认显示文本
+                striped : true,//条纹
+                method : 'get',
+                url : '[[${ctx}]]/gen/genTable/list',
+                pagination : true,//显示分页
+                sidePagination : 'server',//定义分页为服务器端分页
+                pageNumber : 1,//起始页数
+                pageSize : 20,//默认显示行数
+                pageList : [20, 50, 100 ,200],//可选分页数
+                singleSelect : false,//多选
+                //toolbar : '#toolbar',
+                height : 'auto',
+                columns: [
+                    {
+                        field: 'name',
+                        title: '表名',
+                        halign : 'center',
+                        align : 'left'
+                    },{
+                        field: 'comments',
+                        title: '说明',
+                        halign : 'center',
+                        align : 'left'
+                    },{
+                        field: 'className',
+                        title: '类名',
+                        halign : 'center',
+                        align : 'left'
+                    },{
+                        field: 'parentTable',
+                        title: '父表',
+                        halign : 'center',
+                        align : 'left'
+                    },{
+                        field : 'option',
+                        title : '操作',
+                        halign : 'center',
+                        align : 'left',
+                        formatter : function(value, row, index){
+                            var _html = '<ul class="grid_btn_ul">';
+                            _html += '<li><a href="javascript:editTable(' + row.id + ',\'' + row.name + '\');" class="btn btn-success btn-xs"><i class="fa fa-pencil"></i> 编辑 </a></li>';
+                            _html += '<li><a href="javascript:delTable(' + row.id + ')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> 删除 </a></li>';
+                            _html += '</ul>';
+                            return _html;
+                        }
+                    }],
+                onLoadSuccess : function(data){
+                    if(data.total == 0){
+                        $('#table').bootstrapTable('removeAll');
+                    }
+                }
+            });
+        });
+
+        function editTable(id, name) {
+            layer.full(layer.open({
+                type: 2,
+                title : '编辑业务表配置',
+                area : ['800px','700px'],
+                content: '[[${ctx}]]/gen/genTable/form?id=' + id + '&name=' + name, //这里content是一个DOM
+                btn : ['关闭'],
+                closeBtn : '1',
+                shadeClose : true,//点击遮罩层关闭
+                shade : [0.8, '#393D49']
+            }));
+        }
+
+        function addGenTable(){
+            layer.full(layer.open({
+                type: 2,
+                title : '新增业务表配置',
+                area : ['800px','700px'],
+                content: '[[${ctx}]]/gen/genTable/form', //这里content是一个DOM
+                btn : ['关闭'],
+                closeBtn : '1',
+                shadeClose : true,//点击遮罩层关闭
+                shade : [0.8, '#393D49']
+            }));
+        }
+
+        function delTable(id) {
+            layer.confirm('您确定要删除该业务表配置吗？',function(){
+                parent.loading();
+                $.post('[[${ctx}]]/gen/genTable/delete',{
+                    id : id
+                },function(result){
+                    closeLoading();
+                    layer.closeAll();
+                    if(result.success){
+                        showMsgSuccess('删除成功');
+                        refreshTable();
+                    }else{
+                        showMsgError(result.msg);
+                    }
+                },'json');
+            });
+        }
+    </script>
+</head>
+<body layadmin-themealias="default">
+    <div class="layui-fluid animated fadeInRight">
+        <div class="layui-card">
+            <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+                <div class="layui-card-body">
+                    <div style="padding-bottom: 10px;">
+                        <button class="btn btn-primary " type="button" onclick="addGenTable()"><i class="fa fa-plus"></i>&nbsp;新增</button>
+                    </div>
+                </div>
+
+                <table id="table">
+
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

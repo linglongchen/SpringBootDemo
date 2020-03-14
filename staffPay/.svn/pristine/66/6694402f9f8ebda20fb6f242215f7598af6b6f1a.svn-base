@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>设备外壳编码设置</title>
+
+    <head th:include="init :: init"></head>
+    <head th:include="init_bootstrap_table :: bootstrap_table"></head>
+</head>
+<script type="text/javascript">
+    $(function(){
+
+        show();
+
+        //导入excel
+        layui.use(['upload'],function () {
+            var upload = layui.upload;
+            upload.render({
+                elem: '#importExcel'
+                ,url: '[[${ctx}]]/system/setup/import'
+                ,accept: 'file'
+                ,exts: 'xls|xlsx'
+                ,done: function(res){
+                    if(res.success){
+                        showMsgSuccess(res.msg);
+                        search();
+                    }else{
+                        showMsgWarn(res.msg);
+                        search();
+                    }
+                }
+            });
+        });
+
+
+    });
+
+    function show(){
+        $('#table').bootstrapTable({
+            undefinedText : '',//defined的默认显示文本
+            striped : true,//条纹
+            method : 'get',
+            url : '[[${ctx}]]/system/setup/shellCodingList',
+            pagination : true,//显示分页
+            sidePagination : 'server',//定义分页为服务器端分页
+            pageNumber : 1,//起始页数
+            pageSize : 5,//默认显示行数
+            pageList : [20, 50, 100 ,200],//可选分页数
+            singleSelect : false,//多选
+            height : 'auto',
+            columns: [
+                {
+                    checkbox: true,
+                    formatter : function(value, row, index){
+                        if (row.type == 1){
+                            return {
+                                disabled : false
+                            };
+                        }else {
+                            return {
+                                disabled : true
+                            };
+                        }
+                        return value;
+                    }
+                },{
+                    field: 'uniqueEncoding',
+                    title: '设备外壳编号',
+                    halign : 'center',
+                    align : 'center'
+
+                },{
+                    field: 'hotelCode',
+                    title: '归入前缀编号',
+                    halign : 'center',
+                    align : 'center',
+                    formatter : function(value, row, index){
+                        if (row.type == 1){
+                           return "";
+                        }else {
+                            return value;
+                        }
+                    }
+                },
+                {
+                    field: 'hotelName',
+                    title: '归入酒店',
+                    halign : 'center',
+                    align : 'center',
+                    formatter : function(value, row, index){
+                        if (row.type == 1){
+                            return "";
+                        }else {
+                            return value;
+                        }
+                    }
+                },
+                {
+                    field : 'option',
+                    title : '操作',
+                    halign : 'center',
+                    align : 'center',
+                    formatter : function(value, row, index){
+                        var _html = '<ul class="grid_btn_ul">';
+                        if(row.type == 0){
+                            _html += '<li><a href="javascript:codeInfo('+row.id+',1,'+row.codeId+');" class="btn btn-success btn-xs"><i class="fa fa-pencil"></i> 修改 </a></li>';
+                        }else {
+                            _html += '<li><a href="javascript:codeInfo('+row.id+',2,0);" class="btn btn-success btn-xs"><i class="fa fa-pencil"></i> 归入前缀编号 </a></li>';
+                        }
+                        _html += '<li><a href="javascript:delBaseDriver(' + row.id + ')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> 删除 </a></li>';
+
+                        _html += '</ul>';
+                        return _html;
+                    }
+                }],
+
+            onLoadSuccess : function(data){
+                if(data.total == 0){
+                    $('#table').bootstrapTable('removeAll');
+                }
+                //禁止bootstrap table中的checkbox加载layui样式
+                $('.table .bs-checkbox input').each(function () {
+                    $(this).attr("lay-ignore", "true");
+                });
+
+                $('.table thead .bs-checkbox .th-inner .layui-form-checkbox').remove();
+
+            }
+
+        });
+    }
+
+
+    //多选归入前缀编码
+    function  edit() {
+        var idList = [];
+        var row = $.map($('#table').bootstrapTable('getSelections'),function (row) {
+            idList.push(row.id);
+        });
+        if (idList.length<=0){
+            showMsgError("请选择外壳编号");
+            return;
+        }
+
+
+        //请求
+        layer.open({
+            type: 2,
+            title : '前缀编码',
+            area : ['550px','300px'],
+            content: '[[${ctx}]]/system/setup/codingInfoIndex?idList='+idList.toString()+'&type='+3 , //这里content是一个DOM
+            btn : ['保存','关闭'],
+            closeBtn : '2',
+            shadeClose : true,//点击遮罩层关闭
+            shade : [0.8, '#393D49'],
+            yes : function(index, layero){
+                var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                iframeWin.validForm();
+            }
+        });
+
+    }
+
+    //下载导入模版
+    function downloadTemp() {
+        var url = '[[${ctx}]]/system/setup/import/template';
+        $('<form method="get" action="' + url + '"></form>').appendTo('body').submit().remove();
+    }
+
+    //查询
+    function search(){
+        var param = $('#searchForm').serialize();
+        $('#table').bootstrapTable('refresh', {url : '[[${ctx}]]/system/setup/shellCodingList?' + param});
+    }
+
+
+
+    //修改 归入
+    function codeInfo(id,type,codeId){
+        layer.open({
+            type: 2,
+            title : '前缀编码',
+            area : ['550px','300px'],
+            content: '[[${ctx}]]/system/setup/codingInfoIndex?id='+id+"&type="+type+"&codeId="+codeId , //这里content是一个DOM
+             btn : ['保存','关闭'],
+            closeBtn : '2',
+            shadeClose : true,//点击遮罩层关闭
+            shade : [0.8, '#393D49'],
+            yes : function(index, layero){
+                var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                iframeWin.validForm();
+            }
+        });
+    }
+
+
+    //删除
+    function delBaseDriver(id){
+        layer.confirm('您确定要删除该设备外壳编号吗？',function(){
+            parent.loading();
+            $.post('[[${ctx}]]/system/setup/deleteCode',{
+                id : id
+            },function(result){
+                closeLoading();
+                layer.closeAll();
+                    showMsgSuccess('删除成功');
+                    search();
+            });
+        });
+    }
+
+    </script>
+
+<style type="text/css">
+    .layui-form input[type="checkbox"]{
+        display: block;
+    }
+</style>
+<body layadmin-themealias="default">
+<div class="layui-fluid animated fadeInRight">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+            <div class="layui-form-item form-head">
+                <form id="searchForm" class="layui-form">
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <input name="uniqueEncoding" autocomplete="off"  class="layui-input" placeholder="查询设备外壳编号" type="text">
+                        </div>
+                        <div class="layui-inline">
+                            <button class="btn btn-primary " type="button" onclick="search()"><i class="fa fa-search"></i>&nbsp;查询</button>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <button class="btn btn-primary " style="margin-left: 400px;" type="button" onclick="edit()"><i class="fa fa-edit"></i>&nbsp;归入前缀编码</button>
+                        <button class="btn btn-primary " type="button" th:onclick="'downloadTemp()'"><i class="fa fa-file-excel-o"></i>&nbsp;下载导入模版</button>
+                        <button id="importExcel" class="btn btn-primary " type="button" ><i class="fa fa-share-square-o"></i>&nbsp;导入设备外壳编号</button>
+                    </div>
+
+                </form>
+            </div>
+
+            <table id="table">
+
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

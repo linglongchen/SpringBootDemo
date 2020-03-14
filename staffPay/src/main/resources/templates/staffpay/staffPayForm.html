@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>职工薪资管理管理</title>
+
+    <head th:include="init :: init"></head>
+
+    <script type="text/javascript">
+
+        //提交表单
+        function validForm() {
+            $('#signupForm').validate({
+                submitHandler: function (form) {
+                    loading();
+                    form.action = '[[${ctx}]]/staffpay/staffPay/saveStaffPay';
+                    form.submit();
+                }
+            });
+            $('#signupForm').submit();
+        }
+
+        $(function () {
+            let string = $('#natures').val().split(",");
+            console.log(string);
+            // let js = JSON.stringify(string);
+            for (let i=0;i<string.length;i++) {
+            	console.log(string[i])
+                let html = '<div id="lableIndex"  class="layui-form-item col-lg-6 col-sm-12 col-xs-12">' +
+                    '<label class="col-xs-3 layui-form-label" id="lable' + i + '">' + string[i].substring(0,string[i].indexOf(":")) + ':</label>' +
+                    '        <div class="col-xs-3" >' +
+                    '    <input id="' + i + '" class="layui-input" th:value="" placeholder="请输入工作数量" autocomplete="off" type="text"  maxlength="255">' +
+                    '    </div>' +
+                    '    </div>';
+                $('#lableIndex').append(html);
+                $('#'+i+'').val(string[i].substring(string[i].indexOf(":")+1,string[i].length))
+            }
+        })
+    </script>
+</head>
+<body class="gray-bg">
+<div class="wrapper animated fadeInRight">
+    <div class="ibox-content">
+        <div class="row">
+            <form id="signupForm" class="layui-form form-horizontal m-t">
+                <input type="hidden" name="id" th:value="${staffPay.id}">
+                <div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+                    <label class="col-xs-3 layui-form-label">职工姓名：</label>
+                    <div class="col-xs-6">
+                        <input name="staffId" class="layui-input digits" th:value="${staffPay.staff.name }"
+                               placeholder="请输入职工姓名" autocomplete="off" type="text" maxlength="11" readonly>
+                    </div>
+                </div>
+                <div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+                    <label class="col-xs-3 layui-form-label">项目名称：</label>
+                    <div class="col-xs-6">
+                        <input name="projectId" class="layui-input digits" th:value="${staffPay.project.projectName }"
+                               placeholder="请输入项目名称" autocomplete="off" type="text" maxlength="11" readonly>
+                    </div>
+                </div>
+                <div class="layui-form-item col-lg-6 col-sm-12 col-xs-12" id="lableIndex">
+<!--                    <label class="col-xs-3 layui-form-label">natures：</label>-->
+                    <div class="col-xs-6">
+                        <input id="natures" name="natures" class="layui-input" th:value="${staffPay.natures }"
+                               placeholder="请输入natures" autocomplete="off" type="hidden" maxlength="255">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

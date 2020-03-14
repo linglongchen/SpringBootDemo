@@ -1,0 +1,856 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chunqiu.mrjuly.modules.shopinfo.dao.ShopInfoDao">
+
+	<sql id="shopInfoColumns">
+		a.id AS "id",
+		a.hotel_code_id AS "hotelCodeId",
+		a.hotel_entry_adress AS "hotelEntryAdress",
+		a.auditor_status AS "auditorStatus",
+		a.shop_name AS "shopName",
+		a.shop_number AS "shopNumber",
+		a.shop_type AS "shopType",
+		a.shop_address AS "shopAddress",
+		a.shop_tel AS "shopTel",
+		a.shop_lng AS "shopLng",
+		a.shop_lat AS "shopLat",
+		a.business_license_period AS "businessLicensePeriod",
+		a.business_license_img AS "businessLicenseImg",
+		a.code_clicks AS "codeClicks",
+		a.shop_imgs AS "shopImgs",
+		a.account AS "account",
+		a.status AS "status",
+		a.fixed_end_number AS "fixedEndNumber",
+		a.create_date AS "createDate",
+		a.create_by AS "createBy.id",
+		a.update_date AS "updateDate",
+		a.update_by AS "updateBy.id",
+		a.remark AS "remark",
+		a.distance_merchants AS "distanceMerchants",
+		a.system_num AS "systemNum",
+		a.taxpayer_number as "taxpayerNumber",
+		a.mobile as "mobile",
+		a.mailbox as "mailbox",
+		a.company_name as  "companyName",
+		a.star_id as "starId",
+		a.business_license_number as "businessLicenseNumber"  
+	</sql>
+
+	<sql id="shopInfoJoins">
+	</sql>
+
+	<select id="get" resultType="ShopInfo">
+		SELECT
+			<include refid="shopInfoColumns"/>,t.shop_type as "shopTypeName",group_concat(c.hotel_name) as "hotelName",group_concat(b.lease_term) AS "leaseTerm2"
+		FROM shop_info a
+		left join shop_type t on t.id=a.shop_type
+		left join shop_hotel b on b.shop_id=a.id
+		left join hotel_info c on c.hotel_code_id=b.hotel_code_id
+		<include refid="shopInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="ShopInfo">
+		SELECT
+			<include refid="shopInfoColumns"/>,
+		t.shop_type as "shopTypeName",
+		group_concat(c.hotel_name) as "hotelName",
+		group_concat(b.lease_term) AS "leaseTerm2"
+		FROM shop_info a
+		left join shop_type t on t.id=a.shop_type
+		left join shop_hotel b on b.shop_id=a.id AND b.`status` = 3 AND TO_DAYS(b.lease_term) &gt;= TO_DAYS(NOW()) 
+        left join hotel_info c on c.hotel_code_id=b.hotel_code_id
+		<include refid="shopInfoJoins"/>
+		<where>
+			<if test="hotelCodeId != null">
+				AND b.hotel_code_id = #{hotelCodeId}
+			</if>
+			<if test="hotelEntryAdress != null and hotelEntryAdress != ''">
+				AND a.hotel_entry_adress = #{hotelEntryAdress}
+			</if>
+			<if test="auditorStatus != null and auditorStatus != ''">
+				AND a.auditor_status = #{auditorStatus}
+			</if>
+			<if test="shopName != null and shopName != ''">
+				AND a.shop_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{shopName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{shopName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{shopName},'%')</if>
+			</if>
+			<if test="shopNumber != null and shopNumber != ''">
+				AND a.shop_number = #{shopNumber}
+			</if>
+			<if test="shopType != null and shopType != ''">
+				AND a.shop_type = #{shopType}
+			</if>
+			<if test="shopAddress != null and shopAddress != ''">
+				AND a.shop_address = #{shopAddress}
+			</if>
+			<if test="shopTel != null and shopTel != ''">
+				AND a.shop_tel = #{shopTel}
+			</if>
+			<if test="shopLng != null and shopLng != ''">
+				AND a.shop_lng = #{shopLng}
+			</if>
+			<if test="shopLat != null and shopLat != ''">
+				AND a.shop_lat = #{shopLat}
+			</if>
+			<if test="businessLicensePeriod != null and businessLicensePeriod != ''">
+				AND a.business_license_period = #{businessLicensePeriod}
+			</if>
+			<if test="businessLicenseImg != null and businessLicenseImg != ''">
+				AND a.business_license_img = #{businessLicenseImg}
+			</if>
+			<if test="codeClicks != null and codeClicks != ''">
+				AND a.code_clicks = #{codeClicks}
+			</if>
+			<if test="shopImgs != null and shopImgs != ''">
+				AND a.shop_imgs = #{shopImgs}
+			</if>
+			<if test="account != null and account != ''">
+				AND a.account = #{account}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="fixedEndNumber != null and fixedEndNumber != ''">
+				AND a.fixed_end_number = #{fixedEndNumber}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date = #{createDate}
+			</if>
+			<if test="leaseTerm != null and leaseTerm != ''">
+				AND a.lease_term = #{leaseTerm}
+			</if>
+			<if test="distanceMerchants != null and distanceMerchants != ''">
+				AND a.distance_merchants = #{distanceMerchants}
+			</if>
+		</where>
+		GROUP BY a.id
+		<choose>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.id DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO shop_info(
+								hotel_code_id,
+						hotel_entry_adress,
+						auditor_status,
+						shop_name,
+						shop_number,
+						shop_type,
+						shop_address,
+						shop_tel,
+						shop_lng,
+						shop_lat,
+						business_license_period,
+						business_license_img,
+						code_clicks,
+						shop_imgs,
+						account,
+						status,
+						fixed_end_number,
+						create_date,
+						create_by,
+						update_date,
+						update_by,
+						remark,
+						lease_term,
+						distance_merchants
+		) VALUES (
+								#{hotelCodeId},
+						#{hotelEntryAdress},
+						#{auditorStatus},
+						#{shopName},
+						#{shopNumber},
+						#{shopType},
+						#{shopAddress},
+						#{shopTel},
+						#{shopLng},
+						#{shopLat},
+						#{businessLicensePeriod},
+						#{businessLicenseImg},
+						#{codeClicks},
+						#{shopImgs},
+						#{account},
+						0,
+						#{fixedEndNumber},
+						#{createDate},
+						#{createBy.id},
+						#{updateDate},
+						#{updateBy.id},
+						#{remark},
+						#{leaseTerm},
+						#{distanceMerchants}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE shop_info
+		<set>
+			<if test="hotelCodeId != null">
+				hotel_code_id = #{hotelCodeId},
+			</if>
+			<if test="hotelEntryAdress != null and hotelEntryAdress != ''">
+				hotel_entry_adress = #{hotelEntryAdress},
+			</if>
+			<if test="auditorStatus != null">
+				auditor_status = #{auditorStatus},
+			</if>
+			<if test="shopName != null and shopName != ''">
+				shop_name = #{shopName},
+			</if>
+			<if test="shopNumber != null and shopNumber != ''">
+				shop_number = #{shopNumber},
+			</if>
+			<if test="shopType != null">
+				shop_type = #{shopType},
+			</if>
+			<if test="shopAddress != null and shopAddress != ''">
+				shop_address = #{shopAddress},
+			</if>
+			<if test="shopTel != null and shopTel != ''">
+				shop_tel = #{shopTel},
+			</if>
+			<if test="shopLng != null and shopLng != ''">
+				shop_lng = #{shopLng},
+			</if>
+			<if test="shopLat != null and shopLat != ''">
+				shop_lat = #{shopLat},
+			</if>
+			<if test="businessLicensePeriod != null and businessLicensePeriod != ''">
+				business_license_period = #{businessLicensePeriod},
+			</if>
+			<if test="businessLicenseImg != null and businessLicenseImg != ''">
+				business_license_img = #{businessLicenseImg},
+			</if>
+			<if test="codeClicks != null">
+				code_clicks = #{codeClicks},
+			</if>
+			<if test="shopImgs != null and shopImgs != ''">
+				shop_imgs = #{shopImgs},
+			</if>
+			<if test="account != null">
+				account = #{account},
+			</if>
+			<if test="status != null">
+				status = #{status},
+			</if>
+			<if test="fixedEndNumber != null and fixedEndNumber != ''">
+				fixed_end_number = #{fixedEndNumber},
+			</if>
+			<if test="createDate != null">
+				create_date = #{createDate},
+			</if>
+			<if test="updateDate != null">
+				update_date = #{updateDate},
+			</if>
+			<if test="remark != null and remark != ''">
+				remark = #{remark},
+			</if>
+			<if test="leaseTerm != null and leaseTerm != ''">
+				lease_term = #{leaseTerm},
+			</if>
+			<if test="distanceMerchants != null and distanceMerchants != ''">
+				distance_merchants = #{distanceMerchants},
+			</if>
+			<if test="freezeReason != null and freezeReason != ''">
+				freeze_reason = #{freezeReason},
+			</if>
+			<if test="taxpayerNumber != null and taxpayerNumber != ''">
+				taxpayer_number = #{taxpayerNumber},
+			</if>
+			<if test="mobile != null and mobile != ''">
+				mobile = #{mobile},
+			</if>
+			<if test="mailbox != null and mailbox != ''">
+				mailbox = #{mailbox},
+			</if>
+			<if test="companyName != null and companyName != ''">
+				company_name = #{companyName},
+			</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		DELETE FROM shop_info
+		WHERE id = #{id}
+	</update>
+	<update id="saveReject">
+		update shop_info
+		<set>
+			<if test="auditorStatus != null and auditorStatus != ''">
+				auditor_status = #{auditorStatus},
+			</if>
+			<if test="hotelPerson != null and hotelPerson != ''">
+				hotel_person = #{hotelPerson},
+			</if>
+			<if test="hotelReason != null and hotelReason != ''">
+				hotel_reason = #{hotelReason},
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+
+	<update id="freezeAllShop2" parameterType="list">
+		update shop_info
+		<set>
+			status=0
+		</set>
+		where id in (
+		<foreach collection="list" separator="," item="item">
+			#{item.id}
+		</foreach>
+		)
+	</update>
+	<update id="freezeAllShop" parameterType="list">
+		update shop_info
+		<set>
+				status=1,
+			<foreach collection="list" item="item" separator=",">
+				freeze_reason=#{item.freezeReason}
+			</foreach>
+		</set>
+		where id in (
+		<foreach collection="list" separator="," item="item">
+			#{item.id}
+		</foreach>
+		)
+	</update>
+
+	<select id="findAllList" resultType="ShopInfo">
+		SELECT
+		<include refid="shopInfoColumns"/> l.hotel_code_id AS "hotelCodeId"
+		FROM shop_info a
+		LEFT JOIN shop_hotel l ON l.shop_id=a.id
+		<include refid="shopInfoJoins"/>
+		<where>
+
+		</where>
+	</select>
+
+	<select id="getAll" resultType="com.chunqiu.mrjuly.modules.shopinfo.model.ShopInfo">
+		SELECT
+		<include refid="shopInfoColumns"/>
+		FROM shop_info a
+		<include refid="shopInfoJoins"/>
+		a.id=#{id}
+	</select>
+
+	<insert id="shopCreate"  parameterType="ShopInfo"  keyProperty="insertId" useGeneratedKeys="true">
+		INSERT INTO shop_info(
+						hotel_entry_adress,
+						auditor_status,
+						shop_name,
+						shop_number,
+						shop_type,
+						shop_address,
+						shop_tel,
+						shop_lng,
+						shop_lat,
+						business_license_period,
+						business_license_img,
+						code_clicks,
+						shop_imgs,
+						account,
+						status,
+						fixed_end_number,
+						create_date,
+						create_by,
+						update_date,
+						update_by,
+						remark,
+						lease_term,
+						distance_merchants,
+						opening_type,
+						system_num
+		) VALUES (
+						#{hotelEntryAdress},
+						#{auditorStatus},
+						#{shopName},
+						#{shopNumber},
+						#{shopType},
+						#{shopAddress},
+						#{shopTel},
+						#{shopLng},
+						#{shopLat},
+						#{businessLicensePeriod},
+						#{businessLicenseImg},
+						#{codeClicks},
+						#{shopImgs},
+						#{account},
+						0,
+						#{fixedEndNumber},
+						#{createDate},
+						#{createBy.id},
+						#{updateDate},
+						#{updateBy.id},
+						#{remark},
+						#{leaseTerm},
+						#{distanceMerchants},
+						#{openingType},
+						#{systemNum}
+		)
+	</insert>
+
+	<!-- 检测是否重复 -->
+	<select id="checkShopId" resultType="int">
+		select count(1) from shop_info a
+		<where>
+			create_by = #{createBy.id}
+		</where>
+	</select>
+
+	<insert id="insertId">
+		INSERT INTO shop_hotel(
+		shop_id,
+		hotel_code_id,
+		status,
+		create_date,
+		lease_term
+		)VALUES(
+		#{shopId},
+		#{hotelCodeId},
+		0,
+		now(),
+		#{leaseTerm}
+		)
+
+	</insert>
+
+	<select id="selCode" resultType="ShopHotel">
+		select * from shop_hotel WHERE hotel_code_id=#{hotelCodeId}
+	</select>
+
+	<select id="selService" resultType="ServiceMode">
+		SELECT * from service_mode WHERE object_id=#{objectId}
+	</select>
+
+	<update id="updateShopCreate" useGeneratedKeys="true"  keyProperty="updateId">
+		UPDATE shop_info
+		<set>
+			<if test="hotelEntryAdress != null and hotelEntryAdress != ''">
+				hotel_entry_adress = #{hotelEntryAdress},
+			</if>
+			<if test="auditorStatus != null">
+				auditor_status = #{auditorStatus},
+			</if>
+			<if test="shopName != null and shopName != ''">
+				shop_name = #{shopName},
+			</if>
+			<if test="shopNumber != null and shopNumber != ''">
+				shop_number = #{shopNumber},
+			</if>
+			<if test="shopType != null">
+				shop_type = #{shopType},
+			</if>
+			<if test="shopAddress != null and shopAddress != ''">
+				shop_address = #{shopAddress},
+			</if>
+			<if test="shopTel != null and shopTel != ''">
+				shop_tel = #{shopTel},
+			</if>
+			<if test="shopLng != null and shopLng != ''">
+				shop_lng = #{shopLng},
+			</if>
+			<if test="shopLat != null and shopLat != ''">
+				shop_lat = #{shopLat},
+			</if>
+			<if test="businessLicensePeriod != null">
+				business_license_period = #{businessLicensePeriod},
+			</if>
+			<if test="businessLicenseImg != null and businessLicenseImg != ''">
+				business_license_img = #{businessLicenseImg},
+			</if>
+			<if test="codeClicks != null">
+				code_clicks = #{codeClicks},
+			</if>
+			<if test="shopImgs != null and shopImgs != ''">
+				shop_imgs = #{shopImgs},
+			</if>
+			<if test="account != null">
+				account = #{account},
+			</if>
+			<if test="status != null">
+				status = #{status},
+			</if>
+			<if test="fixedEndNumber != null and fixedEndNumber != ''">
+				fixed_end_number = #{fixedEndNumber},
+			</if>
+			<if test="updateDate != null">
+				update_date = #{updateDate},
+			</if>
+			<if test="leaseTerm != null">
+				lease_term = #{leaseTerm},
+			</if>
+			<if test="distanceMerchants != null and distanceMerchants != ''">
+				distance_merchants = #{distanceMerchants},
+			</if>
+			<if test="freezeReason != null and freezeReason != ''">
+				freeze_reason = #{freezeReason},
+			</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+
+	<insert id="serviceMode" parameterType="list">
+		INSERT INTO `service_mode` (
+		`service_mode`,
+		`object_id`,
+		`type`
+		)
+		VALUES
+		<foreach collection ="list" item="item" index= "index" separator =",">
+			(
+			#{item.serviceMode},
+			#{item.objectId},
+			2
+			)
+		</foreach >
+
+	</insert>
+
+	<update id="updateId">
+		UPDATE `admin_user`
+		SET
+		 `business_id` = #{businessId}
+		WHERE
+			`id` = #{id};
+	</update>
+	<insert id="insertMyBill">
+        insert into my_bill_info(
+        status,
+        type,
+        amount_price,
+        remarks,
+        bill_of_origin_id,
+        object_id,
+        create_by
+        )values (
+        3,
+        #{type},
+        #{amountPrice},
+        #{remarks},
+        #{billOfOriginId},
+        #{objectId},
+        #{createBy.id}
+        )
+    </insert>
+	<insert id="insertMyBill2">
+        insert into my_bill_info(
+        status,
+        type,
+        amount_price,
+        remarks,
+        create_by,
+        object_id
+        )values (
+        <choose>
+	        <when test="status != null">
+	            #{status},
+	        </when>
+	        <otherwise>
+	    		4,
+	        </otherwise>
+        </choose>
+        #{type},
+        #{amountPrice},
+        #{remarks},
+        #{createBy.id},
+        #{objectId}
+        )
+    </insert>
+	<insert id="insertFlow">
+        insert into flow_sheet_info(
+        flow_sheet_platform,
+        merchant_name,
+        merchant_code,
+        operation_mode,
+        operating_amount,
+        account_amount,
+        remarks,
+        object_id,
+        create_by
+        )values (
+        #{flowSheetPlatform},
+        #{merchantName},
+        #{merchantCode},
+        #{operationMode},
+        #{operatingAmount},
+        #{accountAmount},
+        #{remarks},
+        #{objectId},
+        #{createBy.id}
+        )
+    </insert>
+
+	<select id="shopLeaseList" resultType="ShopHotel">
+			SELECT
+				a.hotel_name AS "hotelName",
+				b.lease_term AS "leaseTerm"
+			FROM
+				shop_hotel AS b
+			LEFT JOIN hotel_info AS a ON a.hotel_code_id = b.hotel_code_id WHERE status = 3 AND shop_id = #{id} order by b.id desc
+	</select>
+
+	<update id="updateStar">
+        update shop_info 
+        set star_id = #{starId} 
+        where id=#{id} 
+    </update>
+    
+    
+    <insert id="insertSelective" parameterType="com.chunqiu.mrjuly.modules.shopinfo.model.ShopInfo" 
+    	useGeneratedKeys="true" keyProperty="id">
+    insert into shop_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="shopName != null" >
+        shop_name,
+      </if>
+      <if test="shopNumber != null" >
+        shop_number,
+      </if>
+      <if test="shopType != null" >
+        shop_type,
+      </if>
+      <if test="shopAddress != null" >
+        shop_address,
+      </if>
+      <if test="shopTel != null" >
+        shop_tel,
+      </if>
+      <if test="shopLng != null" >
+        shop_lng,
+      </if>
+      <if test="shopLat != null" >
+        shop_lat,
+      </if>
+      <if test="businessLicensePeriod != null" >
+        business_license_period,
+      </if>
+      <if test="businessLicenseImg != null" >
+        business_license_img,
+      </if>
+      <if test="codeClicks != null" >
+        code_clicks,
+      </if>
+      <if test="shopImgs != null" >
+        shop_imgs,
+      </if>
+      <if test="account != null" >
+        account,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="createBy != null" >
+        create_by,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="updateBy != null" >
+        update_by,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="systemNum != null" >
+        system_num,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="mailbox != null" >
+        mailbox,
+      </if>
+      <if test="companyName != null" >
+        company_name,
+      </if>
+      <if test="taxpayerNumber != null" >
+        taxpayer_number,
+      </if>
+      <if test="openingType != null" >
+        opening_type,
+      </if>
+      <if test="freezeReason != null" >
+        freeze_reason,
+      </if>
+      <if test="starId != null" >
+        star_id,
+      </if>
+      <if test="businessLicenseNumber != null" >
+        business_license_number,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="shopName != null" >
+        #{shopName,jdbcType=VARCHAR},
+      </if>
+      <if test="shopNumber != null" >
+        #{shopNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="shopType != null" >
+        #{shopType,jdbcType=INTEGER},
+      </if>
+      <if test="shopAddress != null" >
+        #{shopAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="shopTel != null" >
+        #{shopTel,jdbcType=VARCHAR},
+      </if>
+      <if test="shopLng != null" >
+        #{shopLng,jdbcType=VARCHAR},
+      </if>
+      <if test="shopLat != null" >
+        #{shopLat,jdbcType=VARCHAR},
+      </if>
+      <if test="businessLicensePeriod != null" >
+        #{businessLicensePeriod,jdbcType=DATE},
+      </if>
+      <if test="businessLicenseImg != null" >
+        #{businessLicenseImg,jdbcType=VARCHAR},
+      </if>
+      <if test="codeClicks != null" >
+        #{codeClicks,jdbcType=INTEGER},
+      </if>
+      <if test="shopImgs != null" >
+        #{shopImgs,jdbcType=VARCHAR},
+      </if>
+      <if test="account != null" >
+        #{account,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        #{createBy.id,jdbcType=INTEGER},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy.id,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="systemNum != null" >
+        #{systemNum,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="mailbox != null" >
+        #{mailbox,jdbcType=VARCHAR},
+      </if>
+      <if test="companyName != null" >
+        #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="taxpayerNumber != null" >
+        #{taxpayerNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="openingType != null" >
+        #{openingType,jdbcType=INTEGER},
+      </if>
+      <if test="freezeReason != null" >
+        #{freezeReason,jdbcType=VARCHAR},
+      </if>
+      <if test="starId != null" >
+        #{starId,jdbcType=BIGINT},
+      </if>
+      <if test="businessLicenseNumber != null" >
+        #{businessLicenseNumber,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.chunqiu.mrjuly.modules.shopinfo.model.ShopInfo" >
+    update shop_info
+    <set >
+      <if test="shopName != null" >
+        shop_name = #{shopName,jdbcType=VARCHAR},
+      </if>
+      <if test="shopNumber != null" >
+        shop_number = #{shopNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="shopType != null" >
+        shop_type = #{shopType,jdbcType=INTEGER},
+      </if>
+      <if test="shopAddress != null" >
+        shop_address = #{shopAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="shopTel != null" >
+        shop_tel = #{shopTel,jdbcType=VARCHAR},
+      </if>
+      <if test="shopLng != null" >
+        shop_lng = #{shopLng,jdbcType=VARCHAR},
+      </if>
+      <if test="shopLat != null" >
+        shop_lat = #{shopLat,jdbcType=VARCHAR},
+      </if>
+      <if test="businessLicensePeriod != null" >
+        business_license_period = #{businessLicensePeriod,jdbcType=DATE},
+      </if>
+      <if test="businessLicenseImg != null" >
+        business_license_img = #{businessLicenseImg,jdbcType=VARCHAR},
+      </if>
+      <if test="codeClicks != null" >
+        code_clicks = #{codeClicks,jdbcType=INTEGER},
+      </if>
+      <if test="shopImgs != null" >
+        shop_imgs = #{shopImgs,jdbcType=VARCHAR},
+      </if>
+      <if test="account != null" >
+        account = #{account,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="updateBy != null" >
+        update_by = #{updateBy.id,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="systemNum != null" >
+        system_num = #{systemNum,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="mailbox != null" >
+        mailbox = #{mailbox,jdbcType=VARCHAR},
+      </if>
+      <if test="companyName != null" >
+        company_name = #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="taxpayerNumber != null" >
+        taxpayer_number = #{taxpayerNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="freezeReason != null" >
+        freeze_reason = #{freezeReason,jdbcType=VARCHAR},
+      </if>
+      <if test="starId != null" >
+        star_id = #{starId,jdbcType=BIGINT},
+      </if>
+      <if test="businessLicenseNumber != null" >
+        business_license_number = #{businessLicenseNumber,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,84 @@
+package com.chunqiu.mrjuly.modules.install.controller;
+
+import com.chunqiu.mrjuly.common.annotation.Log;
+import com.chunqiu.mrjuly.common.persistence.BaseController;
+import com.chunqiu.mrjuly.common.utils.UserUtils;
+import com.chunqiu.mrjuly.common.vo.Grid;
+import com.chunqiu.mrjuly.common.vo.GridParam;
+import com.chunqiu.mrjuly.modules.install.model.ClientComplaints;
+import com.chunqiu.mrjuly.modules.install.service.ClientComplaintsService;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+/**
+ * 意见与建议
+ */
+@Slf4j
+@Controller
+@RequestMapping(value = "${adminPath}/install/clientComplaints")
+public class ClientComplaintsController extends BaseController {
+
+	@Autowired
+	private ClientComplaintsService clientComplaintsService;
+	/**
+	 * 登录到意见与建议页面
+	 * @return
+	 */
+	@Log("登录到意见与建议页面")
+	@RequestMapping("index")
+	@RequiresPermissions("install:clientComplaints:view")
+	public String index(){
+		return "install/clientComplaintsList";
+	}
+
+	/**
+	 * 初始化意见与建议数据页面
+	 * @param clientComplaints
+	 * @param param
+	 * @return
+	 */
+	@Log("意见与建议页面初始换列表")
+	@ResponseBody
+	@RequestMapping("list")
+	@RequiresPermissions("install:clientComplaints:view")
+	public Grid list(ClientComplaints clientComplaints, GridParam param){
+		clientComplaints.setObjectId(UserUtils.getUser().getBusinessId());
+		return clientComplaintsService.findPage(clientComplaints, param);
+	}
+
+
+    /**
+     * 查看反馈数据详情
+     *
+     * @param clientComplaints
+     * @param model
+     * @return
+     */
+    @Log("查看详情")
+    @RequestMapping("form")
+	@RequiresPermissions("install:clientComplaints:view")
+    public String form(ClientComplaints clientComplaints, ModelMap model) {
+        clientComplaints = clientComplaintsService.get(clientComplaints.getId());
+        model.addAttribute("clientComplaints",clientComplaints);
+        if(clientComplaints.getIsFeedback()==1){
+            model.addAttribute("isFeedback", "是");
+        }else if(clientComplaints.getIsFeedback()==2){
+            model.addAttribute("isFeedback", "否");
+        }
+
+		if (clientComplaints.getFeedbackFode() == 0){
+			clientComplaints.setContactInformation("暂无");
+		}
+
+        if (clientComplaints.getObjectId() == 0){
+            clientComplaints.setShopName("所有商家");
+        }
+
+		return "install/clientComplaintsForm";
+    }
+}

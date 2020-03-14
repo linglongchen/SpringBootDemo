@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>修改密码</title>
+
+	<head th:include="init :: init"></head>
+	<script type="text/javascript">
+
+        //提交表单
+        function validForm(){
+            $('#signupForm').validate({
+                submitHandler:function(form){
+                    loading();
+                    form.action = '[[${ctx}]]/system/user/savePwd';
+                    form.submit();
+                }
+            });
+            $('#signupForm').submit();
+        }
+	</script>
+</head>
+<body class="gray-bg">
+<div class="wrapper animated fadeInRight">
+	<div class="ibox-content">
+		<div class="row">
+			<form id="signupForm" class="form-horizontal m-t">
+				<div class="form-group">
+					<label class="col-xs-4 control-label"><i class="required">*</i>请输入旧密码：</label>
+					<div class="col-xs-6">
+						<input name="password" class="form-control" placeholder="请输入旧密码" type="password" required  maxlength="10">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-4 control-label"><i class="required">*</i>请输入新密码：</label>
+					<div class="col-xs-6">
+						<input name="newPassWord" class="form-control" placeholder="请输入新密码" type="password" required  maxlength="10">
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+</body>
+</html>

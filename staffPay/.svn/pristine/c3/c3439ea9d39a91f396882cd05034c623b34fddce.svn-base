@@ -1,0 +1,7 @@
+package com.chunqiu.mrjuly.modules.hotelinfo.dao;
+
+import com.chunqiu.mrjuly.common.persistence.CrudDao;
+import com.chunqiu.mrjuly.modules.hotelinfo.model.HotelUniqueCode1;
+
+public interface HotelUniqueCodeDao extends CrudDao<HotelUniqueCode1, Integer> {
+}

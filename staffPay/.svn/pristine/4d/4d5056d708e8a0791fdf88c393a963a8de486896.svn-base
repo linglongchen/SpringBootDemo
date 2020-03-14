@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>信息发布</title>
+
+    <head th:include="init :: init"></head>
+    <head th:include="init_bootstrap_table :: bootstrap_table"></head>
+    <script type="text/javascript">
+        $(function () {
+            $('#table').bootstrapTable({
+                undefinedText: '',//defined的默认显示文本
+                striped: true,//条纹
+                method: 'get',
+                url: '[[${ctx}]]/platform/notice/list',
+                pagination: true,//显示分页
+                sidePagination: 'server',//定义分页为服务器端分页
+                pageNumber: 1,//起始页数
+                pageSize: 10,//默认显示行数
+                pageList: [20, 50, 100, 200],//可选分页数
+                singleSelect: false,  //true为单选
+                // clickToSelect : true,  //单击选中行
+                toolbar: '#toolbar',
+                height: 'auto',
+                columns: [
+                    {
+                        checkbox: true // 显示复选框
+
+                    },
+                    {
+                        field: 'noticeForm',
+                        title: '发布时间',
+                        halign : 'center',
+                        align : 'center',
+                        width: '25%',
+                        formatter: function(value,row,index){
+                            if (value==1){
+                                return row.createDate;
+                            } else if (value==2){
+                             return row.scheduledReleaseTime
+                            }
+                        }
+                    }, {
+                        field: 'noticeTitle',
+                        title: '标题',
+                        halign : 'center',
+                        align : 'center'
+                    }, {
+                        field: 'noticeContent',
+                        title: '内容',
+                        halign : 'center',
+                        align : 'center',
+                    }, {
+                        field: 'noticeRoll',
+                        title: '首页滚动',
+                        halign : 'center',
+                        align : 'center',
+                        formatter: function(value,row,index){
+                            var _html=value==1?"是":"否";
+                            return _html;
+                        }
+                    }, {
+                        field: 'noticeForm',
+                        title: '发送状态',
+                        halign : 'center',
+                        align : 'center',
+                        formatter : function(value, row, index){
+                            var myDate = new Date();
+                            var oDate1 = new Date(myDate);
+                            var oDate2 = new Date(row.scheduledReleaseTime);
+                            if(oDate2 < oDate1){
+                                value = "已发送";
+                            }else{
+                                value = "未发送";
+                            }
+
+                            return value;
+                        }
+                    },{
+                        field : 'option',
+                        title : '操作',
+                        halign : 'center',
+                        align : 'center',
+                        formatter : function(value, row, index){
+                            var _html = '<ul class="grid_btn_ul">';
+                            var myDate = new Date();
+                            var oDate1 = new Date(myDate);
+                            var oDate2 = new Date(row.scheduledReleaseTime);
+                            if(oDate2 < oDate1){
+                                _html += '<li><a href="javascript:editNotice(' + row.id + ')" class="btn btn-success btn-xs"><i class="fa fa-eye"></i> 查看详情 </a></li>';
+                                _html += '<li><a href="javascript:delBank(' + row.id + ')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> 删除 </a></li>';
+                                _html += '</ul>';
+                            }else{
+                                _html += '<li><a href="javascript:editNotice(' + row.id + ')" class="btn btn-success btn-xs"><i class="fa fa-eye"></i> 查看详情 </a></li>';
+                                _html += '<li><a href="javascript:editDict(' + row.id + ')" class="btn btn-success btn-xs"><i class="fa fa-pencil"></i> 编辑 </a></li>';
+                                _html += '<li><a href="javascript:delBank(' + row.id + ')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> 删除 </a></li>';
+                                _html += '</ul>';
+                            }
+                            return _html;
+                        }
+                    }],
+                onLoadSuccess: function (data) {
+                    if (data.total == 0) {
+                        $('#table').bootstrapTable('removeAll');
+                    }
+                    //禁止bootstrap table中的checkbox加载layui样式
+                    $('.table .bs-checkbox input').each(function () {
+                        $(this).attr("lay-ignore", "true");
+                    });
+
+                    $('.table thead .bs-checkbox .th-inner .layui-form-checkbox').remove();
+                }
+            });
+        });
+
+        $(function () {
+            $('#table1').bootstrapTable({
+                undefinedText: '',//defined的默认显示文本
+                striped: true,//条纹
+                method: 'get',
+                url: '[[${ctx}]]/platform/notice/pageList',
+                pagination: true,//显示分页
+                sidePagination: 'server',//定义分页为服务器端分页
+                pageNumber: 1,//起始页数
+                pageSize: 10,//默认显示行数
+                pageList: [20, 50, 100, 200],//可选分页数
+                singleSelect: false,  //true为单选
+                // clickToSelect : true,  //单击选中行
+                toolbar: '#toolbar',
+                height: 'auto',
+                columns: [
+                    {
+                        checkbox: true // 显示复选框
+
+                    },
+                    {
+                        field: 'createDate',
+                        title: '发布时间',
+                        halign : 'center',
+                        align : 'center'
+                    },{
+                        field: 'circularEndTime',
+                        title: '结束时间',
+                        halign : 'center',
+                        align : 'center'
+                    }, {
+                        field: 'noticeTitle',
+                        title: '标题',
+                        halign : 'center',
+                        align : 'center'
+                    }, {
+                        field: 'noticeContent',
+                        title: '内容',
+                        halign : 'center',
+                        align : 'center',
+                    }, {
+                        field: 'noticeRoll',
+                        title: '首页滚动',
+                        halign : 'center',
+                        align : 'center',
+                        formatter: function(value,row,index){
+                            var _html=value==1?"是":"否";
+                            return _html;
+                        }
+                    }, {
+                        field: '',
+                        title: '发送状态',
+                        halign : 'center',
+                        align : 'center',
+                        formatter : function(value, row, index){
+                            var _html = '<ul class="grid_btn_ul">';
+                            var myDate = new Date();
+                            var oDate1 = new Date(myDate);
+                            var oDate2 = new Date(row.createDate);
+                            if(oDate2 < oDate1){
+                                _html += '<li>已发送 </li>';
+                                _html += '</ul>';
+                            }else{
+                                _html += '<li> 未发送 </li>';
+                                _html += '</ul>';
+                            }
+                            return _html;
+                        }
+                    },{
+                        field : 'option',
+                        title : '操作',
+                        halign : 'center',
+                        align : 'center',
+                        formatter : function(value, row, index){
+                            var _html = '<ul class="grid_btn_ul">';
+                                _html += '<li><a href="javascript:look(' + row.id + ')" class="btn btn-success btn-xs"><i class="fa fa-eye"></i> 查看详情 </a></li>';
+                                _html += '<li><a href="javascript:delMess(' + row.id + ')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> 删除 </a></li>';
+                                _html += '</ul>';
+                            return _html;
+                        }
+                    }],
+                onLoadSuccess: function (data) {
+                    if (data.total == 0) {
+                        $('#table1').bootstrapTable('removeAll');
+                    }
+                    //禁止bootstrap table中的checkbox加载layui样式
+                    $('.table .bs-checkbox input').each(function () {
+                        $(this).attr("lay-ignore", "true");
+                    });
+
+                    $('.table thead .bs-checkbox .th-inner .layui-form-checkbox').remove();
+                }
+            });
+        });
+
+        $(function () {
+            $('#table2').bootstrapTable({
+                undefinedText: '',//defined的默认显示文本
+                striped: true,//条纹
+                method: 'get',
+                url: '[[${ctx}]]/platform/notice/allList',
+                pagination: true,//显示分页
+                sidePagination: 'server',//定义分页为服务器端分页
+                pageNumber: 1,//起始页数
+                pageSize: 10,//默认显示行数
+                pageList: [20, 50, 100, 200],//可选分页数
+                singleSelect: false,  //true为单选
+                // clickToSelect : true,  //单击选中行
+                toolbar: '#toolbar',
+                height: 'auto',
+                columns: [
+                    {
+                        checkbox: true // 显示复选框
+
+                    },
+                    {
+                        field: 'createDate',
+                        title: '发布时间',
+                        halign : 'center',
+                        align : 'center'
+                    },{
+                        field: 'noticeContent',
+                        title: '内容',
+                        halign : 'center',
+                        align : 'center',
+                    }, {
+                        field: 'roomNumber',
+                        title: '房间号',
+                        halign : 'center',
+                        align : 'center'
+                    }, {
+                        title: '发送状态',
+                        halign : 'center',
+                        align : 'center',
+                        formatter : function(value, row, index){
+                            var _html = '<ul class="grid_btn_ul">';
+                            var myDate = new Date();
+                            var oDate1 = new Date(myDate);
+                            var oDate2 = new Date(row.createDate);
+                            if(oDate2 < oDate1){
+                                _html += '<li>已发送 </li>';
+                                _html += '</ul>';
+                            }else{
+                                _html += '<li> 未发送 </li>';
+                                _html += '</ul>';
+                            }
+                            return _html;
+                        }
+                    },{
+                        field : 'option',
+                        title : '操作',
+                        halign : 'center',
+                        align : 'center',
+                        formatter : function(value, row, index){
+                            var _html = '<ul class="grid_btn_ul">';
+                            _html += '<li><a href="javascript:details(' + row.id + ')" class="btn btn-success btn-xs"><i class="fa fa-eye"></i> 查看详情 </a></li>';
+                            _html += '<li><a href="javascript:delNew(' + row.id + ')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> 删除 </a></li>';
+                            _html += '</ul>';
+                            return _html;
+                        }
+                    }],
+                onLoadSuccess: function (data) {
+                    if (data.total == 0) {
+                        $('#table1').bootstrapTable('removeAll');
+                    }
+                    //禁止bootstrap table中的checkbox加载layui样式
+                    $('.table .bs-checkbox input').each(function () {
+                        $(this).attr("lay-ignore", "true");
+                    });
+
+                    $('.table thead .bs-checkbox .th-inner .layui-form-checkbox').remove();
+                }
+            });
+        });
+
+        //公告新增
+        function addBank(){
+            layer.open({
+                type: 2,
+                title : '新增信息',
+                area : ['60%','90%'],
+                content: '[[${ctx}]]/platform/notice/form', //这里content是一个DOM
+                btn : ['保存','预览', '关闭'],
+                closeBtn : '1',
+                shadeClose : false,//点击遮罩层关闭
+                shade : [0.8, '#393D49'],
+                yes : function(index, layero){
+                    var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                    iframeWin.validForm();
+
+                },
+                btn2 : function (index, layero) {
+                    var iframeWin2 = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                    iframeWin2.demo();
+                    return false;
+                },cancel : function(index, layero) {
+                    exitBombSow(index);
+                    return false;
+                }
+            });
+        }
+
+        //通知新增
+        function addInform(){
+            layer.open({
+                type: 2,
+                title : '新增信息',
+                area : ['60%','90%'],
+                content: '[[${ctx}]]/platform/notice/formList', //这里content是一个DOM
+                btn : ['保存','预览','返回', '关闭'],
+                closeBtn : '1',
+                shadeClose : false,//点击遮罩层关闭
+                shade : [0.8, '#393D49'],
+                yes : function(index, layero){
+                    var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                    iframeWin.validForm();
+                    refreshTable1();
+                },
+                btn2 : function (index, layero) {
+                    var iframeWin2 = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                    iframeWin2.demo();
+                    return false;
+                },
+                btn3 : function (index, layero) {
+                    var iframeWin2 = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                    iframeWin2.dem();
+                    return false;
+                },cancel : function(index, layero) {
+                    exitBombSow(index);
+                    return false;
+                }
+            });
+        }
+
+        //消息新增
+        function addMessage(){
+            layer.open({
+                type: 2,
+                title : '新增信息',
+                area : ['60%','90%'],
+                content: '[[${ctx}]]/platform/notice/messageForm', //这里content是一个DOM
+                btn : ['保存','预览', '关闭'],
+                closeBtn : '1',
+                shadeClose : false,//点击遮罩层关闭
+                shade : [0.8, '#393D49'],
+                yes : function(index, layero){
+                    var iframeWin1 = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                    iframeWin1.validForm1();
+                    refreshTable2();
+                },
+                btn2 : function (index, layero) {
+                    var iframeWin2 = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                    iframeWin2.demo();
+                    return false;
+                },cancel : function(index, layero) {
+                    exitBombSow(index);
+                    return false;
+                }
+            });
+        }
+
+        //编辑公告
+        function editDict(id){
+            layer.open({
+                type: 2,
+                title : '编辑信息',
+                area : ['60%','90%'],
+                content: '[[${ctx}]]/platform/notice/form?id=' + id, //这里content是一个DOM
+                btn : ['保存', '关闭'],
+                closeBtn : '1',
+                shadeClose : false,//点击遮罩层关闭
+                shade : [0.8, '#393D49'],
+                yes : function(index, layero){
+                    var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                    iframeWin.validForm();
+                },btn2 : function(index, layero){
+                    exitBombSow(index);
+                    return false;
+                },cancel : function(index, layero) {
+                    exitBombSow(index);
+                    return false;
+                }
+            });
+        }
+
+        //查看详情
+        function editNotice(id){
+            layer.open({
+                type: 2,
+                title : '查看详情',
+                area : ['60%','90%'],
+                content: '[[${ctx}]]/platform/notice/form1?id=' + id, //这里content是一个DOM
+                btn : ['关闭'],
+                closeBtn : '1',
+                shadeClose : true,//点击遮罩层关闭
+                shade : [0.8, '#393D49'],
+                yes : function(index, layero){
+                    var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                    layer.closeAll('iframe');
+                }
+            });
+        }
+
+        //查看通知详情
+        function look(id){
+            layer.open({
+                type: 2,
+                title : '查看详情',
+                area : ['60%','90%'],
+                content: '[[${ctx}]]/platform/notice/details?id=' + id, //这里content是一个DOM
+                btn : ['关闭'],
+                closeBtn : '1',
+                shadeClose : true,//点击遮罩层关闭
+                shade : [0.8, '#393D49'],
+                yes : function(index, layero){
+                    var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                    layer.closeAll('iframe');
+                }
+            });
+        }
+
+        //查看消息详情
+        function details(id){
+            layer.open({
+                type: 2,
+                title : '查看详情',
+                area : ['60%','90%'],
+                content: '[[${ctx}]]/platform/notice/lookDetails?id=' + id, //这里content是一个DOM
+                btn : ['关闭'],
+                closeBtn : '1',
+                shadeClose : true,//点击遮罩层关闭
+                shade : [0.8, '#393D49'],
+                yes : function(index, layero){
+                    var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                    layer.closeAll('iframe');
+                }
+            });
+        }
+
+        //公告删除
+        function delBank(id){
+            layer.confirm('您确定要删除该信息吗？',function(){
+                parent.loading();
+                $.post('[[${ctx}]]/platform/notice/delete',{
+                    id : id
+                },function(result){
+                    closeLoading();
+                    layer.closeAll();
+                    if(result.success){
+                        showMsgSuccess('删除成功');
+
+                        refreshTable();
+                    }else{
+                        showMsgError(result.msg);
+                    }
+                },'json');
+            });
+
+        }
+        //通知删除
+        function delMess(id){
+            layer.confirm('您确定要删除该信息吗？',function(){
+                parent.loading();
+                $.post('[[${ctx}]]/platform/notice/delete',{
+                    id : id
+                },function(result){
+                    closeLoading();
+                    layer.closeAll();
+                    if(result.success){
+                        showMsgSuccess('删除成功');
+
+                        refreshTable1();
+                    }else{
+                        showMsgError(result.msg);
+                    }
+                },'json');
+            });
+
+        }
+        //消息删除
+        function delNew(id){
+            layer.confirm('您确定要删除该信息吗？',function(){
+                parent.loading();
+                $.post('[[${ctx}]]/platform/notice/delete',{
+                    id : id
+                },function(result){
+                    closeLoading();
+                    layer.closeAll();
+                    if(result.success){
+                        showMsgSuccess('删除成功');
+
+                        refreshTable2();
+                    }else{
+                        showMsgError(result.msg);
+                    }
+                },'json');
+            });
+
+        }
+
+        //批量删除公告信息
+        function batchDel(){
+            var idList = [];
+            var row = $.map($('#table').bootstrapTable('getSelections'), function (row) {
+                idList.push(row.id);
+            });
+            if (idList.length <= 0) {
+                showMsgError("请选择信息");
+                return;
+            }
+
+            layer.confirm('您确定要删除该信息？',function(){
+                parent.loading();
+                $.post('[[${ctx}]]/platform/notice/batchDelete',{
+                    idList : idList.toString()
+                },function(result){
+                    closeLoading();
+                    layer.closeAll();
+                    if(result.success){
+                        showMsgSuccess('删除成功');
+
+                        refreshTable();
+
+                    }else{
+                        showMsgError(result.msg);
+                    }
+                },'json');
+            });
+        }
+
+        //批量删除通知信息
+        function batchDelete(){
+            var idList = [];
+            var row = $.map($('#table1').bootstrapTable('getSelections'), function (row) {
+                idList.push(row.id);
+            });
+            if (idList.length <= 0) {
+                showMsgError("请选择信息");
+                return;
+            }
+
+            layer.confirm('您确定要删除该信息？',function(){
+                parent.loading();
+                $.post('[[${ctx}]]/platform/notice/batchDelete',{
+                    idList : idList.toString()
+                },function(result){
+                    closeLoading();
+                    layer.closeAll();
+                    if(result.success){
+                        showMsgSuccess('删除成功');
+
+                        refreshTable1();
+                    }else{
+                        showMsgError(result.msg);
+                    }
+                },'json');
+            });
+        }
+
+        //批量删除消息
+        function batchDele(){
+            var idList = [];
+            var row = $.map($('#table2').bootstrapTable('getSelections'), function (row) {
+                idList.push(row.id);
+            });
+            if (idList.length <= 0) {
+                showMsgError("请选择信息");
+                return;
+            }
+
+            layer.confirm('您确定要删除该信息？',function(){
+                parent.loading();
+                $.post('[[${ctx}]]/platform/notice/batchDelete',{
+                    idList : idList.toString()
+                },function(result){
+                    closeLoading();
+                    layer.closeAll();
+                    if(result.success){
+                        showMsgSuccess('删除成功');
+
+                        refreshTable2();
+                    }else{
+                        showMsgError(result.msg);
+                    }
+                },'json');
+            });
+        }
+
+        //查询公告发布时间
+        function search() {
+            var param = $('#searchForm').serialize();
+            $('#table').bootstrapTable('refresh', {url: '[[${ctx}]]/platform/notice/list?' + param});
+        }
+
+        //查询通知结束时间
+        function searchInform() {
+            var param = $('#searchForm1').serialize();
+            $('#table1').bootstrapTable('refresh', {url: '[[${ctx}]]/platform/notice/pageList?' + param});
+        }
+
+        //查询消息发送时间
+        function searchMessage() {
+            var param = $('#searchForm2').serialize();
+            $('#table2').bootstrapTable('refresh', {url: '[[${ctx}]]/platform/notice/allList?' + param});
+        }
+    </script>
+    <style type="text/css">
+        .layui-form input[type="checkbox"] {
+            display: block;
+        }
+    </style>
+</head>
+
+<body layadmin-themealias="default">
+<div class="layui-fluid animated fadeInRight">
+    <div class="layui-card">
+        <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+            <ul class="layui-tab-title">
+                <li class="layui-this">发布公告</li>
+                <li>发布通知</li>
+                <li>发送消息</li>
+            </ul>
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show">
+                    <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+                        <div class="layui-form-item form-head">
+                            <form id="searchForm" class="layui-form">
+                                <div class="layui-inline">
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="dateBegin" id="dateBegin" placeholder="请选择开始日期" autocomplete="off" class="layui-input" lay-date="date" lay-format="yyyy-MM-dd" readonly>
+                                    </div>
+                                    <div class="layui-form-mid layui-word-aux" style="float: left"> -</div>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="dateEnd" id="dateEnd" placeholder="请选择结束日期" autocomplete="off" class="layui-input" lay-date="date" lay-format="yyyy-MM-dd" readonly>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <button class="btn btn-primary " type="button" onclick="search()"><i class="fa fa-search"></i>&nbsp;查询</button>
+                                    <button class="btn btn-primary " type="button" data-toggle="modal" onclick="addBank()"><i class="fa fa-plus"></i>&nbsp;新增</button>
+                                </div>
+                            </form>
+                        </div>
+                        <table id="table">
+
+                        </table>
+                        <button class="btn btn-danger " type="button" data-toggle="modal" onclick="batchDel()"><i class="fa fa-times"></i>&nbsp;批量删除</button>
+                    </div>
+                </div>
+                <div class="layui-tab-item">
+                    <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+                        <div class="layui-form-item form-head">
+                            <form id="searchForm1" class="layui-form">
+                                <div class="layui-inline">
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="dateBegin" id="dateBegin1" placeholder="请选择开始日期" autocomplete="off" class="layui-input" lay-date="date" lay-format="yyyy-MM-dd" readonly>
+                                    </div>
+                                    <div class="layui-form-mid layui-word-aux" style="float: left"> -</div>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="dateEnd" id="dateEnd1" placeholder="请选择结束日期" autocomplete="off" class="layui-input" lay-date="date" lay-format="yyyy-MM-dd" readonly>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <button class="btn btn-primary " type="button" onclick="searchInform()"><i class="fa fa-search"></i>&nbsp;查询</button>
+                                    <button class="btn btn-primary " type="button" data-toggle="modal" onclick="addInform()"><i class="fa fa-plus"></i>&nbsp;新增</button>
+                                    </div>
+                            </form>
+                        </div>
+                        <table id="table1">
+
+                        </table>
+                        <button class="btn btn-danger " type="button" data-toggle="modal" onclick="batchDelete()"><i class="fa fa-times"></i>&nbsp;批量删除</button>
+                    </div>
+                </div>
+                <div class="layui-tab-item">
+                    <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+                        <div class="layui-form-item form-head">
+                            <form id="searchForm2" class="layui-form">
+                                <div class="layui-inline">
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="dateBegin" id="dateBegin2" placeholder="请选择开始日期" autocomplete="off" class="layui-input" lay-date="date" lay-format="yyyy-MM-dd" readonly>
+                                    </div>
+                                    <div class="layui-form-mid layui-word-aux" style="float: left"> -</div>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="dateEnd" id="dateEnd2" placeholder="请选择结束日期" autocomplete="off" class="layui-input" lay-date="date" lay-format="yyyy-MM-dd" readonly>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <button class="btn btn-primary " type="button" onclick="searchMessage()"><i class="fa fa-search"></i>&nbsp;查询</button>
+                                    <button class="btn btn-primary " type="button" data-toggle="modal" onclick="addMessage()"><i class="fa fa-plus"></i>&nbsp;新增</button>
+                                </div>
+                            </form>
+                        </div>
+                        <table id="table2">
+
+                        </table>
+                        <button class="btn btn-danger " type="button" data-toggle="modal" onclick="batchDele()"><i class="fa fa-times"></i>&nbsp;批量删除</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    layui.use('element', function(){
+        var $ = layui.jquery
+            ,element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
+    });
+</script>
+</body>
+</html>

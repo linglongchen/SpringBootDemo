@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>商品管理</title>
+
+	<head th:include="init :: init"></head>
+
+	<script type="text/javascript">
+
+        $(function(){
+            uploadImg1();
+            $("#departmentTypeId").val("[[${departmentGoodsInfo?.departmentTypeId }]]");
+            $("#departmentTypeId").trigger("chosen:updated");
+
+            $("#departmentId").val("[[${departmentGoodsInfo?.departmentId }]]");
+            $("#departmentId").trigger("chosen:updated");
+
+            $("#stock").val("[[${departmentGoodsInfo?.stock }]]");
+            $("#stock").trigger("chosen:updated");
+
+            $("#departmentGoodsLanguage").val("[[${departmentGoodsInfo?.departmentGoodsLanguage }]]");
+            $("#departmentGoodsLanguage").trigger("chosen:updated");
+
+            var text = "[[${departmentGoodsInfo?.serviceMode }]]";
+            if (text != ""){
+                $("[name='serviceMode'][value="+text+"]").attr("checked", "checked");
+                $(":radio[name='type'][value='" + text + "']").attr("checked", "checked");
+			}
+
+
+            $("#serviceModeClick").click(function(){
+                if ($("input[type='radio']:checked").val() == null){
+                    showMsgError("请选择需要修改的服务方式");
+                    return;
+                }else {
+                    $("#mode").css("display","block");
+                }
+            });
+
+			$("#serviceModeCancel").click(function(){
+				$("#serviceModeCancel").parent().css("display","none");
+			})
+
+            $("#serviceModeOk").click(function(){
+                var html = "";
+                var serviceMode =  $("#serviceModeStr").val();
+                if (serviceMode == ""){
+					showMsgError("请输入需要修改的服务内容");
+					return;
+				}
+                $.ajax({
+                    url:"[[${ctx}]]/hotelinfo/departmentGoodsInfo/updateServiceMode",    //请求的url地址
+                    dataType:"json",   //返回格式为json
+                    async:true,//请求是否异步，默认为异步，这也是ajax重要特性
+                    data:{
+                        "id":$("input[type='radio']:checked").val(),
+						"serviceMode":serviceMode
+					},    //参数值
+                    type:"POST",   //请求方式
+                    success:function(req){
+                       for (var i = 0;i<req.length;i++){
+                           $("#type"+req[i].id).attr("title",req[i].serviceMode);
+                           $("#type"+req[i].id).next().children().next().text(req[i].serviceMode);
+					   }
+                    }
+                });
+
+
+            });
+			
+			$(document).on("change",'select#departmentId',function(){
+				console.log($(this).val());
+				var did = $(this).val();
+				$.ajax({
+                    url:"[[${ctx}]]/hotelinfo/departmentGoodsInfo/getCategoriesByDepartment",    //请求的url地址
+                    dataType:"json",   //返回格式为json
+                    async:true,//请求是否异步，默认为异步，这也是ajax重要特性
+                    data:{
+                        "departmentId":did
+					},    //参数值
+                    type:"POST",   //请求方式
+                    success:function(result){
+						$("#departmentTypeId").empty();
+						for(var i = 0; i < result.length; i++) {
+							console.info(result[i].id);
+							$("#departmentTypeId").append("<option value='"+ result[i].id +"'>"+ result[i].categoryName +"</option>");  //为Select追加一个Option(下拉项)
+						}
+						$("#departmentTypeId").trigger("chosen:updated");
+                    }
+                });
+			});
+        })
+		//提交表单
+		function validForm(){
+            //商品图片
+            var departmentGoodsPicStr = '';
+            jQuery('.departmentGoodsPic').each(function(key,value){
+				departmentGoodsPicStr +=$(this).val()+",";
+            });
+            departmentGoodsPicStr =departmentGoodsPicStr.substring(0, departmentGoodsPicStr.lastIndexOf(','));
+			$("#departmentGoodsPic").val(departmentGoodsPicStr);
+			//商品详情图片
+            var departmentGoodsPicInfoStr = '';
+            jQuery('.departmentGoodsInfoPic').each(function(key,value){
+                	departmentGoodsPicInfoStr +=$(this).val()+",";
+            });
+            departmentGoodsPicInfoStr =departmentGoodsPicInfoStr.substring(0, departmentGoodsPicInfoStr.lastIndexOf(','));
+            $("#departmentGoodsInfoPic").val(departmentGoodsPicInfoStr);
+
+            //选择框chekcbox
+			$("#serviceMode").val($("input[type='radio']:checked").val());
+
+			$('#signupForm').validate({
+		        submitHandler:function(form){
+		            loading();
+		            form.action = '[[${ctx}]]/hotelinfo/departmentGoodsInfo/saveDepartmentGoodsInfo';
+					form.submit();
+		        }
+			});
+		    $('#signupForm').submit();
+		}
+
+
+
+        layui.use('upload', function(){
+            var upload = layui.upload;
+            //执行实例
+            var uploadInst = upload.render({
+                elem: '#test2' //绑定元素
+                ,accept:'file'
+                ,url: '[[${ctx}]]/upload/springUpload' //上传接口
+                ,done: function(res){
+                	if ($("#departmentGoodsVideo").val()!=""){
+						$.post('[[${ctx}]]/upload/deleteFile', {
+							file: $("#departmentGoodsVideo").val()
+						}, function (result) {
+						});
+					}
+                    //上传完毕回调
+                    if (res.success == true){
+                        showMsgSuccess('上传成功');
+                    }else {
+                        showMsgError('视频格式不正确');
+                        return;
+					}
+                    $("#departmentGoodsVideo").val(res.data[1]);
+                    $('#test2').val(res.data[1]);
+                    $("#videos").attr("src",res.data[0]);
+                }
+                ,error: function(){
+                    //请求异常回调
+                    if (res.success!=true){
+                        showMsgError('上传失败');
+                        return;
+                    }
+                }
+            });
+        });
+
+		function btn2From(){
+			var departmentGoodsPic = $("input[class='departmentGoodsPic']").val();
+			console.log(departmentGoodsPic)
+			if (departmentGoodsPic != ""){
+				$.post('[[${ctx}]]/upload/deleteFile', {
+					file: departmentGoodsPic
+				}, function (result) {
+				});
+			}
+			$('.departmentGoodsInfoPic').each(function (index,domEle){
+					if ($(domEle).val()!=""){
+						$.post('[[${ctx}]]/upload/deleteFile', {
+							file: $(domEle).val()
+						}, function (result) {
+						});
+					}
+			});
+			if ($("#departmentGoodsVideo").val()!=""){
+				$.post('[[${ctx}]]/upload/deleteFile', {
+					file: $("#departmentGoodsVideo").val()
+				}, function (result) {
+				});
+			}
+		}
+
+		function cancelFrom(){
+			var departmentGoodsPic = $("input[class='departmentGoodsPic']").val();
+			if (departmentGoodsPic != ""){
+				$.post('[[${ctx}]]/upload/deleteFile', {
+					file: departmentGoodsPic
+				}, function (result) {
+				});
+			}
+			$('.departmentGoodsInfoPic').each(function (index,domEle){
+				if ($(domEle).val()!=""){
+					$.post('[[${ctx}]]/upload/deleteFile', {
+						file: $(domEle).val()
+					}, function (result) {
+					});
+				}
+			});
+			if ($("#departmentGoodsVideo").val()!=""){
+				$.post('[[${ctx}]]/upload/deleteFile', {
+					file: $("#departmentGoodsVideo").val()
+				}, function (result) {
+				});
+			}
+		}
+
+
+
+		//加载layui的upload模块，（图片上传）
+        function uploadImg1() {
+            layui.use(['upload'],function () {
+                var upload = layui.upload;
+                $('form img[lay-imgs]').each(function () {
+                    var _this = this;
+                    var _click = $(_this).attr('lay-imgs');
+                    if(_click != null && _click != undefined && _click != ''){
+                        var $id = $(_this).attr('id'), $name = _click;
+                        //普通图片上传
+                        upload.render({
+                            elem: '#' + $id
+                            ,url: '[[${ctx}]]/upload/ossUploadImg'
+                            ,accept: 'images'
+                            ,done: function(res){
+								if ($('input[name="' + $id + '"]').val() != ""){
+									$.post('[[${ctx}]]/upload/deleteFile', {
+										file: $('input[name="' + $id + '"]').val()
+									}, function (result) {
+									});
+								}
+
+                                //如果上传失败
+                                if(res.success){
+									$('#' + $id).attr('src', res.data[0]);
+									$('input[name="' + $name + '"]').val(res.data[1]);
+                                }else{
+                                    showMsgWarn(res.msg);
+                                }
+                            }
+                        });
+                    }
+                });
+
+                upload.render({
+                    elem: '#uploadBtn'
+                    ,url: '[[${ctx}]]/upload/uploadFile'
+                    ,accept: 'file'
+                    ,done: function(res){
+                        //如果上传失败
+                        if(res.success){
+                            showMsgSuccess("上传成功");
+                            $('input[name="tempUrl"]').val(res.data[0]);
+                            $('a[name="atempUrl"]').attr("href",res.data[0]);
+                        }else{
+                            showMsgWarn(res.msg);
+                        }
+                    }
+                });
+            });
+        }
+	</script>
+
+	<style type="text/css">
+		.pic :nth-last-child(4){
+			margin-left: 120px;
+		}
+
+	</style>
+</head>
+<body class="gray-bg">
+	<div class="wrapper animated fadeInRight">
+    	<div class="ibox-content">
+    		<div class="row">
+    			<form id="signupForm" class="layui-form form-horizontal m-t">
+    			<input type="hidden" name="id" th:value="${departmentGoodsInfo?.id}">
+					<div class="div-hidden layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<h3 style="color: red" >* 商品图和商品详情图分辨率建议580*580!</h3>
+					</div>
+					<div class="div-hidden layui-form-item col-lg-6 col-sm-12 col-xs-12 pic">
+						<label class="col-xs-3 layui-form-label ">商品图：</label>
+						<div class="col-xs-6" style="width: 27%;float: left;margin-top:10px " th:each="departmentGoodsInfo,userStat:${departmentGoodsInfo.departmentGoodsPicList}">
+							<img alt="image"  th:id="${userStat.index}"  title="点击上传商品图" style="cursor:pointer;width:192px;height:192px;"  class=""
+								 th:src="${departmentGoodsInfo}" th:lay-imgs="${userStat.index}" >
+						<input  class="departmentGoodsPic" type="hidden" th:name="${userStat.index}" th:value="${departmentGoodsInfo}">
+						</div>
+						<input id ="departmentGoodsPic" type="hidden" name="departmentGoodsPic">
+				    </div>
+					<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12 pic">
+						<label class="col-xs-3 layui-form-label">商品详情图：</label>
+						<div class="col-xs-6 pics" style="width: 27%;float: left;margin-top:10px;" th:each="departmentGoodsPicInfoList,userStat:${departmentGoodsInfo.departmentGoodsPicInfoList}">
+							<img alt="image"  th:id="${userStat.index+10}"  title="点击上传详情图" style="cursor:pointer;width:192px;height:192px;"  class=""
+								 th:src="${departmentGoodsPicInfoList}" th:lay-imgs="${userStat.index+10}">
+							<input  class="departmentGoodsInfoPic" type="hidden" th:name="${userStat.index+10}" th:value="${departmentGoodsPicInfoList}">
+						</div>
+						<input id ="departmentGoodsInfoPic" type="hidden" name="departmentGoodsInfoPic">
+					</div>
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">商品名：</label>
+				        <div class="col-xs-7">
+    						<input required name="departmentGoodsName" class="layui-input " th:value="${departmentGoodsInfo?.departmentGoodsName }" placeholder="请输入商品名" autocomplete="off" type="text"  maxlength="255">
+    					</div>
+				    </div>
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">数量：</label>
+				        <div class="col-xs-7">
+    						<input required name="departmentGoodsNum" oninput = "value=value.replace(/[^\d]/g,'')" class="layui-input digits" th:value="${departmentGoodsInfo?.departmentGoodsNum }" placeholder="请输入数量" autocomplete="off" type="text"  maxlength="11">
+    					</div>
+				    </div>
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">所属语言：</label>
+				        <div class="col-xs-6">
+							<select required id="departmentGoodsLanguage" th:value="${departmentGoodsInfo?.departmentGoodsLanguage }"  name="departmentGoodsLanguage" data-placeholder="请选择语言" class="chosen-select-deselect form-control layui-input">
+								<option value="1">中</option>
+								<option value="2">英</option>
+								<option value="3">德</option>
+								<option value="4">法</option>
+								<option value="5">意</option>
+								<option value="6">日</option>
+								<option value="7">韩</option>
+								<option value="8">拉丁</option>
+								<option value="9">阿拉伯</option>
+							</select>
+    					</div>
+				    </div>
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">价格：</label>
+				        <div class="col-xs-7">
+    						<input required name="departmentGoodsPrice" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.]/g,'')" class="layui-input" th:value="${departmentGoodsInfo?.departmentGoodsPrice }" placeholder="请输入价格" autocomplete="off" type="text" >
+    					</div>
+				    </div>
+				    <div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">部门：</label>
+				        <div class="col-xs-6">
+    						<select required name="departmentId"  id ="departmentId" th:value="${departmentGoodsInfo?.departmentId }" data-placeholder="请输入部门" class="chosen-select-deselect form-control layui-input">
+								<option></option>
+								<option th:each="departmentInfoListList:${departmentInfoListList}" th:value="${departmentInfoListList.id}" th:text="${departmentInfoListList.departmentName}"></option>
+							</select>
+    					</div>
+				    </div>
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">类别:</label>
+				        <div class="col-xs-6">
+    						<select required name="departmentTypeId" id="departmentTypeId"  th:value="${departmentGoodsInfo?.departmentTypeId }" data-placeholder="请输入类别" class="chosen-select-deselect form-control layui-input">
+								<option></option>
+								<option th:each="departmentCategoriesList:${departmentCategoriesList}" th:value="${departmentCategoriesList.id}" th:text="${departmentCategoriesList.categoryName}"></option>
+							</select>
+    					</div>
+				    </div>
+					<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+					<label class="col-xs-3 layui-form-label">服务方式：</label>
+					<div class="col-xs-7">
+						<input required type="hidden" id="serviceMode" name = "serviceMode" th:value="${departmentGoodsInfo?.serviceMode}">
+						<!--<div id="serviceModeList">-->
+							<input  th:each="serviceMode:${serviceMode }" th:value="${serviceMode.id }" th:title="${serviceMode.serviceMode }"  type="radio" name="type"   th:id="'type'+${serviceMode.id }" th:lay-filter="'serviceMode1'+${serviceMode.id }">
+					<!--	</div>-->
+						<button style="position: absolute;" id="serviceModeClick" class="btn btn-primary " type="button" data-toggle="modal" >自定义命名</button>
+						<div id="mode" style="display: none">
+							<input id="serviceModeStr"  style="width: 200px;margin-top: 12px;" type="text" name="serviceMode"  autocomplete="off" placeholder="请输入服务方式" required class="layui-input">
+							<button id="serviceModeOk" style="left: 240px; position: absolute;bottom: 4px;"  class="btn btn-primary " type="button" data-toggle="modal" >确定</button>
+							<button id="serviceModeCancel" style="left: 240px; position: absolute;bottom: 4px;margin-left: 59px;"  class="btn btn-primary " type="button" data-toggle="modal" >取消</button>
+						</div>
+					</div>
+					</div>
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">库存：</label>
+				        <div class="col-xs-6">
+							<select required id="stock" th:value="${departmentGoodsInfo?.stock }"  name="stock" data-placeholder="请输入库存" class="chosen-select-deselect form-control layui-input">
+								<option value="1">售罄</option>
+								<option value="2">有货</option>
+							</select>
+						</div>
+				    </div>
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">商品视频：</label>
+
+				        <div class="col-xs-12" >
+							<input  type="hidden" id="departmentGoodsVideo" th:value="${departmentGoodsInfo?.departmentGoodsVideo}">
+							<video  id="videos" th:src="${departmentGoodsInfo?.departmentGoodsVideo}" controls="controls"></video>
+    						<input   style="cursor:pointer" th:value="${departmentGoodsInfo?.departmentGoodsVideo}" id="test2" name="departmentGoodsVideo" class="layui-input"   placeholder="上传视频" autocomplete="off" type="text"  maxlength="255">
+							<b style="color: red">（*视频建议上传 mp4，rm，rmvb，mov，mtv，avi，3gp，amv，dmv，flv 的格式!）</b>
+    					</div>
+				    </div>
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label required class="col-xs-3 layui-form-label" style="width: 130px">商品文字描述：</label>
+				        <div class="col-xs-6">
+							<textarea th:text="${departmentGoodsInfo?.departmentGoodsDescribe }" style="width: 555px; height: 279px;" name="departmentGoodsDescribe" autocomplete="off"  placeholder="请输入商品文字描述" required class="layui-input">
+							</textarea>
+						</div>
+				    </div>
+
+    			</form>
+    		</div>
+    	</div>
+    </div>
+</body>
+</html>

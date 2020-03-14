@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>广告位价格管理</title>
+
+	<head th:include="init :: init"></head>
+
+	<script type="text/javascript">
+		function inputnum(obj,val){
+			obj.value = obj.value.replace(/[^\d.]/g,""); //清除"数字"和"."以外的字符
+			obj.value = obj.value.replace(/^\./g,""); //验证第一个字符是数字
+			obj.value = obj.value.replace(/\.{2,}/g,""); //只保留第一个, 清除多余的
+			obj.value = obj.value.replace(".","$#$").replace(/\./g,"").replace("$#$",".");
+			obj.value = obj.value.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3'); //只能输入两个小数
+		}
+		//提交表单
+		function validForm(){
+			$('#signupForm').validate({
+		        submitHandler:function(form){
+		            loading();
+		            form.action = '[[${ctx}]]/lyhoteladvertprice/lyHotelAdvertPrice/saveLyHotelAdvertPrice';
+					form.submit();
+		        }
+			});
+		    $('#signupForm').submit();
+		}
+	</script>
+</head>
+<body class="gray-bg">
+	<div class="wrapper animated fadeInRight">
+    	<div class="ibox-content">
+    		<div class="row">
+    			<form id="signupForm" class="layui-form form-horizontal m-t">
+    			<input type="hidden" name="id" th:value="${lyHotelAdvertPrice.id}">
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">图文竞拍价(元)：</label>
+				        <div class="col-xs-6">
+    						<input required name="picturePrice" class="layui-input"  oninput="inputnum(this)" th:value="${lyHotelAdvertPrice.picturePrice }" placeholder="请输入图文竞拍价" autocomplete="off" type="text" >
+    					</div>
+				    </div>
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">视频竞拍价(元)：</label>
+				        <div class="col-xs-6">
+    						<input required name="videoPrice" class="layui-input"  oninput="inputnum(this)" th:value="${lyHotelAdvertPrice.videoPrice }" placeholder="请输入视频竞拍价" autocomplete="off" type="text" >
+    					</div>
+				    </div>
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">图文一口价(元)：</label>
+				        <div class="col-xs-6">
+    						<input required name="pictureTotalPrice" class="layui-input"  oninput="inputnum(this)" th:value="${lyHotelAdvertPrice.pictureTotalPrice }" placeholder="请输入图文一口价" autocomplete="off" type="text" >
+    					</div>
+				    </div>
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">视频一口价(元)：</label>
+				        <div class="col-xs-6">
+    						<input required name="videoTotalPrice" class="layui-input" oninput="inputnum(this)" th:value="${lyHotelAdvertPrice.videoTotalPrice }" placeholder="请输入视频一口价" autocomplete="off" type="text" >
+    					</div>
+				    </div>
+    			</form>
+    		</div>
+    	</div>
+    </div>
+</body>
+</html>

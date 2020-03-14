@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>广告主管理管理</title>
+
+	<head th:include="init :: init"></head>
+
+	<script type="text/javascript">
+
+		//提交表单
+		function validForm(){
+			$('#signupForm').validate({
+		        submitHandler:function(form){
+		            loading();
+		            form.action = '[[${ctx}]]/advertisement/advertiserMasterInfo/saveAdvertiserMasterInfo';
+					form.submit();
+		        }
+			});
+		    $('#signupForm').submit();
+		}
+	</script>
+</head>
+<body class="gray-bg">
+	<div class="wrapper animated fadeInRight">
+    	<div class="ibox-content">
+    		<div class="row">
+    			<form id="signupForm" class="layui-form form-horizontal m-t">
+    			<input type="hidden" name="id" th:value="${advertiserMasterInfo?.id}">
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">广告主编号：</label>
+				        <div class="col-xs-6">
+    						<input name="advertiserNumber" class="layui-input" th:value="${advertiserMasterInfo?.advertiserNumber }" placeholder="请输入广告主编号" autocomplete="off" type="text"  maxlength="255">
+    					</div>
+				    </div>
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">经营有效期：</label>
+				        <div class="col-xs-6">
+    						<input  type="text" id="validityTime" name="validityTime" autocomplete="off" class="layui-input" th:value="${#dates.format(advertiserMasterInfo?.validityTime, 'yyyy-MM-dd')}"
+    								placeholder="请选择经营有效期" lay-date="date" lay-format="yyyy-MM-dd">
+    					</div>
+				    </div>
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">营业执照：</label>
+				        <div class="col-xs-6">
+							<img th:src="${advertiserMasterInfo?.businessLicense }" style="height: 200px;width: 300px">
+    						<!--<input name="businessLicense" class="layui-input" th:value="" placeholder="请输入营业执照" autocomplete="off" type="text"  maxlength="255">-->
+    					</div>
+				    </div>
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">企业编号：</label>
+				        <div class="col-xs-6">
+    						<input name="enterpriseNumber" class="layui-input" th:value="${advertiserMasterInfo?.enterpriseNumber }" placeholder="请输入企业编号" autocomplete="off" type="text"  maxlength="20">
+    					</div>
+				    </div>
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">企业名称：</label>
+				        <div class="col-xs-6">
+    						<input name="advertiserName" class="layui-input" th:value="${advertiserMasterInfo?.advertiserName }" placeholder="请输入企业名称" autocomplete="off" type="text"  maxlength="255">
+    					</div>
+				    </div>
+    			</form>
+    		</div>
+    	</div>
+    </div>
+</body>
+</html>

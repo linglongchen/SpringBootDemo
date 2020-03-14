@@ -1,0 +1,22 @@
+package com.chunqiu.mrjuly.modules.install.dao;
+
+import com.chunqiu.mrjuly.common.persistence.CrudDao;
+import com.chunqiu.mrjuly.modules.install.model.LotteryRules;
+
+import java.util.List;
+
+/**
+ * 抽奖规则预设
+ */
+public interface LotteryRulesDao extends CrudDao<LotteryRules, Integer>{
+
+    /**
+     * 查找所有的数据
+     * @return
+     */
+    List<LotteryRules> getAll(Integer id);
+
+    /*int insert1(LotteryRules lotteryRules);
+    int insert2(LotteryRules lotteryRules);*/
+
+}

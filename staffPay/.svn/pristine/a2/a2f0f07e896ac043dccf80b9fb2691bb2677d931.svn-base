@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>意见与建议</title>
+	<link href="https://cdn.staticfile.org/twitter-bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+	<head th:include="init :: init"></head>
+	<head th:include="init_bootstrap_table :: bootstrap_table"></head>
+
+	<script type="text/javascript">
+
+	</script>
+</head>
+<body layadmin-themealias="default">
+<div class="layui-fluid animated fadeInRight">
+	<div class="layui-card">
+		<div class="layui-form layui-card-header layuiadmin-card-header-auto">
+			<div class="layui-form-item form-head">
+				<table class="table">
+
+					<tr>
+						<th>激活号</th>
+						<td name="feedbackRoom" th:text="${clientComplaints.feedbackRoom}"></td>
+					</tr>
+					<tr>
+						<th>投诉类别</th>
+						<td name="fdBackType.name" th:text="${clientComplaints.name}" ></td>
+					</tr>
+					<tr>
+						<th>投诉对象</th>
+						<td name="shopInfo.shopName" th:text="${clientComplaints.shopName}"></td>
+					</tr>
+					<tr>
+						<th>投诉内容</th>
+						<td name="complaintContent" th:text="${clientComplaints.complaintContent}"></td>
+					</tr>
+					<tr>
+						<th>是否需要反馈处理</th>
+						<td name="isFeedback" th:text="${isFeedback}"></td>
+					</tr>
+					<tr>
+						<th>手机号/邮箱</th>
+						<td name="contactInformation" th:text="${clientComplaints.contactInformation}"  ></td>
+					</tr>
+
+				</table>
+
+			</div>
+	</div>
+</div>
+</body>
+</html>

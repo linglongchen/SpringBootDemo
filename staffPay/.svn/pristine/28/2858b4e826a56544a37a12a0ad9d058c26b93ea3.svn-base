@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>查看详情</title>
+	<link href="https://cdn.staticfile.org/twitter-bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+	<head th:include="init :: init"></head>
+	<head th:include="init_bootstrap_table :: bootstrap_table"></head>
+
+	<script type="text/javascript">
+
+	</script>
+</head>
+<body layadmin-themealias="default">
+<div class="layui-fluid animated fadeInRight">
+	<div class="layui-card">
+		<div class="layui-form layui-card-header layuiadmin-card-header-auto">
+			<div class="layui-form-item form-head">
+
+
+
+			<table class="table">
+
+				<tr>
+					<th>订单编号</th>
+					<td name="orderSn" th:text="${customerOrder.orderSn}"></td>
+				</tr>
+				<tr>
+					<th>所属酒店</th>
+					<td name="hotelInfo.hotelName" th:text="${customerOrder.hotelInfo.hotelName}" ></td>
+				</tr>
+				<tr>
+					<th>下单房号</th>
+					<td name="orderRoom" th:text="${customerOrder.orderRoom}"></td>
+				</tr>
+				<tr>
+					<th>下单时间</th>
+					<td name="createDate" th:text="${#dates.format(customerOrder.createDate,'yyyy-MM-dd HH:mm:ss')}"></td>
+				</tr>
+				<tr>
+					<th>商品</th>
+					<td name="shopGoodsInfo.goodsName" th:text="${customerOrder.shopGoodsInfo.goodsName}"></td>
+				</tr>
+				<tr>
+					<th>数量</th>
+					<td name="goodsNum" th:text="${customerOrder.goodsNum}"></td>
+				</tr>
+				<tr>
+					<th>状态</th>
+					<td name="status" th:text="${status}"></td>
+				</tr>
+
+			</table>
+		</div>
+	</div>
+</div>
+	</div>
+</body>
+</html>

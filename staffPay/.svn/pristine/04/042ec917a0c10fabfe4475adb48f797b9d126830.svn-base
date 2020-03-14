@@ -1,0 +1,44 @@
+package com.chunqiu.mrjuly.modules.advertisingplaytime.model;
+
+import javax.validation.constraints.NotNull;
+
+import com.chunqiu.mrjuly.common.persistence.DataEntity;
+
+/**
+ * 广告滚动时间Entity
+ * @author qj
+ * @version 2019-04-12
+ */
+public class AdvertisingPlayTime extends DataEntity<AdvertisingPlayTime, Integer> {
+	
+	private static final long serialVersionUID = 1L;
+	private Integer fullScreenTime;		// 广告全屏滚动时间
+	private Integer indexScreenTime;		// 首页广告滚动时间
+	
+	public AdvertisingPlayTime() {
+		super();
+	}
+
+	public AdvertisingPlayTime(Integer id){
+		super(id);
+	}
+
+	@NotNull(message="广告全屏滚动时间不能为空")
+	public Integer getFullScreenTime() {
+		return fullScreenTime;
+	}
+
+	public void setFullScreenTime(Integer fullScreenTime) {
+		this.fullScreenTime = fullScreenTime;
+	}
+	
+	@NotNull(message="首页广告滚动时间不能为空")
+	public Integer getIndexScreenTime() {
+		return indexScreenTime;
+	}
+
+	public void setIndexScreenTime(Integer indexScreenTime) {
+		this.indexScreenTime = indexScreenTime;
+	}
+	
+}

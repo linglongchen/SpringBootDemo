@@ -1,0 +1,125 @@
+package com.chunqiu.mrjuly.modules.devicematchinginfo.service;
+
+import javax.annotation.Resource;
+
+import com.chunqiu.mrjuly.common.persistence.CrudService;
+import com.chunqiu.mrjuly.common.vo.Grid;
+import com.chunqiu.mrjuly.common.vo.GridParam;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import org.springframework.stereotype.Service;
+import com.chunqiu.mrjuly.modules.devicematchinginfo.model.DeviceMatchingInfo;
+import com.chunqiu.mrjuly.modules.devicematchinginfo.dao.DeviceMatchingInfoDao;
+
+import java.util.List;
+
+/**
+ * 设备匹配Service
+ * @author 周天
+ * @version 2019-03-11
+ */
+@Service
+public class DeviceMatchingInfoService extends CrudService<DeviceMatchingInfoDao, DeviceMatchingInfo, Integer> {
+	@Resource
+	private DeviceMatchingInfoDao dao;
+
+	/**
+	 * 获取客户端列表数据
+	 * @param deviceMatchingInfo
+	 * @param param
+	 * @return
+	 */
+	public Grid serverSideListById2(DeviceMatchingInfo deviceMatchingInfo, GridParam param) {
+		Grid grid = new Grid();
+		Page page = PageHelper.offsetPage(param.getOffset(), param.getLimit(), true);
+		dao.serverSideListById(deviceMatchingInfo);
+		grid.setRows(page.getResult());
+		grid.setTotal(page.getTotal());
+		return grid;
+	}
+
+	/**
+	 * 获取通讯匹配列表数据
+	 * @param deviceMatchingInfo
+	 * @param param
+	 * @return
+	 */
+	public Grid findCommunicationPage(DeviceMatchingInfo deviceMatchingInfo, GridParam param) {
+		Grid grid = new Grid();
+		Page page = PageHelper.offsetPage(param.getOffset(), param.getLimit(), true);
+		dao.findCommunicationPage(deviceMatchingInfo);
+		grid.setRows(page.getResult());
+		grid.setTotal(page.getTotal());
+		return grid;
+	}
+
+	/**
+	 * 获取服务端详情列表数据
+	 * @param deviceMatchingInfo
+	 * @param param
+	 * @return
+	 */
+	public Grid hotelClientList(DeviceMatchingInfo deviceMatchingInfo, GridParam param){
+		Grid grid = new Grid();
+		Page page = PageHelper.offsetPage(param.getOffset(), param.getLimit(), true);
+		dao.hotelClientList(deviceMatchingInfo);
+		grid.setRows(page.getResult());
+		grid.setTotal(page.getTotal());
+		return grid;
+	}
+
+	/**
+	 * 查询服务端编号
+	 * @param deviceMatchingInfo
+	 * @return
+	 */
+	public List<DeviceMatchingInfo> serverSideListById(DeviceMatchingInfo deviceMatchingInfo) {
+		return dao.serverSideListById(deviceMatchingInfo);
+	}
+
+	/**
+	 * 新增绑定数据
+	 * @param deviceMatchingInfoList
+	 * @return
+	 */
+	public int insertDevice(List<DeviceMatchingInfo> deviceMatchingInfoList){
+		return dao.insertDevice(deviceMatchingInfoList);
+	}
+
+	/**
+	 * 更新绑定状态
+	 * @param deviceMatchingInfoList
+	 * @return
+	 */
+	public int updateDeviceStatus(List<DeviceMatchingInfo> deviceMatchingInfoList){
+		return dao.updateDeviceStatus(deviceMatchingInfoList);
+	}
+
+	/**
+	 * 更新绑定状态
+	 * @param deviceMatchingInfoList
+	 * @return
+	 */
+	public int updateClientStatus(List<DeviceMatchingInfo> deviceMatchingInfoList){
+		return dao.updateClientStatus(deviceMatchingInfoList);
+	}
+
+	/**
+	 * 更改通讯匹配设备状态
+	 * @param deviceMatchingInfo
+	 * @param deviceMatchingInfoList
+	 * @return
+	 */
+	public int updateMatchingStatus(DeviceMatchingInfo deviceMatchingInfo ,List<DeviceMatchingInfo> deviceMatchingInfoList){
+		return dao.updateMatchingStatus(deviceMatchingInfo,deviceMatchingInfoList);
+	}
+
+	/**
+	 * 删除绑定记录
+	 * @param deviceMatchingInfoList
+	 * @return
+	 */
+	public int delClient(List<DeviceMatchingInfo> deviceMatchingInfoList){
+		return dao.delClient(deviceMatchingInfoList);
+	}
+}

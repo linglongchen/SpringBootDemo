@@ -1,0 +1,13 @@
+package com.chunqiu.mrjuly.modules.advertisement.dao;
+
+import com.chunqiu.mrjuly.common.persistence.CrudDao;
+import com.chunqiu.mrjuly.modules.advertisement.model.BanAdvertisementType;
+
+/**
+ * 禁播广告DAO接口
+ * @author chen
+ * @version 2019-04-12
+ */
+public interface BanAdvertisementTypeDao extends CrudDao<BanAdvertisementType, Integer> {
+	
+}

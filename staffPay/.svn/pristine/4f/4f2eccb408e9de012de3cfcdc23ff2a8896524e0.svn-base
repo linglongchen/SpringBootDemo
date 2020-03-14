@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>业务表管理表单</title>
+    <head th:include="init :: init"></head>
+    <!--<head th:include="init_bootstrap_table :: bootstrap_table"></head>-->
+
+    <script type="text/javascript">
+        $(function () {
+           closeLoading();
+
+            layui.use(['table'],function () {
+                var table = layui.table;
+            });
+        });
+
+        //提交表单
+        function validForm(){
+            $('#signupForm').validate({
+                submitHandler:function(form){
+                    //此处填写form提交的地址
+                    loading();
+                    //form.action = '[[${ctx}]]/admin/gen/genTable/form';
+                    form.submit();
+                }
+            });
+            $('#signupForm').submit();
+        }
+    </script>
+
+</head>
+<body class="gray-bg">
+    <div class="wrapper animated fadeInRight">
+        <div class="ibox-content">
+            <div class="row">
+                <form th:if="${#strings.isEmpty(genTable.name)}" th:action="@{/admin/gen/genTable/form}" id="signupForm" class="layui-form form-horizontal m-t">
+                    <div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+                        <label class="col-xs-3 layui-form-label"><i class="required">*</i>表名：</label>
+                        <div class="col-xs-6 layui-form">
+                            <select class="chosen-select form-control layui-input" data-placeholder="请选择数据库表"
+                                    data-value="" th:data-url="@{/admin/gen/genTable/getAllTable}"
+                                    data-key="name" data-label="nameAndComments" name="name" required>
+
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item col-sm-12 col-xs-12">
+                        <div class="layui-input-block">
+                            <button class="btn btn-primary " type="button" onclick="validForm()"><i class="fa fa-share"></i>&nbsp;下一步</button>
+                        </div>
+                    </div>
+                </form>
+
+                <form th:if="${!#strings.isEmpty(genTable.name)}" th:action="@{/admin/gen/genTable/save}" id="signupForm" class="layui-form form-horizontal m-t" method="post">
+                    <div class="layui-card">
+                        <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+                            <div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+                                <label class="col-xs-3 layui-form-label"><i class="required">*</i>表名：</label>
+                                <div class="col-xs-6">
+                                    <input type="text" th:value="${genTable.name}" name="name" autocomplete="off" placeholder="请填写表名" class="layui-input" readonly>
+                                </div>
+                            </div>
+                            <div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+                                <label class="col-xs-3 layui-form-label"><i class="required">*</i>说明：</label>
+                                <div class="col-xs-6">
+                                    <input type="text" th:value="${genTable.comments}" name="comments" autocomplete="off" placeholder="请填写说明" class="layui-input" required>
+                                </div>
+                            </div>
+                            <div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+                                <label class="col-xs-3 layui-form-label"><i class="required">*</i>类名：</label>
+                                <div class="col-xs-6">
+                                    <input type="text" th:value="${genTable.className}" name="className" autocomplete="off" placeholder="请填写类名" class="layui-input" required>
+                                </div>
+                            </div>
+                            <div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+                                <label class="col-xs-3 layui-form-label">备注：</label>
+                                <div class="col-xs-6">
+                                    <input type="text" th:value="${genTable.remarks}" name="remarks" autocomplete="off" placeholder="请填写备注" class="layui-input">
+                                </div>
+                            </div>
+
+                            <table class="layui-table">
+                                <thead>
+                                    <tr>
+                                        <th title="数据库字段名">列名</th>
+                                        <th title="默认读取数据库字段备注">说明</th>
+                                        <th title="数据库中设置的字段类型及长度">物理类型</th>
+                                        <th title="实体对象的属性字段类型">Java类型</th>
+                                        <th title="实体对象的属性字段（对象名.属性名|属性名2|属性名3，例如：用户user.id|name|loginName，属性名2和属性名3为Join时关联查询的字段）">Java属性名称 <i class="icon-question-sign"></i></th>
+                                        <th title="是否是数据库主键">主键</th>
+                                        <th title="字段是否可为空值，不可为空字段自动进行空值验证">可空</th>
+                                        <th title="选中后该字段被加入到insert语句里">插入</th>
+                                        <th title="选中后该字段被加入到update语句里">编辑</th>
+                                        <th title="选中后该字段被加入到查询列表里">列表</th>
+                                        <th title="选中后该字段被加入到查询条件里">查询</th>
+                                        <th title="该字段为查询字段时的查询匹配放松">查询匹配方式</th>
+                                        <th title="字段在表单中显示的类型">显示表单类型</th>
+                                        <th title="显示表单类型设置为“下拉框、复选框、点选框”时，需设置字典的类型">字典类型</th>
+                                        <th>排序</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="column,vs : ${genTable.columnList}">
+                                        <td>
+                                            <input type="hidden" th:name="'columnList[' + ${vs.index} + '].id'" th:value="${column.id}"/>
+                                            <input type="hidden" th:name="'columnList[' + ${vs.index} + '].delFlag'" th:value="${column.delFlag}"/>
+                                            <!--<input type="hidden" th:name="'columnList[' + ${vs.index} + '].genTable.id'" th:value="${column.genTable.id}"/>-->
+                                            <input type="hidden" th:name="'columnList[' + ${vs.index} + '].name'" th:value="${column.name}"/>
+                                            [[${column.name}]]
+                                        </td>
+                                        <td>
+                                            <input type="text" th:name="'columnList[' + ${vs.index} + '].comments'" th:value="${column.comments}" maxlength="200" class="layui-input" required style="width:100px;"/>
+                                        </td>
+                                        <td>
+                                            <input type="hidden" th:name="'columnList[' + ${vs.index} + '].jdbcType'" th:value="${column.jdbcType}"/>
+                                            [[${column.jdbcType}]]
+                                        </td>
+                                        <td>
+                                            <select th:name="'columnList[' + ${vs.index} + '].javaType'" class="chosen-select form-control layui-input"
+                                                    data-placeholder="请选择java类型" style="width:120px;" required>
+                                                <option></option>
+                                                <option th:each="dict,vst : ${config.javaTypeList}" th:value="${dict.value}" th:selected="${dict.value==column.javaType ? 'true' : 'false'}"
+                                                        th:title="${dict.description}">[[${dict.label}]]</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text" th:name="'columnList[' + ${vs.index} + '].javaField'" th:value="${column.javaField}" maxlength="200" style="width:120px;" class="layui-input" required/>
+                                        </td>
+                                        <td>
+                                            <input type="checkbox" th:name="'columnList[' + ${vs.index} + '].isPk'" th:value="1" th:checked="${column.isPk eq '1' ? 'true' : 'false'}" lay-skin="primary" />
+                                        </td>
+                                        <td>
+                                            <input type="checkbox" th:name="'columnList[' + ${vs.index} + '].isNull'" th:value="1" th:checked="${column.isNull eq '1' ? 'true' : 'false'}" lay-skin="primary" />
+                                        </td>
+                                        <td>
+                                            <input type="checkbox" th:name="'columnList[' + ${vs.index} + '].isInsert'" th:value="1" th:checked="${column.isInsert eq '1' ? 'true' : 'false'}" lay-skin="primary" />
+                                        </td>
+                                        <td>
+                                            <input type="checkbox" th:name="'columnList[' + ${vs.index} + '].isEdit'" th:value="1" th:checked="${column.isEdit eq '1' ? 'true' : 'false'}" lay-skin="primary" />
+                                        </td>
+                                        <td>
+                                            <input type="checkbox" th:name="'columnList[' + ${vs.index} + '].isList'" th:value="1" th:checked="${column.isList eq '1' ? 'true' : 'false'}" lay-skin="primary" />
+                                        </td>
+                                        <td>
+                                            <input type="checkbox" th:name="'columnList[' + ${vs.index} + '].isQuery'" th:value="1" th:checked="${column.isQuery eq '1' ? 'true' : 'false'}" lay-skin="primary" />
+                                        </td>
+                                        <td>
+                                            <select th:name="'columnList[' + ${vs.index} + '].queryType'" class="chosen-select form-control layui-input" data-placeholder="请选择查询匹配方式" style="width:80px;" required>
+                                                <option th:each="dict,vst : ${config.queryTypeList}" th:value="${dict.value}" th:selected="${dict.value==column.queryType ? 'true' : 'false'}"
+                                                        th:title="${dict.description}">[[${dict.label}]]</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select th:name="'columnList[' + ${vs.index} + '].showType'" class="chosen-select form-control layui-input" data-placeholder="请选择显示表单类型" style="width:120px;" required>
+                                                <option th:each="dict,vst : ${config.showTypeList}" th:value="${dict.value}" th:selected="${dict.value==column.showType ? 'true' : 'false'}"
+                                                        th:title="${dict.description}">[[${dict.label}]]</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text" th:name="'columnList[' + ${vs.index} + '].dictType'" th:value="${column.dictType}" maxlength="200" style="width: 100px;" class="layui-input"/>
+                                        </td>
+                                        <td>
+                                            <input type="text" th:name="'columnList[' + ${vs.index} + '].sort'" th:value="${column.sort}" maxlength="200" style="width: 50px;" class="layui-input digits" required/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item col-sm-12 col-xs-12">
+                        <div class="layui-input-block">
+                            <button class="btn btn-default" type="button" onclick="history.go(-1)"><i class="fa fa-reply"></i>&nbsp;返回</button>
+                            <button class="btn btn-primary " type="button" onclick="validForm()"><i class="fa fa-save"></i>&nbsp;保存</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

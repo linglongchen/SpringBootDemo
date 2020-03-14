@@ -1,0 +1,121 @@
+package com.chunqiu.mrjuly.modules.hotelinfo.dao;
+
+import com.chunqiu.mrjuly.common.persistence.CrudDao;
+import com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder;
+import com.chunqiu.mrjuly.modules.adviertisement.model.AdvertisementUpload;
+import com.chunqiu.mrjuly.modules.hotelinfo.model.DepartmentInfoList;
+import com.chunqiu.mrjuly.modules.hotelinfo.model.HotelInfo;
+import com.chunqiu.mrjuly.modules.hotelinfo.model.MenuInfo;
+import com.chunqiu.mrjuly.modules.install.model.ServiceMode;
+import com.chunqiu.mrjuly.modules.mybill.model.MyBillInfo;
+import com.chunqiu.mrjuly.modules.shophotel.model.ShopHotel;
+import com.chunqiu.mrjuly.modules.shopinfo.model.ShopInfo;
+import org.apache.poi.ss.formula.functions.T;
+
+import java.util.List;
+
+/**
+ * 酒店信息DAO接口
+ *
+ * @author chen
+ * @version 2019-03-01
+ */
+public interface HotelInfoDao extends CrudDao<HotelInfo, Integer> {
+    int updateNum(HotelInfo hotelInfo);
+
+    HotelInfo hotelInfoById(HotelInfo hotelInfo);
+
+    List<MenuInfo> menuListById(MenuInfo menu);
+
+    MenuInfo menuInfo(MenuInfo menu);
+
+    int insertDepartmentById(DepartmentInfoList departmentInfoList);
+
+    int changeFreezeAll(List<HotelInfo> list);
+
+
+    int serviceMode(List<ServiceMode> serviceModes);
+
+    public List<HotelInfo> findListHotel(HotelInfo hotelInfo);
+
+    HotelInfo selectHotel(HotelInfo hotelInfo);
+
+    int insertUploadAdver(List<AdvertisementUpload> advertisementUploads);
+
+    int updateAll(List<HotelInfo> list);
+
+    public List<T> findList2(HotelInfo entity);
+
+    public List<T> getUploadInfo(AdvertisingOrder advertisingOrder);
+
+    public List<T> findList3(HotelInfo entity);
+    public List<T> findListAD(HotelInfo hotelInfo);
+
+
+    int getHotelInfo(HotelInfo hotelInfo);
+
+    List<HotelInfo> findAllList9(HotelInfo hotelInfo);
+
+    public HotelInfo getSelectAdvertise(HotelInfo hotelInfo);
+
+    List<HotelInfo> getTime();
+
+    int getAllHotelInfo();
+
+    List<HotelInfo> hotelServiceDateList(HotelInfo hotelInfo);
+
+    List<ShopInfo> getShopType();
+
+    HotelInfo getHotel(HotelInfo hotelInfo);
+
+    Integer getShopCount(ShopHotel shopHotel);
+
+    List<MyBillInfo> getMyBill(HotelInfo hotelInfo);
+
+    List<MyBillInfo> getMy(HotelInfo hotelInfo);
+
+    List<MyBillInfo> getMyBill2(HotelInfo hotelInfo);
+
+    List<MyBillInfo> getMyBill3(HotelInfo hotelInfo);
+
+    Float getCount(HotelInfo hotelInfo);
+
+    Float getCount6(HotelInfo hotelInfo);
+
+    Float getCount2(HotelInfo hotelInfo);
+
+    String getNewTime(AdvertisingOrder advertisingOrder);
+
+    int setState(Integer time);
+
+    public int changeUnicode(String uniqueEncoding);
+
+    public int changeUnicode2(String uniqueEncoding);
+
+
+    HotelInfo hotelName(HotelInfo hotelInfo);
+
+
+    Integer getAdvertisementOrder(AdvertisingOrder advertisingOrder);
+
+    Float getDateOrder(AdvertisingOrder advertisingOrder);
+
+    Float getDateOrder2(AdvertisingOrder advertisingOrder);
+
+    Integer getSort1(Integer hotelId);
+
+    List<HotelInfo> getAllHetelIdAndName();
+
+
+    List<HotelInfo>getHotelCategoryListByName(HotelInfo hotelInfo);
+
+    int updateHotelStatusById(HotelInfo hotelInfo);
+
+    int insertCode(HotelInfo hotelInfo);
+
+    int updateCode(HotelInfo hotelInfo);
+
+    HotelInfo hotelInfoByName(HotelInfo hotelInfo);
+
+    int uploadCountNumById(HotelInfo hotelInfo);
+}

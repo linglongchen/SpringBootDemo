@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chunqiu.mrjuly.modules.system.dao.UserDao">
+
+	<sql id="userColumns">
+		a.id AS "id",
+		a.code AS "code",
+		a.name AS "name",
+		a.phone AS "phone",
+		a.account AS "account",
+		a.password AS "password",
+		a.head_img AS "headImg",
+		a.remark AS "remark",
+		a.flag AS "flag",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime",
+		a.role_type AS "roleType",
+		d.id as "role.id",
+		d.name as "role.name",
+		d.comment as "role.comment",
+		a.role_type as "roleType",
+		a.hotel_code_id as "hotelCodeId",
+		a.department_id as "departmentId",
+		a.business_id as "businessId",
+		a.business_type as "businessType"
+	</sql>
+
+	<sql id="userJoins">
+		left join admin_user_role c on a.id=c.uid
+		left join admin_role d on c.role_id=d.id
+	</sql>
+
+	<select id="get" resultType="User">
+		SELECT
+			<include refid="userColumns"/>
+		FROM admin_user a
+		<include refid="userJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="getByName" resultType="User">
+		select
+		<include refid="userColumns" />
+		from admin_user a
+		<include refid="userJoins"/>
+		where a.account=#{name} and a.flag=0
+	</select>
+
+	<select id="userInfoById" resultType="User">
+		<if test="roleType == 3">
+			select a.company_name as "name",a.account,b.business_logo as "headImg",a.shop_number as "shopNumber" from shop_info as a left join shop_renovation_info as b on b.shop_id = a.id where a.id = #{businessId};
+		</if>
+		<if test="roleType == 4">
+			select company_name as "name",account_balance as "account" from advertiser_info where id = #{businessId};
+		</if>
+	</select>
+
+	<select id="getType" resultType="User">
+		select
+		<include refid="userColumns" />
+		from admin_user a
+		<include refid="userJoins"/>
+		where a.
+	</select>
+
+	<select id="findList" resultType="User">
+		SELECT
+			<include refid="userColumns"/>
+		FROM admin_user a
+		<include refid="userJoins"/>
+		<where>
+			a.flag = 0
+			<if test="roleType == 1">
+				AND c.role_id != 1
+			</if>
+			<if test="code != null and code != ''">
+				AND a.code LIKE
+					<if test="dbName == 'oracle'">'%'||#{code}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{code}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{code},'%')</if>
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name LIKE
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="phone != null and phone != ''">
+				AND a.phone LIKE
+					<if test="dbName == 'oracle'">'%'||#{phone}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{phone}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{phone},'%')</if>
+			</if>
+			<if test="account != null and account != ''">
+				AND a.account LIKE
+					<if test="dbName == 'oracle'">'%'||#{account}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{account}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{account},'%')</if>
+			</if>
+			<if test="roleId != null and roleId != ''">
+				AND d.parent_id= #{roleId}
+			</if>
+			<if test="hotelCodeId != null">
+				and a.hotel_code_id = #{hotelCodeId}
+			</if>
+		</where>
+		<choose>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="User">
+		SELECT
+			<include refid="userColumns"/>
+		FROM admin_user a
+		<include refid="userJoins"/>
+		<where>
+
+		</where>
+		<choose>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		INSERT INTO admin_user(
+			code,
+			name,
+			phone,
+			account,
+			password,
+			head_img,
+			remark,
+			flag,
+			create_time,
+			update_time,
+			role_type,
+			hotel_code_id,
+			department_id,
+			business_id,
+			business_type
+		) VALUES (
+			#{code},
+			#{account},
+			#{phone},
+			#{account},
+			#{password},
+			#{headImg},
+			#{remark},
+			0,
+			#{createTime},
+			#{updateTime},
+			#{roleType},
+			#{hotelCodeId},
+			#{departmentId},
+			#{businessId},
+			#{businessType}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE admin_user
+		<set>
+			<if test="code != null and code != ''">
+				code = #{code},
+			</if>
+			<if test="name != null and name != ''">
+				name = #{name},
+			</if>
+			<if test="phone != null and phone != ''">
+				phone = #{phone},
+			</if>
+			<if test="account != null and account != ''">
+				account = #{account},
+			</if>
+			<if test="password != null and password != ''">
+				password = #{password},
+			</if>
+			<if test="headImg != null and headImg != ''">
+				head_img = #{headImg},
+			</if>
+			<if test="remark != null and remark != ''">
+				remark = #{remark},
+			</if>
+			<if test="flag != null">
+				flag = #{flag},
+			</if>
+			<if test="createTime != null and createTime != ''">
+				create_time = #{createTime},
+			</if>
+			<if test="updateTime != null and updateTime != ''">
+				update_time = #{updateTime},
+			</if>
+			<if test="hotelCodeId != null ">
+				hotel_code_id = #{hotelCodeId},
+			</if>
+			<if test="roleType != null ">
+				role_type = #{roleType},
+			</if>
+			<if test="businessId != null ">
+				business_id = #{businessId},
+			</if>
+			<if test="businessType != null ">
+				business_type = #{businessType},
+			</if>
+			<if test="departmentId != null ">
+				department_id = #{departmentId},
+			</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		DELETE FROM admin_user
+		WHERE id = #{id}
+	</update>
+
+
+	<select id="departmentInfoName" resultType="DepartmentInfo">
+		select id,department_name as "departmentName" from department_info where del_flag = '0' and hotel_code_id = #{hotelCodeId}
+	</select>
+
+	<insert id="insertEstablishRole">
+		INSERT INTO `establish_role` ( `c_id`, `b_id`) VALUES (#{roleId}, #{uid});
+	</insert>
+
+	<select id="getByAccount" resultType="User">
+		SELECT
+		<include refid="userColumns"/>
+		FROM admin_user a
+		<include refid="userJoins"/>
+		WHERE a.account = #{account}
+	</select>
+	
+	<select id="getByBusinessId" resultType="User">
+		SELECT 
+			a.id AS "id",
+			a.code AS "code",
+			a.name AS "name",
+			a.phone AS "phone",
+			a.account AS "account",
+			a.password AS "password",
+			a.head_img AS "headImg",
+			a.remark AS "remark",
+			a.flag AS "flag",
+			a.create_time AS "createTime",
+			a.update_time AS "updateTime",
+			a.role_type AS "roleType",
+			a.role_type as "roleType",
+			a.hotel_code_id as "hotelCodeId",
+			a.department_id as "departmentId",
+			a.business_id as "businessId",
+			a.business_type as "businessType" 
+		FROM admin_user a 
+		WHERE a.business_id = #{id} 
+	</select>
+</mapper>

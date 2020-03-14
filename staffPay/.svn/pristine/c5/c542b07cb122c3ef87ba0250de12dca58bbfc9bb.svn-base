@@ -1,0 +1,14 @@
+package com.chunqiu.mrjuly.modules.shopinfo.dao;
+
+import com.chunqiu.mrjuly.common.persistence.CrudDao;
+import com.chunqiu.mrjuly.modules.shopinfo.model.ShopRenovationInfo;
+
+/**
+ * 商家首页信息DAO接口
+ * @author wang
+ * @version 2019-03-12
+ */
+public interface ShopRenovationInfoDao extends CrudDao<ShopRenovationInfo, Integer> {
+
+
+}

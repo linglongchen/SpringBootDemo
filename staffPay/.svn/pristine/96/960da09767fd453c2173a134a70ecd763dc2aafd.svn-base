@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>广告管理管理</title>
+
+    <head th:include="init :: init"></head>
+    <head th:include="init_bootstrap_table :: bootstrap_table"></head>
+
+    <script type="text/javascript">
+        $(function () {
+            $('#table').bootstrapTable({
+                undefinedText: '',//defined的默认显示文本
+                striped: true,//条纹
+                method: 'get',
+                url: '[[${ctx}]]/adviertisement/adviertisementType/list',
+                pagination: true,//显示分页
+                sidePagination: 'server',//定义分页为服务器端分页
+                pageNumber: 1,//起始页数
+                pageSize: 20,//默认显示行数
+                pageList: [20, 50, 100, 200],//可选分页数
+                singleSelect: false,//多选
+                //toolbar : '#toolbar',
+                height: 'auto',
+                columns: [
+                    {
+                        field: 'typeName',
+                        title: '广告类型名称',
+                        halign: 'center',
+                        align: 'center'
+                    }, {
+                        field: 'num',
+                        title: '编号',
+                        halign: 'center',
+                        align: 'center'
+                    }, {
+                        field: 'type2Name',
+                        title: '二级类型',
+                        halign: 'center',
+                        align: 'center',
+                        formatter: function (value, row, index) {
+                            if ((value != null && value != '') || (row.typeName != null && row.typeName != '') ||
+                                (row.type2Num != null && row.type2Num != '') || (row.num != null && row.num != '')) {
+                                var str = "";
+                                if ((value != null && value != '') && (row.type2Num != null && row.type2Num != '')) {
+                                    var str2 = value.split(',');
+                                    var num2 = row.type2Num.split(',');
+                                    for (var i = 0; i < str2.length; i++) {
+                                        str += row.typeName + '-' + str2[i] + '-' + row.num + '-' + num2[i] + '<br/>';
+                                    }
+                                }
+                                return str;
+                            } else {
+                                return "";
+                            }
+
+
+                        }
+                    }, {
+                        field: 'type3Name',
+                        title: '三级类型',
+                        halign: 'center',
+                        align: 'center',
+                        formatter: function (value, row, index) {
+                            var str="";
+                            if ((value!=null && value!='')||(row.type3Num!=null && row.type3Num != '')) {
+                                var type3 = value.split(',');
+                                var num3 = row.type3Num.split(',');
+                                for (var i=0;i<type3.length;i++){
+                                    str+=type3[i]+num3[i]+'<br/>';
+                                }
+                            }
+                            return str;
+                            // if ((value != null && value != '') || (row.typeName != null && row.typeName != '') ||
+                            //     (row.type2Num != null && row.type2Num != '') || (row.num != null && row.num != '') || (row.type3Num != null && row.type3Num != '') || (row.type2Name != null && row.type2Name != '')) {
+                            //     var re = "";
+                            //     if ((row.type2Name != null && row.type2Name != '') && (value != null && value != '') && (row.type2Num != null && row.type2Num != '') && (row.type3Num != null && row.type3Num != '')) {
+                            //         var typeName = row.typeName;
+                            //         var type2Name = row.type2Name;
+                            //         var num2 = row.type2Num;
+                            //         var num3 = row.type3Num;
+                            //         var str2 = value.split(',');
+                            //         var str3 = type2Name.split(',');
+                            //         var str4 = num2.split(',');
+                            //         var str5 = num3.split(',');
+                            //         for (var i = 0; i < str2.length; i++) {
+                            //             if (str3[i]==null && str4[i]==''){
+                            //                 str3[i]=="";
+                            //             }
+                            //             if (str4[i]==null && str4[i]==''){
+                            //                 str4[i]=="";
+                            //             }
+                            //                 re += typeName + '-' + str3[i] + '-' + str2[i] + '-' + row.num + '-' + str4[i] + '-' + str5[i] + '<br/>'
+                            //         }
+                            //         return re;
+                            //     }
+                            // } else {
+                            //     return "";
+                            // }
+
+                        }
+                    }, {
+                        field: 'option',
+                        title: '操作',
+                        halign: 'center',
+                        align: 'center',
+                        formatter: function (value, row, index) {
+                            var _html = '<ul class="grid_btn_ul">';
+                            _html += '<li><a href="javascript:editAdviertisementType(' + row.id + ')" class="btn btn-success btn-xs"><i class="fa fa-pencil"></i> 编辑 </a></li>';
+                            _html += '<li><a href="javascript:delAdviertisementType(' + row.id + ')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> 删除 </a></li>';
+                            _html += '</ul>';
+                            return _html;
+                        }
+                    }],
+                onLoadSuccess: function (data) {
+                    if (data.total == 0) {
+                        $('#table').bootstrapTable('removeAll');
+                    }
+                }
+            });
+        });
+
+        //添加广告管理
+        function addAdviertisementType() {
+            layer.open({
+                type: 2,
+                title: '新增广告管理',
+                area : ['60%','90%'],
+                content: '[[${ctx}]]/adviertisement/adviertisementType/form', //这里content是一个DOM
+                btn: ['保存', '关闭'],
+                closeBtn: '1',
+                shadeClose: false,//点击遮罩层关闭
+                shade: [0.8, '#393D49'],
+                yes: function (index, layero) {
+                    var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                    iframeWin.validForm();
+                },btn2 : function(index, layero){
+                    exitBombSow(index);
+                    refreshTable();
+                    return false;
+                },cancel : function(index, layero) {
+                    exitBombSow(index);
+                    refreshTable();
+                    return false;
+                }
+            });
+        }
+
+        //编辑广告管理
+        function editAdviertisementType(id) {
+            layer.open({
+                type: 2,
+                title: '编辑广告管理',
+                area : ['60%','90%'],
+                content: '[[${ctx}]]/adviertisement/adviertisementType/form?id=' + id, //这里content是一个DOM
+                btn: ['保存', '关闭'],
+                closeBtn: '1',
+                shadeClose: false,//点击遮罩层关闭
+                shade: [0.8, '#393D49'],
+                yes: function (index, layero) {
+                    var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                    iframeWin.validForm();
+                },btn2 : function(index, layero){
+                    exitBombSow(index);
+                    refreshTable();
+                    return false;
+                },cancel : function(index, layero) {
+                    exitBombSow(index);
+                    refreshTable();
+                    return false;
+                }
+            });
+        }
+
+        //删除广告管理
+        function delAdviertisementType(id) {
+            layer.confirm('您确定要删除该广告管理吗？', function () {
+                parent.loading();
+                $.post('[[${ctx}]]/adviertisement/adviertisementType/delAdviertisementType', {
+                    id: id
+                }, function (result) {
+                    closeLoading();
+                    layer.closeAll();
+                    if (result.success) {
+                        showMsgSuccess('删除成功');
+                        refreshTable();
+                    } else {
+                        showMsgError(result.msg);
+                    }
+                }, 'json');
+            });
+        }
+
+        //查询
+        function search() {
+            var param = $('#searchForm').serialize();
+            $('#table').bootstrapTable('refresh', {url: '[[${ctx}]]/adviertisement/adviertisementType/list?' + param});
+        }
+    </script>
+</head>
+<body layadmin-themealias="default">
+<div class="layui-fluid animated fadeInRight">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+            <div class="layui-form-item form-head">
+                <form id="searchForm" class="layui-form">
+                    <div class="layui-inline">
+                        <label class="layui-form-label" style="width: 150px;">广告类型名称：</label>
+                        <div class="layui-input-inline">
+                            <input name="typeName" autocomplete="off" class="layui-input" placeholder="请输入广告类型名称"
+                                   type="text">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <button class="btn btn-primary " type="button" onclick="search()"><i class="fa fa-search"></i>&nbsp;搜索
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="layui-card-body">
+                <div style="padding-bottom: 10px;">
+                    <button class="btn btn-primary " type="button" data-toggle="modal"
+                            onclick="addAdviertisementType()"><i class="fa fa-plus"></i>&nbsp;新增
+                    </button>
+                </div>
+            </div>
+            <table id="table">
+
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

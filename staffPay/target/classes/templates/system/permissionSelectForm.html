@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>菜单选择</title>
+
+    <head th:include="init :: init"></head>
+    <head th:include="init_ztree :: ztree"></head>
+
+    <script type="text/javascript">
+        var setting = {
+            check: {
+                enable: true
+            },
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            }
+        };
+
+        $(function(){
+            $.post('[[${ctx}]]/system/role/rolePermissionList',{
+                roleId : [[${param.roleId }]]
+            },function(result){
+                $.fn.zTree.init($("#tree"), setting, result);
+            },'json');
+        });
+
+        //提交表单
+        function validForm(){
+            var treeObj = $.fn.zTree.getZTreeObj("tree");
+            var nodes = treeObj.getChangeCheckedNodes();
+            var addMenus = [], delMenus = [];
+            for(var i = 0; i < nodes.length; i++){
+                //现在选中，而之前未选中--新增
+                if(nodes[i].checked && !nodes[i].checkedOld){
+                    addMenus.push(nodes[i].id);
+                }
+                //现在未选中，而之前选中--删除
+                if(!nodes[i].checked && nodes[i].checkedOld){
+                    delMenus.push(nodes[i].id);
+                }
+            }
+            $.post('[[${ctx}]]/system/role/editRoleMenu',{
+                roleId : [[${param.roleId }]],
+                addMenus : addMenus.join(","),
+                delMenus : delMenus.join(",")
+            },function(result){
+                if(result.success){
+                    showMsgSuccess('操作成功');
+                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                    parent.layer.close(index); //再执行关闭
+                }else{
+                    showMsgError(result.msg);
+                }
+            },'json');
+        }
+    </script>
+</head>
+<body class="gray-bg">
+    <div class="wrapper animated fadeInRight">
+        <div class="ibox-content">
+            <div class="row">
+                <div class="zTreeDemoBackground left">
+                    <ul id="tree" class="ztree"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

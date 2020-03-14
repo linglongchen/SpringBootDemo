@@ -1,0 +1,879 @@
+18:53:56.879 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - Starting SpringbootApplication on LAPTOP-BRM15SJN with PID 6324 (D:\ideaProject\staffPay\staffPay\target\classes started by admin in D:\ideaProject\staffPay\staffPay)
+18:53:56.887 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - No active profile set, falling back to default profiles: default
+18:54:03.458 logback-com.chunqiu [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8008"]
+18:54:03.479 logback-com.chunqiu [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+18:54:03.480 logback-com.chunqiu [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet Engine: Apache Tomcat/8.5.34
+18:54:03.489 logback-com.chunqiu [localhost-startStop-1] INFO  o.a.c.core.AprLifecycleListener - The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jdk1.8.0_241\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Program Files\Java\jdk1.8.0_241\bin;C:\Program Files\Java\jdk1.8.0_241\jre\bin;D:\nodejs\;D:\Git\cmd;C:\Program Files\MySQL\MySQL Server 5.7\bin;D:\Redis\redis;C:\Users\admin\AppData\Local\Microsoft\WindowsApps;D:\nodejs\node_global;;.]
+18:54:03.786 logback-com.chunqiu [localhost-startStop-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+18:54:11.378 logback-com.chunqiu [container-1] INFO  io.lettuce.core.EpollProvider - Starting without optional epoll library
+18:54:11.381 logback-com.chunqiu [container-1] INFO  io.lettuce.core.KqueueProvider - Starting without optional kqueue library
+18:54:12.950 logback-com.chunqiu [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8008"]
+18:54:12.953 logback-com.chunqiu [main] INFO  o.a.tomcat.util.net.NioSelectorPool - Using a shared selector for servlet write/read
+18:54:12.995 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - Started SpringbootApplication in 16.924 seconds (JVM running for 20.185)
+18:54:47.011 logback-com.chunqiu [http-nio-8008-exec-2] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring FrameworkServlet 'dispatcherServlet'
+18:54:47.073 logback-com.chunqiu [http-nio-8008-exec-2] INFO  o.a.s.s.m.AbstractValidatingSessionManager - Enabling session validation scheduler...
+18:56:36.183 logback-com.chunqiu [http-nio-8008-exec-8] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- 执行 Shiro 凭证认证 ----------------------
+18:56:36.523 logback-com.chunqiu [http-nio-8008-exec-8] INFO  c.alibaba.druid.pool.DruidDataSource - {dataSource-1,druidDataSource} inited
+18:57:36.512 logback-com.chunqiu [http-nio-8008-exec-4] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- 执行 Shiro 凭证认证 ----------------------
+18:57:49.725 logback-com.chunqiu [http-nio-8008-exec-3] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- 执行 Shiro 凭证认证 ----------------------
+18:57:49.738 logback-com.chunqiu [http-nio-8008-exec-3] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- Shiro 凭证认证成功 ----------------------
+18:57:50.540 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- 执行 Shiro 权限获取 ---------------------
+18:57:50.574 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- 获取到以下权限 ----------------
+18:57:50.574 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.shiro.ShiroRealm - Shiro 权限信息[system:user:view, system:role:view, system:user:edit, system:role:edit, project:project:view,save,del, staff:staff:view,del,save]
+18:57:50.574 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- Shiro 权限获取成功 ----------------------
+18:57:50.589 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+18:57:50.594 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：06:57:50.589  耗时：0:0:0.5  URI: /admin/system/user/userList  最大内存: 1572m  已分配内存: 458m  已分配内存中的剩余空间: 127m  最大可用内存: 1241m
+18:57:50.595 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+18:58:06.995 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- 执行 Shiro 凭证认证 ----------------------
+18:58:07.001 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- Shiro 凭证认证成功 ----------------------
+18:58:11.096 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> MenuController，  Method >>> index
+18:58:11.098 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- 执行 Shiro 权限获取 ---------------------
+18:58:11.115 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- 获取到以下权限 ----------------
+18:58:11.115 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.shiro.ShiroRealm - Shiro 权限信息[system:adminLog:view, system:user:view, system:adminLog:save, system:role:view, system:dict:edit, system:user:edit, system:role:edit, system:dict:view, gen:genScheme:view,gen:genScheme:edit, gen:genTable:view,gen:genTable:edit,gen:genTableColumn:view,gen:genTableColumn:edit, system:menu:view, adviertisement:AdvertisingPage:view,edit, system:menu:edit]
+18:58:11.116 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- Shiro 权限获取成功 ----------------------
+18:58:11.129 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+18:58:11.129 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：06:58:11.129  耗时：0:0:0.4  URI: /admin/system/menu/index  最大内存: 1572m  已分配内存: 458m  已分配内存中的剩余空间: 115m  最大可用内存: 1229m
+18:58:11.130 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+18:58:11.384 logback-com.chunqiu [http-nio-8008-exec-8] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> MenuController，  Method >>> list
+18:58:11.515 logback-com.chunqiu [http-nio-8008-exec-8] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+18:58:11.516 logback-com.chunqiu [http-nio-8008-exec-8] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：06:58:11.515  耗时：0:0:0.114  URI: /admin/system/menu/list  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 433m  最大可用内存: 1501m
+18:58:11.532 logback-com.chunqiu [http-nio-8008-exec-8] INFO  c.c.mrjuly.common.filter.LogFilter - Request Params:
+  order = ["asc"]
+18:58:11.532 logback-com.chunqiu [http-nio-8008-exec-8] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+18:58:25.905 logback-com.chunqiu [http-nio-8008-exec-4] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> MenuController，  Method >>> delMenu
+18:58:25.927 logback-com.chunqiu [http-nio-8008-exec-4] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+18:58:25.928 logback-com.chunqiu [http-nio-8008-exec-4] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：06:58:25.927  耗时：0:0:0.17  URI: /admin/system/menu/delMenu  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 418m  最大可用内存: 1486m
+18:58:25.928 logback-com.chunqiu [http-nio-8008-exec-4] INFO  c.c.mrjuly.common.filter.LogFilter - Request Params:
+  id = ["461"]
+18:58:25.928 logback-com.chunqiu [http-nio-8008-exec-4] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+18:58:25.953 logback-com.chunqiu [http-nio-8008-exec-1] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> MenuController，  Method >>> list
+18:58:25.981 logback-com.chunqiu [http-nio-8008-exec-1] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+18:58:25.982 logback-com.chunqiu [http-nio-8008-exec-1] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：06:58:25.981  耗时：0:0:0.24  URI: /admin/system/menu/list  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 415m  最大可用内存: 1483m
+18:58:25.982 logback-com.chunqiu [http-nio-8008-exec-1] INFO  c.c.mrjuly.common.filter.LogFilter - Request Params:
+  order = ["asc"]
+18:58:25.982 logback-com.chunqiu [http-nio-8008-exec-1] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+18:58:34.394 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> MenuController，  Method >>> delMenu
+18:58:34.405 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+18:58:34.405 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：06:58:34.405  耗时：0:0:0.7  URI: /admin/system/menu/delMenu  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 414m  最大可用内存: 1481m
+18:58:34.405 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.mrjuly.common.filter.LogFilter - Request Params:
+  id = ["463"]
+18:58:34.405 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+18:58:34.429 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> MenuController，  Method >>> list
+18:58:34.449 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+18:58:34.449 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：06:58:34.448  耗时：0:0:0.15  URI: /admin/system/menu/list  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 412m  最大可用内存: 1479m
+18:58:34.449 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.mrjuly.common.filter.LogFilter - Request Params:
+  order = ["asc"]
+18:58:34.449 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+18:58:40.104 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> MenuController，  Method >>> delMenu
+18:58:40.119 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+18:58:40.119 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：06:58:40.119  耗时：0:0:0.11  URI: /admin/system/menu/delMenu  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 410m  最大可用内存: 1477m
+18:58:40.119 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.mrjuly.common.filter.LogFilter - Request Params:
+  id = ["465"]
+18:58:40.119 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+18:58:40.139 logback-com.chunqiu [http-nio-8008-exec-3] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> MenuController，  Method >>> list
+18:58:40.155 logback-com.chunqiu [http-nio-8008-exec-3] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+18:58:40.156 logback-com.chunqiu [http-nio-8008-exec-3] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：06:58:40.155  耗时：0:0:0.13  URI: /admin/system/menu/list  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 407m  最大可用内存: 1475m
+18:58:40.156 logback-com.chunqiu [http-nio-8008-exec-3] INFO  c.c.mrjuly.common.filter.LogFilter - Request Params:
+  order = ["asc"]
+18:58:40.156 logback-com.chunqiu [http-nio-8008-exec-3] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+18:58:51.148 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- 执行 Shiro 凭证认证 ----------------------
+18:58:51.152 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- Shiro 凭证认证成功 ----------------------
+18:58:51.413 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- 执行 Shiro 权限获取 ---------------------
+18:58:51.422 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- 获取到以下权限 ----------------
+18:58:51.422 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.mrjuly.common.shiro.ShiroRealm - Shiro 权限信息[system:user:view, system:role:view, system:user:edit, system:role:edit, project:project:view,save,del, staff:staff:view,del,save]
+18:58:51.422 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- Shiro 权限获取成功 ----------------------
+18:58:51.426 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+18:58:51.426 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：06:58:51.426  耗时：0:0:0.1  URI: /admin/system/user/userList  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 400m  最大可用内存: 1468m
+18:58:51.426 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:01:56.441 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:01:56.441 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:01:56.441  耗时：0:0:0.0  URI: /admin/system/user/userList  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 381m  最大可用内存: 1448m
+19:01:56.441 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:02:02.323 logback-com.chunqiu [http-nio-8008-exec-4] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- 执行 Shiro 凭证认证 ----------------------
+19:02:02.331 logback-com.chunqiu [http-nio-8008-exec-4] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- Shiro 凭证认证成功 ----------------------
+19:02:06.927 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> DictController，  Method >>> index
+19:02:06.929 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- 执行 Shiro 权限获取 ---------------------
+19:02:06.940 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- 获取到以下权限 ----------------
+19:02:06.940 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.mrjuly.common.shiro.ShiroRealm - Shiro 权限信息[system:adminLog:view, system:user:view, system:adminLog:save, system:role:view, system:dict:edit, system:user:edit, system:role:edit, system:dict:view, gen:genScheme:view,gen:genScheme:edit, gen:genTable:view,gen:genTable:edit,gen:genTableColumn:view,gen:genTableColumn:edit, system:menu:view, adviertisement:AdvertisingPage:view,edit, system:menu:edit]
+19:02:06.940 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- Shiro 权限获取成功 ----------------------
+19:02:06.948 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:02:06.949 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:02:06.948  耗时：0:0:0.2  URI: /admin/system/dict/index  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 368m  最大可用内存: 1436m
+19:02:06.949 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:02:11.441 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> RoleController，  Method >>> index
+19:02:11.451 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:02:11.451 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:02:11.451  耗时：0:0:0.3  URI: /admin/system/role/index  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 361m  最大可用内存: 1429m
+19:02:11.451 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:02:12.539 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> UserController，  Method >>> index
+19:02:12.542 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:02:12.542 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:02:12.542  耗时：0:0:0.1  URI: /admin/system/user/index  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 355m  最大可用内存: 1423m
+19:02:12.542 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:02:13.909 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> AdminLogController，  Method >>> index
+19:02:13.921 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:02:13.921 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:02:13.921  耗时：0:0:0.2  URI: /admin/system/adminLog/index  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 350m  最大可用内存: 1417m
+19:02:13.921 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:02:15.674 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> DictController，  Method >>> list
+19:02:15.741 logback-com.chunqiu [http-nio-8008-exec-4] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> RoleController，  Method >>> list
+19:02:15.755 logback-com.chunqiu [http-nio-8008-exec-8] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:02:15.755 logback-com.chunqiu [http-nio-8008-exec-8] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:02:15.754  耗时：0:0:0.1  URI: /admin/system/user/userList  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 338m  最大可用内存: 1406m
+19:02:15.755 logback-com.chunqiu [http-nio-8008-exec-8] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:02:15.794 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:02:15.794 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:02:15.794  耗时：0:0:0.36  URI: /admin/system/dict/list  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 335m  最大可用内存: 1402m
+19:02:15.794 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.mrjuly.common.filter.LogFilter - Request Params:
+  order = ["asc"]
+  limit = ["20"]
+  offset = ["0"]
+19:02:15.794 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:02:15.802 logback-com.chunqiu [http-nio-8008-exec-3] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> UserController，  Method >>> list
+19:02:15.808 logback-com.chunqiu [http-nio-8008-exec-4] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:02:15.809 logback-com.chunqiu [http-nio-8008-exec-4] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:02:15.808  耗时：0:0:0.50  URI: /admin/system/role/list  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 333m  最大可用内存: 1400m
+19:02:15.809 logback-com.chunqiu [http-nio-8008-exec-4] INFO  c.c.mrjuly.common.filter.LogFilter - Request Params:
+  order = ["asc"]
+  limit = ["20"]
+  offset = ["0"]
+19:02:15.809 logback-com.chunqiu [http-nio-8008-exec-4] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:02:15.840 logback-com.chunqiu [http-nio-8008-exec-3] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:02:15.841 logback-com.chunqiu [http-nio-8008-exec-3] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:02:15.840  耗时：0:0:0.21  URI: /admin/system/user/list  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 331m  最大可用内存: 1398m
+19:02:15.841 logback-com.chunqiu [http-nio-8008-exec-3] INFO  c.c.mrjuly.common.filter.LogFilter - Request Params:
+  order = ["asc"]
+  limit = ["20"]
+  offset = ["0"]
+19:02:15.841 logback-com.chunqiu [http-nio-8008-exec-3] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:02:15.845 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> AdminLogController，  Method >>> list
+19:02:15.910 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:02:15.910 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:02:15.910  耗时：0:0:0.50  URI: /admin/system/adminLog/list  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 329m  最大可用内存: 1396m
+19:02:15.910 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.mrjuly.common.filter.LogFilter - Request Params:
+  order = ["asc"]
+  limit = ["20"]
+  offset = ["0"]
+19:02:15.910 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:02:21.277 logback-com.chunqiu [http-nio-8008-exec-1] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> MenuController，  Method >>> index
+19:02:21.279 logback-com.chunqiu [http-nio-8008-exec-1] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:02:21.279 logback-com.chunqiu [http-nio-8008-exec-1] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:02:21.279  耗时：0:0:0.0  URI: /admin/system/menu/index  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 327m  最大可用内存: 1394m
+19:02:21.279 logback-com.chunqiu [http-nio-8008-exec-1] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:02:21.540 logback-com.chunqiu [http-nio-8008-exec-4] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> MenuController，  Method >>> list
+19:02:21.571 logback-com.chunqiu [http-nio-8008-exec-4] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:02:21.571 logback-com.chunqiu [http-nio-8008-exec-4] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:02:21.571  耗时：0:0:0.28  URI: /admin/system/menu/list  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 323m  最大可用内存: 1390m
+19:02:21.571 logback-com.chunqiu [http-nio-8008-exec-4] INFO  c.c.mrjuly.common.filter.LogFilter - Request Params:
+  order = ["asc"]
+19:02:21.571 logback-com.chunqiu [http-nio-8008-exec-4] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:02:42.894 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> UserController，  Method >>> form
+19:02:42.904 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:02:42.905 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:02:42.904  耗时：0:0:0.5  URI: /admin/system/user/form  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 322m  最大可用内存: 1389m
+19:02:42.905 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.mrjuly.common.filter.LogFilter - Request Params:
+  id = ["2"]
+19:02:42.905 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:02:43.198 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> RoleController，  Method >>> getSelect
+19:02:43.203 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:02:43.203 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:02:43.203  耗时：0:0:0.4  URI: /admin/system/role/getSelect  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 317m  最大可用内存: 1385m
+19:02:43.203 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:03:00.693 logback-com.chunqiu [http-nio-8008-exec-4] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- 执行 Shiro 凭证认证 ----------------------
+19:03:00.698 logback-com.chunqiu [http-nio-8008-exec-4] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- Shiro 凭证认证成功 ----------------------
+19:03:01.006 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- 执行 Shiro 权限获取 ---------------------
+19:03:01.017 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- 获取到以下权限 ----------------
+19:03:01.017 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.shiro.ShiroRealm - Shiro 权限信息[system:user:view, system:role:view, system:user:edit, system:role:edit, project:project:view,save,del, staff:staff:view,del,save]
+19:03:01.017 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- Shiro 权限获取成功 ----------------------
+19:03:01.018 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:03:01.018 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:03:01.018  耗时：0:0:0.0  URI: /admin/system/user/userList  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 312m  最大可用内存: 1380m
+19:03:01.019 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:03:03.020 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> UserController，  Method >>> index
+19:03:03.023 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:03:03.023 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:03:03.023  耗时：0:0:0.0  URI: /admin/system/user/index  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 311m  最大可用内存: 1379m
+19:03:03.023 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:03:03.204 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> UserController，  Method >>> list
+19:03:03.227 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:03:03.227 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:03:03.227  耗时：0:0:0.18  URI: /admin/system/user/list  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 308m  最大可用内存: 1375m
+19:03:03.227 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.mrjuly.common.filter.LogFilter - Request Params:
+  order = ["asc"]
+  limit = ["20"]
+  offset = ["0"]
+19:03:03.227 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:03:07.192 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> UserController，  Method >>> form
+19:03:07.197 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:03:07.197 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:03:07.197  耗时：0:0:0.3  URI: /admin/system/user/form  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 307m  最大可用内存: 1374m
+19:03:07.198 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.mrjuly.common.filter.LogFilter - Request Params:
+  id = ["2"]
+19:03:07.198 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:03:07.365 logback-com.chunqiu [http-nio-8008-exec-3] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> RoleController，  Method >>> getSelect
+19:03:07.368 logback-com.chunqiu [http-nio-8008-exec-3] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:03:07.369 logback-com.chunqiu [http-nio-8008-exec-3] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:03:07.368  耗时：0:0:0.2  URI: /admin/system/role/getSelect  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 305m  最大可用内存: 1373m
+19:03:07.369 logback-com.chunqiu [http-nio-8008-exec-3] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:03:14.770 logback-com.chunqiu [http-nio-8008-exec-1] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> RoleController，  Method >>> index
+19:03:14.774 logback-com.chunqiu [http-nio-8008-exec-1] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:03:14.774 logback-com.chunqiu [http-nio-8008-exec-1] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:03:14.774  耗时：0:0:0.0  URI: /admin/system/role/index  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 304m  最大可用内存: 1372m
+19:03:14.774 logback-com.chunqiu [http-nio-8008-exec-1] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:03:14.984 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> RoleController，  Method >>> list
+19:03:14.993 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:03:14.993 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:03:14.993  耗时：0:0:0.5  URI: /admin/system/role/list  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 301m  最大可用内存: 1369m
+19:03:14.994 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.filter.LogFilter - Request Params:
+  order = ["asc"]
+  limit = ["20"]
+  offset = ["0"]
+19:03:14.994 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:03:15.043 logback-com.chunqiu [http-nio-8008-exec-8] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:03:15.043 logback-com.chunqiu [http-nio-8008-exec-8] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:03:15.043  耗时：0:0:0.0  URI: /admin/system/user/userList  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 301m  最大可用内存: 1369m
+19:03:15.043 logback-com.chunqiu [http-nio-8008-exec-8] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:03:24.737 logback-com.chunqiu [http-nio-8008-exec-1] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- 执行 Shiro 凭证认证 ----------------------
+19:03:24.741 logback-com.chunqiu [http-nio-8008-exec-1] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- Shiro 凭证认证成功 ----------------------
+19:03:26.539 logback-com.chunqiu [http-nio-8008-exec-8] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> MenuController，  Method >>> index
+19:03:26.540 logback-com.chunqiu [http-nio-8008-exec-8] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- 执行 Shiro 权限获取 ---------------------
+19:03:26.546 logback-com.chunqiu [http-nio-8008-exec-8] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- 获取到以下权限 ----------------
+19:03:26.546 logback-com.chunqiu [http-nio-8008-exec-8] INFO  c.c.mrjuly.common.shiro.ShiroRealm - Shiro 权限信息[system:adminLog:view, system:user:view, system:adminLog:save, system:role:view, system:dict:edit, system:user:edit, system:role:edit, system:dict:view, gen:genScheme:view,gen:genScheme:edit, gen:genTable:view,gen:genTable:edit,gen:genTableColumn:view,gen:genTableColumn:edit, system:menu:view, adviertisement:AdvertisingPage:view,edit, system:menu:edit]
+19:03:26.546 logback-com.chunqiu [http-nio-8008-exec-8] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- Shiro 权限获取成功 ----------------------
+19:03:26.550 logback-com.chunqiu [http-nio-8008-exec-8] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:03:26.550 logback-com.chunqiu [http-nio-8008-exec-8] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:03:26.550  耗时：0:0:0.0  URI: /admin/system/menu/index  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 295m  最大可用内存: 1362m
+19:03:26.550 logback-com.chunqiu [http-nio-8008-exec-8] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:03:26.824 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> MenuController，  Method >>> list
+19:03:26.842 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:03:26.842 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:03:26.842  耗时：0:0:0.12  URI: /admin/system/menu/list  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 294m  最大可用内存: 1361m
+19:03:26.843 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.mrjuly.common.filter.LogFilter - Request Params:
+  order = ["asc"]
+19:03:26.843 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:03:27.978 logback-com.chunqiu [http-nio-8008-exec-4] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> UserController，  Method >>> index
+19:03:27.980 logback-com.chunqiu [http-nio-8008-exec-4] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:03:27.980 logback-com.chunqiu [http-nio-8008-exec-4] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:03:27.980  耗时：0:0:0.0  URI: /admin/system/user/index  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 293m  最大可用内存: 1360m
+19:03:27.980 logback-com.chunqiu [http-nio-8008-exec-4] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:03:28.148 logback-com.chunqiu [http-nio-8008-exec-1] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> UserController，  Method >>> list
+19:03:28.163 logback-com.chunqiu [http-nio-8008-exec-1] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:03:28.164 logback-com.chunqiu [http-nio-8008-exec-1] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:03:28.163  耗时：0:0:0.11  URI: /admin/system/user/list  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 291m  最大可用内存: 1358m
+19:03:28.164 logback-com.chunqiu [http-nio-8008-exec-1] INFO  c.c.mrjuly.common.filter.LogFilter - Request Params:
+  order = ["asc"]
+  limit = ["20"]
+  offset = ["0"]
+19:03:28.164 logback-com.chunqiu [http-nio-8008-exec-1] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:03:30.465 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> UserController，  Method >>> form
+19:03:30.471 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:03:30.472 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:03:30.471  耗时：0:0:0.2  URI: /admin/system/user/form  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 290m  最大可用内存: 1357m
+19:03:30.472 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.mrjuly.common.filter.LogFilter - Request Params:
+  id = ["2"]
+19:03:30.472 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:03:30.633 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> RoleController，  Method >>> getSelect
+19:03:30.637 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:03:30.637 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:03:30.637  耗时：0:0:0.4  URI: /admin/system/role/getSelect  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 288m  最大可用内存: 1356m
+19:03:30.637 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:03:35.642 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> RoleController，  Method >>> index
+19:03:35.644 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:03:35.644 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:03:35.644  耗时：0:0:0.0  URI: /admin/system/role/index  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 288m  最大可用内存: 1356m
+19:03:35.644 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:03:35.856 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> RoleController，  Method >>> list
+19:03:35.872 logback-com.chunqiu [http-nio-8008-exec-3] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:03:35.873 logback-com.chunqiu [http-nio-8008-exec-3] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:03:35.872  耗时：0:0:0.0  URI: /admin/system/user/userList  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 283m  最大可用内存: 1350m
+19:03:35.873 logback-com.chunqiu [http-nio-8008-exec-3] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:03:35.874 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:03:35.874 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:03:35.874  耗时：0:0:0.2  URI: /admin/system/role/list  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 282m  最大可用内存: 1349m
+19:03:35.875 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.mrjuly.common.filter.LogFilter - Request Params:
+  order = ["asc"]
+  limit = ["20"]
+  offset = ["0"]
+19:03:35.875 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:03:37.090 logback-com.chunqiu [http-nio-8008-exec-1] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> RoleController，  Method >>> editPermission
+19:03:37.093 logback-com.chunqiu [http-nio-8008-exec-1] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:03:37.094 logback-com.chunqiu [http-nio-8008-exec-1] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:03:37.093  耗时：0:0:0.0  URI: /admin/system/role/editPermission  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 282m  最大可用内存: 1349m
+19:03:37.094 logback-com.chunqiu [http-nio-8008-exec-1] INFO  c.c.mrjuly.common.filter.LogFilter - Request Params:
+  roleId = ["2"]
+19:03:37.094 logback-com.chunqiu [http-nio-8008-exec-1] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:03:37.316 logback-com.chunqiu [http-nio-8008-exec-8] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> RoleController，  Method >>> rolePermissionList
+19:03:37.334 logback-com.chunqiu [http-nio-8008-exec-8] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:03:37.335 logback-com.chunqiu [http-nio-8008-exec-8] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:03:37.334  耗时：0:0:0.15  URI: /admin/system/role/rolePermissionList  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 274m  最大可用内存: 1342m
+19:03:37.335 logback-com.chunqiu [http-nio-8008-exec-8] INFO  c.c.mrjuly.common.filter.LogFilter - Request Params:
+  roleId = ["2"]
+19:03:37.335 logback-com.chunqiu [http-nio-8008-exec-8] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:04:11.467 logback-com.chunqiu [http-nio-8008-exec-3] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> RoleController，  Method >>> editRoleMenu
+19:04:11.547 logback-com.chunqiu [http-nio-8008-exec-3] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:04:11.547 logback-com.chunqiu [http-nio-8008-exec-3] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:04:11.547  耗时：0:0:0.76  URI: /admin/system/role/editRoleMenu  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 270m  最大可用内存: 1338m
+19:04:11.547 logback-com.chunqiu [http-nio-8008-exec-3] INFO  c.c.mrjuly.common.filter.LogFilter - Request Params:
+  roleId = ["2"]
+  addMenus = ["283,284,285"]
+  delMenus = ["462,464,466"]
+19:04:11.547 logback-com.chunqiu [http-nio-8008-exec-3] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:04:13.983 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> DictController，  Method >>> index
+19:04:13.985 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:04:13.986 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:04:13.985  耗时：0:0:0.0  URI: /admin/system/dict/index  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 270m  最大可用内存: 1337m
+19:04:13.986 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:04:14.272 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> DictController，  Method >>> list
+19:04:14.287 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:04:14.287 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:04:14.287  耗时：0:0:0.12  URI: /admin/system/dict/list  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 266m  最大可用内存: 1333m
+19:04:14.287 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.mrjuly.common.filter.LogFilter - Request Params:
+  order = ["asc"]
+  limit = ["20"]
+  offset = ["0"]
+19:04:14.287 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:04:17.174 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> RoleController，  Method >>> editPermission
+19:04:17.178 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:04:17.178 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:04:17.178  耗时：0:0:0.0  URI: /admin/system/role/editPermission  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 266m  最大可用内存: 1333m
+19:04:17.178 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.mrjuly.common.filter.LogFilter - Request Params:
+  roleId = ["2"]
+19:04:17.178 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:04:17.484 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> RoleController，  Method >>> rolePermissionList
+19:04:17.495 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:04:17.496 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:04:17.495  耗时：0:0:0.11  URI: /admin/system/role/rolePermissionList  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 264m  最大可用内存: 1331m
+19:04:17.496 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.filter.LogFilter - Request Params:
+  roleId = ["2"]
+19:04:17.496 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:04:23.216 logback-com.chunqiu [http-nio-8008-exec-8] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> RoleController，  Method >>> editRoleMenu
+19:04:23.256 logback-com.chunqiu [http-nio-8008-exec-8] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:04:23.256 logback-com.chunqiu [http-nio-8008-exec-8] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:04:23.256  耗时：0:0:0.37  URI: /admin/system/role/editRoleMenu  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 261m  最大可用内存: 1329m
+19:04:23.256 logback-com.chunqiu [http-nio-8008-exec-8] INFO  c.c.mrjuly.common.filter.LogFilter - Request Params:
+  roleId = ["2"]
+  addMenus = ["212,229,247"]
+  delMenus = [""]
+19:04:23.256 logback-com.chunqiu [http-nio-8008-exec-8] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:04:34.219 logback-com.chunqiu [http-nio-8008-exec-4] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> MenuController，  Method >>> form
+19:04:34.229 logback-com.chunqiu [http-nio-8008-exec-4] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:04:34.229 logback-com.chunqiu [http-nio-8008-exec-4] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:04:34.229  耗时：0:0:0.7  URI: /admin/system/menu/form  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 260m  最大可用内存: 1328m
+19:04:34.229 logback-com.chunqiu [http-nio-8008-exec-4] INFO  c.c.mrjuly.common.filter.LogFilter - Request Params:
+  id = ["7"]
+19:04:34.229 logback-com.chunqiu [http-nio-8008-exec-4] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:04:54.960 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- 执行 Shiro 凭证认证 ----------------------
+19:04:54.969 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- Shiro 凭证认证成功 ----------------------
+19:04:55.313 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- 执行 Shiro 权限获取 ---------------------
+19:04:55.320 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- 获取到以下权限 ----------------
+19:04:55.320 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.mrjuly.common.shiro.ShiroRealm - Shiro 权限信息[system:adminLog:view, system:user:view, system:adminLog:save, system:role:view, system:user:edit, system:role:edit]
+19:04:55.320 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- Shiro 权限获取成功 ----------------------
+19:04:55.322 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:04:55.322 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:04:55.322  耗时：0:0:0.1  URI: /admin/system/user/userList  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 252m  最大可用内存: 1320m
+19:04:55.322 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:04:57.119 logback-com.chunqiu [http-nio-8008-exec-1] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> UserController，  Method >>> index
+19:04:57.122 logback-com.chunqiu [http-nio-8008-exec-1] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:04:57.122 logback-com.chunqiu [http-nio-8008-exec-1] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:04:57.122  耗时：0:0:0.0  URI: /admin/system/user/index  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 252m  最大可用内存: 1320m
+19:04:57.122 logback-com.chunqiu [http-nio-8008-exec-1] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:04:57.327 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> UserController，  Method >>> list
+19:04:57.343 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:04:57.343 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:04:57.343  耗时：0:0:0.12  URI: /admin/system/user/list  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 250m  最大可用内存: 1317m
+19:04:57.344 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.mrjuly.common.filter.LogFilter - Request Params:
+  order = ["asc"]
+  limit = ["20"]
+  offset = ["0"]
+19:04:57.344 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:04:58.502 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> RoleController，  Method >>> index
+19:04:58.505 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:04:58.505 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:04:58.505  耗时：0:0:0.0  URI: /admin/system/role/index  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 250m  最大可用内存: 1317m
+19:04:58.505 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:04:58.811 logback-com.chunqiu [http-nio-8008-exec-3] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> RoleController，  Method >>> list
+19:04:58.818 logback-com.chunqiu [http-nio-8008-exec-1] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:04:58.818 logback-com.chunqiu [http-nio-8008-exec-1] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:04:58.818  耗时：0:0:0.0  URI: /admin/system/user/userList  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 234m  最大可用内存: 1302m
+19:04:58.818 logback-com.chunqiu [http-nio-8008-exec-1] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:04:58.820 logback-com.chunqiu [http-nio-8008-exec-3] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:04:58.820 logback-com.chunqiu [http-nio-8008-exec-3] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:04:58.820  耗时：0:0:0.2  URI: /admin/system/role/list  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 234m  最大可用内存: 1302m
+19:04:58.820 logback-com.chunqiu [http-nio-8008-exec-3] INFO  c.c.mrjuly.common.filter.LogFilter - Request Params:
+  order = ["asc"]
+  limit = ["20"]
+  offset = ["0"]
+19:04:58.820 logback-com.chunqiu [http-nio-8008-exec-3] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:05:00.518 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> AdminLogController，  Method >>> index
+19:05:00.520 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:05:00.521 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:05:00.520  耗时：0:0:0.0  URI: /admin/system/adminLog/index  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 232m  最大可用内存: 1300m
+19:05:00.521 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:05:00.729 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> AdminLogController，  Method >>> list
+19:05:00.742 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:05:00.742 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:05:00.742  耗时：0:0:0.10  URI: /admin/system/adminLog/list  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 230m  最大可用内存: 1297m
+19:05:00.742 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.filter.LogFilter - Request Params:
+  order = ["asc"]
+  limit = ["20"]
+  offset = ["0"]
+19:05:00.742 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:05:16.018 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- 执行 Shiro 凭证认证 ----------------------
+19:05:16.022 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- Shiro 凭证认证成功 ----------------------
+19:05:18.326 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> UserController，  Method >>> index
+19:05:18.327 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- 执行 Shiro 权限获取 ---------------------
+19:05:18.333 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- 获取到以下权限 ----------------
+19:05:18.333 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.shiro.ShiroRealm - Shiro 权限信息[system:adminLog:view, system:user:view, system:adminLog:save, system:role:view, system:dict:edit, system:user:edit, system:role:edit, system:dict:view, gen:genScheme:view,gen:genScheme:edit, gen:genTable:view,gen:genTable:edit,gen:genTableColumn:view,gen:genTableColumn:edit, system:menu:view, adviertisement:AdvertisingPage:view,edit, system:menu:edit]
+19:05:18.333 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- Shiro 权限获取成功 ----------------------
+19:05:18.335 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:05:18.335 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:05:18.335  耗时：0:0:0.0  URI: /admin/system/user/index  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 221m  最大可用内存: 1288m
+19:05:18.335 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:05:18.520 logback-com.chunqiu [http-nio-8008-exec-8] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> UserController，  Method >>> list
+19:05:18.541 logback-com.chunqiu [http-nio-8008-exec-8] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:05:18.541 logback-com.chunqiu [http-nio-8008-exec-8] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:05:18.541  耗时：0:0:0.17  URI: /admin/system/user/list  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 217m  最大可用内存: 1284m
+19:05:18.542 logback-com.chunqiu [http-nio-8008-exec-8] INFO  c.c.mrjuly.common.filter.LogFilter - Request Params:
+  order = ["asc"]
+  limit = ["20"]
+  offset = ["0"]
+19:05:18.542 logback-com.chunqiu [http-nio-8008-exec-8] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:05:18.748 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> MenuController，  Method >>> index
+19:05:18.751 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:05:18.752 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:05:18.751  耗时：0:0:0.0  URI: /admin/system/menu/index  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 217m  最大可用内存: 1284m
+19:05:18.752 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:05:19.042 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> MenuController，  Method >>> list
+19:05:19.065 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:05:19.065 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:05:19.065  耗时：0:0:0.17  URI: /admin/system/menu/list  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 213m  最大可用内存: 1281m
+19:05:19.066 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.mrjuly.common.filter.LogFilter - Request Params:
+  order = ["asc"]
+19:05:19.066 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:05:19.842 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> MenuController，  Method >>> form
+19:05:19.861 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+19:05:19.861 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：07:05:19.861  耗时：0:0:0.15  URI: /admin/system/menu/form  最大内存: 1572m  已分配内存: 504m  已分配内存中的剩余空间: 212m  最大可用内存: 1280m
+19:05:19.861 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.filter.LogFilter - Request Params:
+  parentId = ["1"]
+19:05:19.861 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+19:14:14.083 logback-com.chunqiu [Thread-37] INFO  o.a.s.s.m.AbstractValidatingSessionManager - Disabled session validation scheduler.
+19:14:15.249 logback-com.chunqiu [Thread-37] INFO  c.alibaba.druid.pool.DruidDataSource - {dataSource-1} closed
+19:14:52.838 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - Starting SpringbootApplication on LAPTOP-BRM15SJN with PID 9588 (D:\ideaProject\staffPay\staffPay\target\classes started by admin in D:\ideaProject\staffPay\staffPay)
+19:14:52.853 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - No active profile set, falling back to default profiles: default
+19:25:23.157 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - Starting SpringbootApplication on LAPTOP-BRM15SJN with PID 2852 (D:\ideaProject\staffPay\staffPay\target\classes started by admin in D:\ideaProject\staffPay\staffPay)
+19:25:23.163 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - No active profile set, falling back to default profiles: default
+19:29:53.671 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - Starting SpringbootApplication on LAPTOP-BRM15SJN with PID 15204 (D:\ideaProject\staffPay\staffPay\target\classes started by admin in D:\ideaProject\staffPay\staffPay)
+19:29:53.680 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - No active profile set, falling back to default profiles: default
+19:31:11.719 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - Starting SpringbootApplication on LAPTOP-BRM15SJN with PID 12364 (D:\ideaProject\staffPay\staffPay\target\classes started by admin in D:\ideaProject\staffPay\staffPay)
+19:31:11.728 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - No active profile set, falling back to default profiles: default
+19:45:48.698 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - Starting SpringbootApplication on LAPTOP-BRM15SJN with PID 15068 (D:\ideaProject\staffPay\staffPay\target\classes started by admin in D:\ideaProject\staffPay\staffPay)
+19:45:48.704 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - No active profile set, falling back to default profiles: default
+19:45:54.859 logback-com.chunqiu [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8008"]
+19:45:54.875 logback-com.chunqiu [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+19:45:54.876 logback-com.chunqiu [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet Engine: Apache Tomcat/8.5.34
+19:45:54.882 logback-com.chunqiu [localhost-startStop-1] INFO  o.a.c.core.AprLifecycleListener - The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jdk1.8.0_241\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Program Files\Java\jdk1.8.0_241\bin;C:\Program Files\Java\jdk1.8.0_241\jre\bin;D:\nodejs\;D:\Git\cmd;C:\Program Files\MySQL\MySQL Server 5.7\bin;D:\Redis\redis;C:\Users\admin\AppData\Local\Microsoft\WindowsApps;D:\nodejs\node_global;;.]
+19:45:55.059 logback-com.chunqiu [localhost-startStop-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+19:45:56.411 logback-com.chunqiu [main] INFO  o.a.catalina.core.StandardService - Stopping service [Tomcat]
+19:48:00.164 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - Starting SpringbootApplication on LAPTOP-BRM15SJN with PID 2664 (D:\ideaProject\staffPay\staffPay\target\classes started by admin in D:\ideaProject\staffPay\staffPay)
+19:48:00.173 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - No active profile set, falling back to default profiles: default
+19:48:05.805 logback-com.chunqiu [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8008"]
+19:48:05.823 logback-com.chunqiu [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+19:48:05.823 logback-com.chunqiu [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet Engine: Apache Tomcat/8.5.34
+19:48:05.830 logback-com.chunqiu [localhost-startStop-1] INFO  o.a.c.core.AprLifecycleListener - The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jdk1.8.0_241\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Program Files\Java\jdk1.8.0_241\bin;C:\Program Files\Java\jdk1.8.0_241\jre\bin;D:\nodejs\;D:\Git\cmd;C:\Program Files\MySQL\MySQL Server 5.7\bin;D:\Redis\redis;C:\Users\admin\AppData\Local\Microsoft\WindowsApps;D:\nodejs\node_global;;.]
+19:48:05.982 logback-com.chunqiu [localhost-startStop-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+19:48:07.291 logback-com.chunqiu [main] INFO  o.a.catalina.core.StandardService - Stopping service [Tomcat]
+20:29:45.124 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - Starting SpringbootApplication on LAPTOP-BRM15SJN with PID 2964 (D:\ideaProject\staffPay\staffPay\target\classes started by admin in D:\ideaProject\staffPay\staffPay)
+20:29:45.139 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - No active profile set, falling back to default profiles: default
+20:29:54.469 logback-com.chunqiu [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8008"]
+20:29:54.498 logback-com.chunqiu [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+20:29:54.499 logback-com.chunqiu [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet Engine: Apache Tomcat/8.5.34
+20:29:54.513 logback-com.chunqiu [localhost-startStop-1] INFO  o.a.c.core.AprLifecycleListener - The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jdk1.8.0_241\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Program Files\Java\jdk1.8.0_241\bin;C:\Program Files\Java\jdk1.8.0_241\jre\bin;D:\nodejs\;D:\Git\cmd;C:\Program Files\MySQL\MySQL Server 5.7\bin;D:\Redis\redis;C:\Users\admin\AppData\Local\Microsoft\WindowsApps;D:\nodejs\node_global;;.]
+20:29:54.793 logback-com.chunqiu [localhost-startStop-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+20:29:57.077 logback-com.chunqiu [main] INFO  o.a.catalina.core.StandardService - Stopping service [Tomcat]
+20:31:49.808 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - Starting SpringbootApplication on LAPTOP-BRM15SJN with PID 16148 (D:\ideaProject\staffPay\staffPay\target\classes started by admin in D:\ideaProject\staffPay\staffPay)
+20:31:49.817 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - No active profile set, falling back to default profiles: default
+20:31:57.655 logback-com.chunqiu [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8008"]
+20:31:57.681 logback-com.chunqiu [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+20:31:57.682 logback-com.chunqiu [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet Engine: Apache Tomcat/8.5.34
+20:31:57.695 logback-com.chunqiu [localhost-startStop-1] INFO  o.a.c.core.AprLifecycleListener - The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jdk1.8.0_241\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Program Files\Java\jdk1.8.0_241\bin;C:\Program Files\Java\jdk1.8.0_241\jre\bin;D:\nodejs\;D:\Git\cmd;C:\Program Files\MySQL\MySQL Server 5.7\bin;D:\Redis\redis;C:\Users\admin\AppData\Local\Microsoft\WindowsApps;D:\nodejs\node_global;;.]
+20:31:57.980 logback-com.chunqiu [localhost-startStop-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+20:32:00.446 logback-com.chunqiu [main] INFO  org.mongodb.driver.cluster - Cluster created with settings {hosts=[localhost:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms', maxWaitQueueSize=500}
+20:32:00.566 logback-com.chunqiu [cluster-ClusterId{value='5e6ccec06b1e8d3f140bcda9', description='null'}-localhost:27017] INFO  org.mongodb.driver.connection - Opened connection [connectionId{localValue:1, serverValue:19}] to localhost:27017
+20:32:00.575 logback-com.chunqiu [cluster-ClusterId{value='5e6ccec06b1e8d3f140bcda9', description='null'}-localhost:27017] INFO  org.mongodb.driver.cluster - Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, version=ServerVersion{versionList=[4, 2, 1]}, minWireVersion=0, maxWireVersion=8, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=6768200}
+20:32:09.974 logback-com.chunqiu [container-1] INFO  io.lettuce.core.EpollProvider - Starting without optional epoll library
+20:32:09.977 logback-com.chunqiu [container-1] INFO  io.lettuce.core.KqueueProvider - Starting without optional kqueue library
+20:32:11.230 logback-com.chunqiu [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8008"]
+20:32:11.232 logback-com.chunqiu [main] INFO  o.a.tomcat.util.net.NioSelectorPool - Using a shared selector for servlet write/read
+20:32:11.278 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - Started SpringbootApplication in 22.874 seconds (JVM running for 24.729)
+20:32:30.046 logback-com.chunqiu [http-nio-8008-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring FrameworkServlet 'dispatcherServlet'
+20:32:30.162 logback-com.chunqiu [http-nio-8008-exec-1] INFO  o.a.s.s.m.AbstractValidatingSessionManager - Enabling session validation scheduler...
+20:32:37.052 logback-com.chunqiu [http-nio-8008-exec-3] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- 执行 Shiro 凭证认证 ----------------------
+20:32:37.887 logback-com.chunqiu [http-nio-8008-exec-3] INFO  c.alibaba.druid.pool.DruidDataSource - {dataSource-1,druidDataSource} inited
+20:32:38.232 logback-com.chunqiu [http-nio-8008-exec-3] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- Shiro 凭证认证成功 ----------------------
+20:32:51.836 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- 执行 Shiro 凭证认证 ----------------------
+20:32:51.848 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- Shiro 凭证认证成功 ----------------------
+20:32:52.363 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- 执行 Shiro 权限获取 ---------------------
+20:32:52.419 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- 获取到以下权限 ----------------
+20:32:52.419 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.shiro.ShiroRealm - Shiro 权限信息[system:adminLog:view, system:user:view, system:adminLog:save, system:role:view, system:user:edit, system:role:edit]
+20:32:52.419 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- Shiro 权限获取成功 ----------------------
+20:32:52.447 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+20:32:52.453 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：08:32:52.446  耗时：0:0:0.6  URI: /admin/system/user/userList  最大内存: 1572m  已分配内存: 466m  已分配内存中的剩余空间: 197m  最大可用内存: 1303m
+20:32:52.454 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+20:32:52.565 logback-com.chunqiu [http-nio-8008-exec-10] INFO  org.mongodb.driver.connection - Opened connection [connectionId{localValue:2, serverValue:20}] to localhost:27017
+20:35:37.369 logback-com.chunqiu [http-nio-8008-exec-1] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> UserController，  Method >>> index
+20:35:37.376 logback-com.chunqiu [http-nio-8008-exec-1] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+20:35:37.377 logback-com.chunqiu [http-nio-8008-exec-1] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：08:35:37.376  耗时：0:0:0.0  URI: /admin/system/user/index  最大内存: 1572m  已分配内存: 466m  已分配内存中的剩余空间: 187m  最大可用内存: 1293m
+20:35:37.377 logback-com.chunqiu [http-nio-8008-exec-1] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+20:35:41.633 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> RoleController，  Method >>> index
+20:35:41.647 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+20:35:41.647 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：08:35:41.647  耗时：0:0:0.3  URI: /admin/system/role/index  最大内存: 1572m  已分配内存: 466m  已分配内存中的剩余空间: 180m  最大可用内存: 1286m
+20:35:41.647 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+20:35:43.634 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> AdminLogController，  Method >>> index
+20:35:43.651 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+20:35:43.652 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：08:35:43.651  耗时：0:0:0.5  URI: /admin/system/adminLog/index  最大内存: 1572m  已分配内存: 466m  已分配内存中的剩余空间: 173m  最大可用内存: 1279m
+20:35:43.652 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+20:35:48.161 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+20:35:48.161 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：08:35:48.160  耗时：0:0:0.0  URI: /admin/system/user/userList  最大内存: 1572m  已分配内存: 466m  已分配内存中的剩余空间: 168m  最大可用内存: 1274m
+20:35:48.162 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+20:36:25.249 logback-com.chunqiu [Thread-47] INFO  org.mongodb.driver.connection - Closed connection [connectionId{localValue:2, serverValue:20}] to localhost:27017 because the pool has been closed.
+20:36:25.254 logback-com.chunqiu [Thread-47] INFO  o.a.s.s.m.AbstractValidatingSessionManager - Disabled session validation scheduler.
+20:36:26.386 logback-com.chunqiu [Thread-47] INFO  c.alibaba.druid.pool.DruidDataSource - {dataSource-1} closed
+20:36:38.818 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - Starting SpringbootApplication on LAPTOP-BRM15SJN with PID 13756 (D:\ideaProject\staffPay\staffPay\target\classes started by admin in D:\ideaProject\staffPay\staffPay)
+20:36:38.836 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - No active profile set, falling back to default profiles: default
+20:36:47.256 logback-com.chunqiu [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8008"]
+20:36:47.279 logback-com.chunqiu [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+20:36:47.279 logback-com.chunqiu [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet Engine: Apache Tomcat/8.5.34
+20:36:47.287 logback-com.chunqiu [localhost-startStop-1] INFO  o.a.c.core.AprLifecycleListener - The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jdk1.8.0_241\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Program Files\Java\jdk1.8.0_241\bin;C:\Program Files\Java\jdk1.8.0_241\jre\bin;D:\nodejs\;D:\Git\cmd;C:\Program Files\MySQL\MySQL Server 5.7\bin;D:\Redis\redis;C:\Users\admin\AppData\Local\Microsoft\WindowsApps;D:\nodejs\node_global;;.]
+20:36:47.625 logback-com.chunqiu [localhost-startStop-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+20:36:50.465 logback-com.chunqiu [main] INFO  org.mongodb.driver.cluster - Cluster created with settings {hosts=[localhost:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms', maxWaitQueueSize=500}
+20:37:01.271 logback-com.chunqiu [container-1] INFO  io.lettuce.core.EpollProvider - Starting without optional epoll library
+20:37:01.274 logback-com.chunqiu [container-1] INFO  io.lettuce.core.KqueueProvider - Starting without optional kqueue library
+20:37:02.727 logback-com.chunqiu [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8008"]
+20:37:02.730 logback-com.chunqiu [main] INFO  o.a.tomcat.util.net.NioSelectorPool - Using a shared selector for servlet write/read
+20:37:02.776 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - Started SpringbootApplication in 26.244 seconds (JVM running for 28.772)
+20:37:10.611 logback-com.chunqiu [cluster-ClusterId{value='5e6ccfe26b1e8d35bc346d4e', description='null'}-localhost:27017] INFO  org.mongodb.driver.cluster - Exception in monitor thread while connecting to server localhost:27017
+com.mongodb.MongoSocketReadTimeoutException: Timeout while receiving message
+	at com.mongodb.connection.InternalStreamConnection.translateReadException(InternalStreamConnection.java:530)
+	at com.mongodb.connection.InternalStreamConnection.receiveMessage(InternalStreamConnection.java:421)
+	at com.mongodb.connection.InternalStreamConnection.receiveCommandMessageResponse(InternalStreamConnection.java:290)
+	at com.mongodb.connection.InternalStreamConnection.sendAndReceive(InternalStreamConnection.java:255)
+	at com.mongodb.connection.CommandHelper.sendAndReceive(CommandHelper.java:84)
+	at com.mongodb.connection.CommandHelper.executeCommand(CommandHelper.java:34)
+	at com.mongodb.connection.InternalStreamConnectionInitializer.initializeConnectionDescription(InternalStreamConnectionInitializer.java:91)
+	at com.mongodb.connection.InternalStreamConnectionInitializer.initialize(InternalStreamConnectionInitializer.java:51)
+	at com.mongodb.connection.InternalStreamConnection.open(InternalStreamConnection.java:127)
+	at com.mongodb.connection.DefaultServerMonitor$ServerMonitorRunnable.run(DefaultServerMonitor.java:114)
+	at java.lang.Thread.run(Thread.java:748)
+Caused by: java.net.SocketTimeoutException: Read timed out
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.socketRead(SocketInputStream.java:116)
+	at java.net.SocketInputStream.read(SocketInputStream.java:171)
+	at java.net.SocketInputStream.read(SocketInputStream.java:141)
+	at com.mongodb.connection.SocketStream.read(SocketStream.java:84)
+	at com.mongodb.connection.InternalStreamConnection.receiveResponseBuffers(InternalStreamConnection.java:547)
+	at com.mongodb.connection.InternalStreamConnection.receiveMessage(InternalStreamConnection.java:418)
+	... 9 common frames omitted
+20:37:59.196 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - Starting SpringbootApplication on LAPTOP-BRM15SJN with PID 11452 (D:\ideaProject\staffPay\staffPay\target\classes started by admin in D:\ideaProject\staffPay\staffPay)
+20:37:59.205 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - No active profile set, falling back to default profiles: default
+20:38:06.213 logback-com.chunqiu [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8008"]
+20:38:06.233 logback-com.chunqiu [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+20:38:06.233 logback-com.chunqiu [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet Engine: Apache Tomcat/8.5.34
+20:38:06.243 logback-com.chunqiu [localhost-startStop-1] INFO  o.a.c.core.AprLifecycleListener - The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jdk1.8.0_241\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Program Files\Java\jdk1.8.0_241\bin;C:\Program Files\Java\jdk1.8.0_241\jre\bin;D:\nodejs\;D:\Git\cmd;C:\Program Files\MySQL\MySQL Server 5.7\bin;D:\Redis\redis;C:\Users\admin\AppData\Local\Microsoft\WindowsApps;D:\nodejs\node_global;;.]
+20:38:06.474 logback-com.chunqiu [localhost-startStop-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+20:38:08.683 logback-com.chunqiu [main] INFO  org.mongodb.driver.cluster - Cluster created with settings {hosts=[localhost:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms', maxWaitQueueSize=500}
+20:38:16.908 logback-com.chunqiu [container-1] INFO  io.lettuce.core.EpollProvider - Starting without optional epoll library
+20:38:16.912 logback-com.chunqiu [container-1] INFO  io.lettuce.core.KqueueProvider - Starting without optional kqueue library
+20:38:18.051 logback-com.chunqiu [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8008"]
+20:38:18.054 logback-com.chunqiu [main] INFO  o.a.tomcat.util.net.NioSelectorPool - Using a shared selector for servlet write/read
+20:38:18.091 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - Started SpringbootApplication in 19.871 seconds (JVM running for 21.917)
+20:38:28.808 logback-com.chunqiu [cluster-ClusterId{value='5e6cd0306b1e8d2cbcf8a063', description='null'}-localhost:27017] INFO  org.mongodb.driver.cluster - Exception in monitor thread while connecting to server localhost:27017
+com.mongodb.MongoSocketReadTimeoutException: Timeout while receiving message
+	at com.mongodb.connection.InternalStreamConnection.translateReadException(InternalStreamConnection.java:530)
+	at com.mongodb.connection.InternalStreamConnection.receiveMessage(InternalStreamConnection.java:421)
+	at com.mongodb.connection.InternalStreamConnection.receiveCommandMessageResponse(InternalStreamConnection.java:290)
+	at com.mongodb.connection.InternalStreamConnection.sendAndReceive(InternalStreamConnection.java:255)
+	at com.mongodb.connection.CommandHelper.sendAndReceive(CommandHelper.java:84)
+	at com.mongodb.connection.CommandHelper.executeCommand(CommandHelper.java:34)
+	at com.mongodb.connection.InternalStreamConnectionInitializer.initializeConnectionDescription(InternalStreamConnectionInitializer.java:91)
+	at com.mongodb.connection.InternalStreamConnectionInitializer.initialize(InternalStreamConnectionInitializer.java:51)
+	at com.mongodb.connection.InternalStreamConnection.open(InternalStreamConnection.java:127)
+	at com.mongodb.connection.DefaultServerMonitor$ServerMonitorRunnable.run(DefaultServerMonitor.java:114)
+	at java.lang.Thread.run(Thread.java:748)
+Caused by: java.net.SocketTimeoutException: Read timed out
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.socketRead(SocketInputStream.java:116)
+	at java.net.SocketInputStream.read(SocketInputStream.java:171)
+	at java.net.SocketInputStream.read(SocketInputStream.java:141)
+	at com.mongodb.connection.SocketStream.read(SocketStream.java:84)
+	at com.mongodb.connection.InternalStreamConnection.receiveResponseBuffers(InternalStreamConnection.java:547)
+	at com.mongodb.connection.InternalStreamConnection.receiveMessage(InternalStreamConnection.java:418)
+	... 9 common frames omitted
+20:38:38.841 logback-com.chunqiu [cluster-ClusterId{value='5e6cd0306b1e8d2cbcf8a063', description='null'}-localhost:27017] INFO  org.mongodb.driver.connection - Opened connection [connectionId{localValue:2, serverValue:24}] to localhost:27017
+20:38:38.850 logback-com.chunqiu [cluster-ClusterId{value='5e6cd0306b1e8d2cbcf8a063', description='null'}-localhost:27017] INFO  org.mongodb.driver.cluster - Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, version=ServerVersion{versionList=[4, 2, 1]}, minWireVersion=0, maxWireVersion=8, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=5653200}
+20:38:44.192 logback-com.chunqiu [http-nio-8008-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring FrameworkServlet 'dispatcherServlet'
+20:38:44.322 logback-com.chunqiu [http-nio-8008-exec-1] INFO  o.a.s.s.m.AbstractValidatingSessionManager - Enabling session validation scheduler...
+20:38:46.289 logback-com.chunqiu [http-nio-8008-exec-4] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+20:38:46.294 logback-com.chunqiu [http-nio-8008-exec-4] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：08:38:46.288  耗时：0:0:0.4  URI: /admin/system/user/userList  最大内存: 1572m  已分配内存: 498m  已分配内存中的剩余空间: 310m  最大可用内存: 1384m
+20:38:46.294 logback-com.chunqiu [http-nio-8008-exec-4] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+20:38:46.393 logback-com.chunqiu [http-nio-8008-exec-4] INFO  org.mongodb.driver.connection - Opened connection [connectionId{localValue:3, serverValue:25}] to localhost:27017
+20:42:39.462 logback-com.chunqiu [Thread-43] INFO  org.mongodb.driver.connection - Closed connection [connectionId{localValue:3, serverValue:25}] to localhost:27017 because the pool has been closed.
+20:42:39.469 logback-com.chunqiu [Thread-43] INFO  o.a.s.s.m.AbstractValidatingSessionManager - Disabled session validation scheduler.
+20:42:50.138 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - Starting SpringbootApplication on LAPTOP-BRM15SJN with PID 14888 (D:\ideaProject\staffPay\staffPay\target\classes started by admin in D:\ideaProject\staffPay\staffPay)
+20:42:50.147 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - No active profile set, falling back to default profiles: default
+20:42:57.890 logback-com.chunqiu [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8008"]
+20:42:57.919 logback-com.chunqiu [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+20:42:57.920 logback-com.chunqiu [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet Engine: Apache Tomcat/8.5.34
+20:42:57.936 logback-com.chunqiu [localhost-startStop-1] INFO  o.a.c.core.AprLifecycleListener - The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jdk1.8.0_241\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Program Files\Java\jdk1.8.0_241\bin;C:\Program Files\Java\jdk1.8.0_241\jre\bin;D:\nodejs\;D:\Git\cmd;C:\Program Files\MySQL\MySQL Server 5.7\bin;D:\Redis\redis;C:\Users\admin\AppData\Local\Microsoft\WindowsApps;D:\nodejs\node_global;;.]
+20:42:58.167 logback-com.chunqiu [localhost-startStop-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+20:43:00.670 logback-com.chunqiu [main] INFO  org.mongodb.driver.cluster - Cluster created with settings {hosts=[localhost:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms', maxWaitQueueSize=500}
+20:43:09.646 logback-com.chunqiu [container-1] INFO  io.lettuce.core.EpollProvider - Starting without optional epoll library
+20:43:09.649 logback-com.chunqiu [container-1] INFO  io.lettuce.core.KqueueProvider - Starting without optional kqueue library
+20:43:10.888 logback-com.chunqiu [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8008"]
+20:43:10.891 logback-com.chunqiu [main] INFO  o.a.tomcat.util.net.NioSelectorPool - Using a shared selector for servlet write/read
+20:43:10.930 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - Started SpringbootApplication in 21.947 seconds (JVM running for 23.945)
+20:43:20.756 logback-com.chunqiu [cluster-ClusterId{value='5e6cd1546b1e8d3a28dd2c41', description='null'}-localhost:27017] INFO  org.mongodb.driver.cluster - Exception in monitor thread while connecting to server localhost:27017
+com.mongodb.MongoSocketReadTimeoutException: Timeout while receiving message
+	at com.mongodb.connection.InternalStreamConnection.translateReadException(InternalStreamConnection.java:530)
+	at com.mongodb.connection.InternalStreamConnection.receiveMessage(InternalStreamConnection.java:421)
+	at com.mongodb.connection.InternalStreamConnection.receiveCommandMessageResponse(InternalStreamConnection.java:290)
+	at com.mongodb.connection.InternalStreamConnection.sendAndReceive(InternalStreamConnection.java:255)
+	at com.mongodb.connection.CommandHelper.sendAndReceive(CommandHelper.java:84)
+	at com.mongodb.connection.CommandHelper.executeCommand(CommandHelper.java:34)
+	at com.mongodb.connection.InternalStreamConnectionInitializer.initializeConnectionDescription(InternalStreamConnectionInitializer.java:91)
+	at com.mongodb.connection.InternalStreamConnectionInitializer.initialize(InternalStreamConnectionInitializer.java:51)
+	at com.mongodb.connection.InternalStreamConnection.open(InternalStreamConnection.java:127)
+	at com.mongodb.connection.DefaultServerMonitor$ServerMonitorRunnable.run(DefaultServerMonitor.java:114)
+	at java.lang.Thread.run(Thread.java:748)
+Caused by: java.net.SocketTimeoutException: Read timed out
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.socketRead(SocketInputStream.java:116)
+	at java.net.SocketInputStream.read(SocketInputStream.java:171)
+	at java.net.SocketInputStream.read(SocketInputStream.java:141)
+	at com.mongodb.connection.SocketStream.read(SocketStream.java:84)
+	at com.mongodb.connection.InternalStreamConnection.receiveResponseBuffers(InternalStreamConnection.java:547)
+	at com.mongodb.connection.InternalStreamConnection.receiveMessage(InternalStreamConnection.java:418)
+	... 9 common frames omitted
+20:43:38.626 logback-com.chunqiu [cluster-ClusterId{value='5e6cd1546b1e8d3a28dd2c41', description='null'}-localhost:27017] INFO  org.mongodb.driver.connection - Opened connection [connectionId{localValue:2, serverValue:27}] to localhost:27017
+20:43:38.634 logback-com.chunqiu [cluster-ClusterId{value='5e6cd1546b1e8d3a28dd2c41', description='null'}-localhost:27017] INFO  org.mongodb.driver.cluster - Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, version=ServerVersion{versionList=[4, 2, 1]}, minWireVersion=0, maxWireVersion=8, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=5215500}
+20:43:45.107 logback-com.chunqiu [http-nio-8008-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring FrameworkServlet 'dispatcherServlet'
+20:43:45.230 logback-com.chunqiu [http-nio-8008-exec-1] INFO  o.a.s.s.m.AbstractValidatingSessionManager - Enabling session validation scheduler...
+20:43:47.327 logback-com.chunqiu [http-nio-8008-exec-3] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+20:43:47.333 logback-com.chunqiu [http-nio-8008-exec-3] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：08:43:47.327  耗时：0:0:0.6  URI: /admin/system/user/userList  最大内存: 1572m  已分配内存: 487m  已分配内存中的剩余空间: 331m  最大可用内存: 1415m
+20:43:47.334 logback-com.chunqiu [http-nio-8008-exec-3] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+20:43:47.433 logback-com.chunqiu [http-nio-8008-exec-3] INFO  org.mongodb.driver.connection - Opened connection [connectionId{localValue:3, serverValue:28}] to localhost:27017
+20:43:53.004 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> RoleController，  Method >>> index
+20:43:53.029 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+20:43:53.030 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：08:43:53.029  耗时：0:0:0.3  URI: /admin/system/role/index  最大内存: 1572m  已分配内存: 487m  已分配内存中的剩余空间: 314m  最大可用内存: 1399m
+20:43:53.030 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+20:43:53.457 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.alibaba.druid.pool.DruidDataSource - {dataSource-1,druidDataSource} inited
+20:43:56.862 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> RoleController，  Method >>> list
+20:43:56.909 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+20:43:56.910 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：08:43:56.909  耗时：0:0:0.0  URI: /admin/system/user/userList  最大内存: 1572m  已分配内存: 487m  已分配内存中的剩余空间: 268m  最大可用内存: 1352m
+20:43:56.910 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+20:43:57.155 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+20:43:57.156 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：08:43:57.155  耗时：0:0:0.237  URI: /admin/system/role/list  最大内存: 1572m  已分配内存: 487m  已分配内存中的剩余空间: 253m  最大可用内存: 1338m
+20:43:57.163 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.mrjuly.common.filter.LogFilter - Request Params:
+  order = ["asc"]
+  limit = ["20"]
+  offset = ["0"]
+20:43:57.163 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+20:44:11.422 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> UserController，  Method >>> index
+20:44:11.426 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+20:44:11.426 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：08:44:11.426  耗时：0:0:0.0  URI: /admin/system/user/index  最大内存: 1572m  已分配内存: 487m  已分配内存中的剩余空间: 252m  最大可用内存: 1336m
+20:44:11.426 logback-com.chunqiu [http-nio-8008-exec-5] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+20:44:11.889 logback-com.chunqiu [http-nio-8008-exec-3] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> UserController，  Method >>> list
+20:44:11.959 logback-com.chunqiu [http-nio-8008-exec-3] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+20:44:11.960 logback-com.chunqiu [http-nio-8008-exec-3] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：08:44:11.959  耗时：0:0:0.50  URI: /admin/system/user/list  最大内存: 1572m  已分配内存: 487m  已分配内存中的剩余空间: 245m  最大可用内存: 1329m
+20:44:11.961 logback-com.chunqiu [http-nio-8008-exec-3] INFO  c.c.mrjuly.common.filter.LogFilter - Request Params:
+  order = ["asc"]
+  limit = ["20"]
+  offset = ["0"]
+20:44:11.961 logback-com.chunqiu [http-nio-8008-exec-3] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+20:45:28.430 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- 执行 Shiro 凭证认证 ----------------------
+20:45:28.448 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- Shiro 凭证认证成功 ----------------------
+20:45:35.195 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> MenuController，  Method >>> index
+20:45:35.197 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- 执行 Shiro 权限获取 ---------------------
+20:45:35.234 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- 获取到以下权限 ----------------
+20:45:35.235 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.mrjuly.common.shiro.ShiroRealm - Shiro 权限信息[system:adminLog:view, system:user:view, system:adminLog:save, system:role:view, system:dict:edit, system:user:edit, system:role:edit, system:dict:view, gen:genScheme:view,gen:genScheme:edit, gen:genTable:view,gen:genTable:edit,gen:genTableColumn:view,gen:genTableColumn:edit, system:menu:view, adviertisement:AdvertisingPage:view,edit, system:menu:edit]
+20:45:35.235 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- Shiro 权限获取成功 ----------------------
+20:45:35.247 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+20:45:35.247 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：08:45:35.247  耗时：0:0:0.3  URI: /admin/system/menu/index  最大内存: 1572m  已分配内存: 487m  已分配内存中的剩余空间: 213m  最大可用内存: 1298m
+20:45:35.247 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+20:45:35.579 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> MenuController，  Method >>> list
+20:45:35.695 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+20:45:35.696 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：08:45:35.695  耗时：0:0:0.102  URI: /admin/system/menu/list  最大内存: 1572m  已分配内存: 487m  已分配内存中的剩余空间: 205m  最大可用内存: 1289m
+20:45:35.696 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.filter.LogFilter - Request Params:
+  order = ["asc"]
+20:45:35.696 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+20:45:53.598 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> MenuController，  Method >>> form
+20:45:53.645 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+20:45:53.646 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：08:45:53.645  耗时：0:0:0.39  URI: /admin/system/menu/form  最大内存: 1572m  已分配内存: 487m  已分配内存中的剩余空间: 198m  最大可用内存: 1283m
+20:45:53.647 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.mrjuly.common.filter.LogFilter - Request Params:
+  parentId = ["1"]
+20:45:53.647 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+20:46:01.522 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> MenuController，  Method >>> saveMenu
+20:46:15.061 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+20:46:15.061 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：08:46:15.061  耗时：0:0:13.530  URI: /admin/system/menu/saveMenu  最大内存: 1572m  已分配内存: 555m  已分配内存中的剩余空间: 105m  最大可用内存: 1122m
+20:46:15.062 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.mrjuly.common.filter.LogFilter - Request Params:
+  id = [""]
+  parentId = ["1"]
+  parentIds = [""]
+  name = ["测试管理"]
+  sort = ["990"]
+  href = [""]
+  target = [""]
+  icon = [""]
+  isShow = ["1"]
+  permission = [""]
+  remarks = [""]
+20:46:15.062 logback-com.chunqiu [http-nio-8008-exec-2] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+20:51:28.656 logback-com.chunqiu [Thread-44] INFO  org.mongodb.driver.connection - Closed connection [connectionId{localValue:3, serverValue:28}] to localhost:27017 because the pool has been closed.
+20:51:28.666 logback-com.chunqiu [Thread-44] INFO  o.a.s.s.m.AbstractValidatingSessionManager - Disabled session validation scheduler.
+20:51:29.848 logback-com.chunqiu [Thread-44] INFO  c.alibaba.druid.pool.DruidDataSource - {dataSource-1} closed
+21:05:41.965 logback-com.chunqiu [main] INFO  c.boot.mrjuly.SpringbootApplication - Starting SpringbootApplication on LAPTOP-BRM15SJN with PID 816 (D:\ideaProject\staffPay\staffPay\target\classes started by admin in D:\ideaProject\staffPay\staffPay)
+21:05:41.985 logback-com.chunqiu [main] INFO  c.boot.mrjuly.SpringbootApplication - No active profile set, falling back to default profiles: default
+21:08:33.108 logback-com.boot [main] INFO  c.boot.mrjuly.SpringbootApplication - Starting SpringbootApplication on LAPTOP-BRM15SJN with PID 16080 (D:\ideaProject\staffPay\staffPay\target\classes started by admin in D:\ideaProject\staffPay\staffPay)
+21:08:33.116 logback-com.boot [main] INFO  c.boot.mrjuly.SpringbootApplication - No active profile set, falling back to default profiles: default
+21:21:54.947 logback-com.boot [Thread-45] INFO  o.a.s.s.m.AbstractValidatingSessionManager - Disabled session validation scheduler.
+21:21:56.180 logback-com.boot [Thread-45] INFO  c.alibaba.druid.pool.DruidDataSource - {dataSource-1} closed
+21:23:04.951 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - Starting SpringbootApplication on LAPTOP-BRM15SJN with PID 2196 (D:\ideaProject\staffPay\staffPay\target\classes started by admin in D:\ideaProject\staffPay\staffPay)
+21:23:04.960 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - No active profile set, falling back to default profiles: default
+21:24:34.006 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - Starting SpringbootApplication on LAPTOP-BRM15SJN with PID 1020 (D:\ideaProject\staffPay\staffPay\target\classes started by admin in D:\ideaProject\staffPay\staffPay)
+21:24:34.013 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - No active profile set, falling back to default profiles: default
+21:25:51.598 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - Starting SpringbootApplication on LAPTOP-BRM15SJN with PID 10696 (D:\ideaProject\staffPay\staffPay\target\classes started by admin in D:\ideaProject\staffPay\staffPay)
+21:25:51.607 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - No active profile set, falling back to default profiles: default
+21:27:03.699 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - Starting SpringbootApplication on LAPTOP-BRM15SJN with PID 360 (D:\ideaProject\staffPay\staffPay\target\classes started by admin in D:\ideaProject\staffPay\staffPay)
+21:27:03.706 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - No active profile set, falling back to default profiles: default
+21:29:00.359 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - Starting SpringbootApplication on LAPTOP-BRM15SJN with PID 6196 (D:\ideaProject\staffPay\staffPay\target\classes started by admin in D:\ideaProject\staffPay\staffPay)
+21:29:00.367 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - No active profile set, falling back to default profiles: default
+21:29:28.343 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - Starting SpringbootApplication on LAPTOP-BRM15SJN with PID 15036 (D:\ideaProject\staffPay\staffPay\target\classes started by admin in D:\ideaProject\staffPay\staffPay)
+21:29:28.351 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - No active profile set, falling back to default profiles: default
+21:30:07.956 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - Starting SpringbootApplication on LAPTOP-BRM15SJN with PID 7176 (D:\ideaProject\staffPay\staffPay\target\classes started by admin in D:\ideaProject\staffPay\staffPay)
+21:30:07.965 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - No active profile set, falling back to default profiles: default
+21:30:15.103 logback-com.chunqiu [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8008"]
+21:30:15.130 logback-com.chunqiu [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+21:30:15.131 logback-com.chunqiu [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet Engine: Apache Tomcat/8.5.34
+21:30:15.138 logback-com.chunqiu [localhost-startStop-1] INFO  o.a.c.core.AprLifecycleListener - The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jdk1.8.0_241\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Program Files\Java\jdk1.8.0_241\bin;C:\Program Files\Java\jdk1.8.0_241\jre\bin;D:\nodejs\;D:\Git\cmd;C:\Program Files\MySQL\MySQL Server 5.7\bin;D:\Redis\redis;C:\Users\admin\AppData\Local\Microsoft\WindowsApps;D:\nodejs\node_global;;.]
+21:30:15.375 logback-com.chunqiu [localhost-startStop-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+21:30:17.783 logback-com.chunqiu [main] INFO  org.mongodb.driver.cluster - Cluster created with settings {hosts=[localhost:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms', maxWaitQueueSize=500}
+21:30:17.935 logback-com.chunqiu [cluster-ClusterId{value='5e6cdc696b1e8d1c0872ae07', description='null'}-localhost:27017] INFO  org.mongodb.driver.connection - Opened connection [connectionId{localValue:1, serverValue:12}] to localhost:27017
+21:30:17.945 logback-com.chunqiu [cluster-ClusterId{value='5e6cdc696b1e8d1c0872ae07', description='null'}-localhost:27017] INFO  org.mongodb.driver.cluster - Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, version=ServerVersion{versionList=[4, 2, 1]}, minWireVersion=0, maxWireVersion=8, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=6677100}
+21:30:27.154 logback-com.chunqiu [container-1] INFO  io.lettuce.core.EpollProvider - Starting without optional epoll library
+21:30:27.157 logback-com.chunqiu [container-1] INFO  io.lettuce.core.KqueueProvider - Starting without optional kqueue library
+21:30:28.359 logback-com.chunqiu [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8008"]
+21:30:28.361 logback-com.chunqiu [main] INFO  o.a.tomcat.util.net.NioSelectorPool - Using a shared selector for servlet write/read
+21:30:28.432 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - Started SpringbootApplication in 21.428 seconds (JVM running for 23.192)
+21:30:32.105 logback-com.chunqiu [http-nio-8008-exec-2] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring FrameworkServlet 'dispatcherServlet'
+21:30:32.297 logback-com.chunqiu [http-nio-8008-exec-2] INFO  o.a.s.s.m.AbstractValidatingSessionManager - Enabling session validation scheduler...
+21:30:40.950 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- 执行 Shiro 凭证认证 ----------------------
+21:30:41.551 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.alibaba.druid.pool.DruidDataSource - {dataSource-1,druidDataSource} inited
+21:30:41.863 logback-com.chunqiu [http-nio-8008-exec-9] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- Shiro 凭证认证成功 ----------------------
+21:30:42.786 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- 执行 Shiro 权限获取 ---------------------
+21:30:42.866 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- 获取到以下权限 ----------------
+21:30:42.867 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.shiro.ShiroRealm - Shiro 权限信息[system:adminLog:view, system:user:view, system:adminLog:save, system:role:view, system:user:edit, system:role:edit]
+21:30:42.867 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- Shiro 权限获取成功 ----------------------
+21:30:42.899 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+21:30:42.908 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：09:30:42.898  耗时：0:0:0.7  URI: /admin/system/user/userList  最大内存: 1572m  已分配内存: 482m  已分配内存中的剩余空间: 209m  最大可用内存: 1299m
+21:30:42.909 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+21:30:43.044 logback-com.chunqiu [http-nio-8008-exec-7] INFO  org.mongodb.driver.connection - Opened connection [connectionId{localValue:2, serverValue:13}] to localhost:27017
+21:30:44.593 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> com.chunqiu.mrjuly.modules.system.controller.UserController，  Method >>> index
+21:30:44.600 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+21:30:44.600 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：09:30:44.600  耗时：0:0:0.0  URI: /admin/system/user/index  最大内存: 1572m  已分配内存: 482m  已分配内存中的剩余空间: 199m  最大可用内存: 1288m
+21:30:44.600 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+21:30:55.297 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.m.c.u.Interceptor.MyInterceptor - Request Controller >>> com.chunqiu.mrjuly.modules.system.controller.UserController，  Method >>> list
+21:30:55.550 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+21:30:55.550 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：09:30:55.549  耗时：0:0:0.193  URI: /admin/system/user/list  最大内存: 1572m  已分配内存: 482m  已分配内存中的剩余空间: 187m  最大可用内存: 1277m
+21:30:55.556 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.filter.LogFilter - Request Params:
+  order = ["asc"]
+  limit = ["20"]
+  offset = ["0"]
+21:30:55.556 logback-com.chunqiu [http-nio-8008-exec-10] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+21:30:58.136 logback-com.chunqiu [Thread-46] INFO  org.mongodb.driver.connection - Closed connection [connectionId{localValue:2, serverValue:13}] to localhost:27017 because the pool has been closed.
+21:30:58.142 logback-com.chunqiu [Thread-46] INFO  o.a.s.s.m.AbstractValidatingSessionManager - Disabled session validation scheduler.
+21:30:59.281 logback-com.chunqiu [Thread-46] INFO  c.alibaba.druid.pool.DruidDataSource - {dataSource-1} closed
+22:38:07.490 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - Starting SpringbootApplication on LAPTOP-BRM15SJN with PID 16224 (D:\ideaProject\staffPay\staffPay\target\classes started by admin in D:\ideaProject\staffPay\staffPay)
+22:38:07.498 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - No active profile set, falling back to default profiles: default
+22:38:13.146 logback-com.chunqiu [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8008"]
+22:38:13.162 logback-com.chunqiu [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+22:38:13.162 logback-com.chunqiu [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet Engine: Apache Tomcat/8.5.34
+22:38:13.198 logback-com.chunqiu [localhost-startStop-1] INFO  o.a.c.core.AprLifecycleListener - The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jdk1.8.0_241\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Program Files\Java\jdk1.8.0_241\bin;C:\Program Files\Java\jdk1.8.0_241\jre\bin;D:\nodejs\;D:\Git\cmd;C:\Program Files\MySQL\MySQL Server 5.7\bin;D:\Redis\redis;C:\Users\admin\AppData\Local\Microsoft\WindowsApps;D:\nodejs\node_global;;.]
+22:38:13.362 logback-com.chunqiu [localhost-startStop-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+22:38:15.028 logback-com.chunqiu [main] INFO  org.mongodb.driver.cluster - Cluster created with settings {hosts=[localhost:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms', maxWaitQueueSize=500}
+22:38:15.104 logback-com.chunqiu [cluster-ClusterId{value='5e6cec576b1e8d3f6014488c', description='null'}-localhost:27017] INFO  org.mongodb.driver.connection - Opened connection [connectionId{localValue:1, serverValue:24}] to localhost:27017
+22:38:15.111 logback-com.chunqiu [cluster-ClusterId{value='5e6cec576b1e8d3f6014488c', description='null'}-localhost:27017] INFO  org.mongodb.driver.cluster - Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, version=ServerVersion{versionList=[4, 2, 1]}, minWireVersion=0, maxWireVersion=8, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=4539700}
+22:38:22.062 logback-com.chunqiu [container-1] INFO  io.lettuce.core.EpollProvider - Starting without optional epoll library
+22:38:22.066 logback-com.chunqiu [container-1] INFO  io.lettuce.core.KqueueProvider - Starting without optional kqueue library
+22:38:23.019 logback-com.chunqiu [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8008"]
+22:38:23.021 logback-com.chunqiu [main] INFO  o.a.tomcat.util.net.NioSelectorPool - Using a shared selector for servlet write/read
+22:38:23.055 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - Started SpringbootApplication in 16.715 seconds (JVM running for 19.241)
+22:38:46.913 logback-com.chunqiu [http-nio-8008-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring FrameworkServlet 'dispatcherServlet'
+22:38:46.988 logback-com.chunqiu [http-nio-8008-exec-1] INFO  o.a.s.s.m.AbstractValidatingSessionManager - Enabling session validation scheduler...
+22:38:53.005 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- 执行 Shiro 凭证认证 ----------------------
+22:38:53.399 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.alibaba.druid.pool.DruidDataSource - {dataSource-1,druidDataSource} inited
+22:38:53.607 logback-com.chunqiu [http-nio-8008-exec-7] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- Shiro 凭证认证成功 ----------------------
+22:38:54.368 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- 执行 Shiro 权限获取 ---------------------
+22:38:54.407 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- 获取到以下权限 ----------------
+22:38:54.408 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.mrjuly.common.shiro.ShiroRealm - Shiro 权限信息[system:adminLog:view, system:user:view, system:adminLog:save, system:role:view, system:user:edit, system:role:edit]
+22:38:54.408 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.mrjuly.common.shiro.ShiroRealm - ---------------- Shiro 权限获取成功 ----------------------
+22:38:54.431 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+22:38:54.436 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：10:38:54.431  耗时：0:0:0.4  URI: /admin/system/user/userList  最大内存: 1572m  已分配内存: 513m  已分配内存中的剩余空间: 252m  最大可用内存: 1311m
+22:38:54.436 logback-com.chunqiu [http-nio-8008-exec-6] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+22:38:54.510 logback-com.chunqiu [http-nio-8008-exec-6] INFO  org.mongodb.driver.connection - Opened connection [connectionId{localValue:2, serverValue:25}] to localhost:27017
+22:40:44.745 logback-com.chunqiu [Thread-34] INFO  org.mongodb.driver.connection - Closed connection [connectionId{localValue:2, serverValue:25}] to localhost:27017 because the pool has been closed.
+22:40:44.750 logback-com.chunqiu [Thread-34] INFO  o.a.s.s.m.AbstractValidatingSessionManager - Disabled session validation scheduler.
+22:40:45.900 logback-com.chunqiu [Thread-34] INFO  c.alibaba.druid.pool.DruidDataSource - {dataSource-1} closed
+22:40:53.319 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - Starting SpringbootApplication on LAPTOP-BRM15SJN with PID 16476 (D:\ideaProject\staffPay\staffPay\target\classes started by admin in D:\ideaProject\staffPay\staffPay)
+22:40:53.325 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - No active profile set, falling back to default profiles: default
+22:40:58.370 logback-com.chunqiu [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8008"]
+22:40:58.384 logback-com.chunqiu [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+22:40:58.384 logback-com.chunqiu [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet Engine: Apache Tomcat/8.5.34
+22:40:58.390 logback-com.chunqiu [localhost-startStop-1] INFO  o.a.c.core.AprLifecycleListener - The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jdk1.8.0_241\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Program Files\Java\jdk1.8.0_241\bin;C:\Program Files\Java\jdk1.8.0_241\jre\bin;D:\nodejs\;D:\Git\cmd;C:\Program Files\MySQL\MySQL Server 5.7\bin;D:\Redis\redis;C:\Users\admin\AppData\Local\Microsoft\WindowsApps;D:\nodejs\node_global;;.]
+22:40:58.546 logback-com.chunqiu [localhost-startStop-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+22:41:00.181 logback-com.chunqiu [main] INFO  org.mongodb.driver.cluster - Cluster created with settings {hosts=[localhost:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms', maxWaitQueueSize=500}
+22:41:00.257 logback-com.chunqiu [cluster-ClusterId{value='5e6cecfc6b1e8d405c508f43', description='null'}-localhost:27017] INFO  org.mongodb.driver.connection - Opened connection [connectionId{localValue:1, serverValue:30}] to localhost:27017
+22:41:00.265 logback-com.chunqiu [cluster-ClusterId{value='5e6cecfc6b1e8d405c508f43', description='null'}-localhost:27017] INFO  org.mongodb.driver.cluster - Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, version=ServerVersion{versionList=[4, 2, 1]}, minWireVersion=0, maxWireVersion=8, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=5319600}
+22:41:06.007 logback-com.chunqiu [container-1] INFO  io.lettuce.core.EpollProvider - Starting without optional epoll library
+22:41:06.011 logback-com.chunqiu [container-1] INFO  io.lettuce.core.KqueueProvider - Starting without optional kqueue library
+22:41:06.902 logback-com.chunqiu [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8008"]
+22:41:06.904 logback-com.chunqiu [main] INFO  o.a.tomcat.util.net.NioSelectorPool - Using a shared selector for servlet write/read
+22:41:06.934 logback-com.chunqiu [main] INFO  c.c.mrjuly.SpringbootApplication - Started SpringbootApplication in 14.564 seconds (JVM running for 16.237)
+22:41:17.424 logback-com.chunqiu [http-nio-8008-exec-2] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring FrameworkServlet 'dispatcherServlet'
+22:41:17.503 logback-com.chunqiu [http-nio-8008-exec-2] INFO  o.a.s.s.m.AbstractValidatingSessionManager - Enabling session validation scheduler...
+22:41:18.865 logback-com.chunqiu [http-nio-8008-exec-4] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return start =====================
+22:41:18.869 logback-com.chunqiu [http-nio-8008-exec-4] INFO  c.c.mrjuly.common.filter.LogFilter - 计时结束：10:41:18.865  耗时：0:0:0.4  URI: /admin/system/user/userList  最大内存: 1572m  已分配内存: 472m  已分配内存中的剩余空间: 267m  最大可用内存: 1367m
+22:41:18.870 logback-com.chunqiu [http-nio-8008-exec-4] INFO  c.c.mrjuly.common.filter.LogFilter - ===================== return end =====================
+
+22:41:18.941 logback-com.chunqiu [http-nio-8008-exec-4] INFO  org.mongodb.driver.connection - Opened connection [connectionId{localValue:2, serverValue:31}] to localhost:27017
+22:51:14.508 logback-com.chunqiu [Thread-32] INFO  org.mongodb.driver.connection - Closed connection [connectionId{localValue:2, serverValue:31}] to localhost:27017 because the pool has been closed.
+22:51:14.513 logback-com.chunqiu [Thread-32] INFO  o.a.s.s.m.AbstractValidatingSessionManager - Disabled session validation scheduler.

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>对公账户设置</title>
+
+    <head th:include="init :: init"></head>
+    <head th:include="init_bootstrap_table :: bootstrap_table"></head>
+
+    <script th:inline="javascript"  type="text/javascript">
+        $(function(){
+            showBank();
+        });
+
+        //查询所有银行
+        function showBank(){
+            $.post([[${ctx}]] + '/system/setup/bankList',
+                {},
+                function (result) {
+                    $.each(result,function(i) {
+                        $("#bankId").append("<option value="+result[i].bId+">"+result[i].bankName+"</option>");
+                    });
+                    var name = [[${bankInfo?.name}]];
+                    var bankNumber = [[${bankInfo?.bankNumber}]];
+                    var bankId = [[${bankInfo?.bankId}]];
+                    $("#name").val(name);
+                    $("#number").val(bankNumber);
+                    $("#bankId").val(bankId);
+                    $("#bankId").trigger("chosen:updated");
+                    return;
+                });
+        }
+
+
+        //提交
+        function complete(){
+            var nameReg = /^[\u4E00-\u9FA5]{2,4}$/;
+            var reg = /^\d{19}$/g;
+            //用户姓名
+            var name =  $("#name").val();
+            //银行卡号
+            var number = $("#number").val();
+            //银行卡
+            var bankId = $("#bankId").val();
+            if (name == null || name == ""){
+                showMsgError("请填写用户姓名");
+                return;
+            } else if (number == null|| number == ""){
+                showMsgError("请填写银行卡号");
+                return;
+            }else if (bankId == null || bankId == ""){
+                showMsgError("请选择银行卡");
+                return;
+            }else if (!nameReg.test(name)){
+                showMsgError("姓名格式有误");
+                return;
+            }else if(!reg.test(number)){
+                showMsgError("银行卡号格式有误");
+                return;
+            }
+
+
+            //提交
+            $.post([[${ctx}]] + '/system/setup/saveBankInfo',
+                {
+                    name:name,
+                    bankNumber:number,
+                    bankId:bankId,
+                    bId:[[${bankInfo?.bId}]]
+                },
+                function (result) {
+                        loading();
+                        closeLoading();
+                        showMsgSuccess("保存成功");
+                        return;
+                });
+        }
+
+    </script>
+</head>
+<body class="gray-bg">
+<div class="wrapper animated fadeInRight">
+    <div class="ibox-content">
+        <div class="row">
+            <form id="signupForm" class="layui-form form-horizontal m-t">
+                <input type="hidden" name="id">
+                <div class="layui-form-item col-lg-6 col-sm-12 col-xs-12" style="margin-left: 26%">
+                    <label class="col-xs-3 layui-form-label"><i class="required">*</i>真实姓名：</label>
+                    <div class="col-xs-6">
+                        <input name="name" id="name"class="layui-input" placeholder="请输入您的姓名" autocomplete="off" type="text" required  maxlength="100">
+                    </div>
+                </div>
+                <div class="layui-form-item col-lg-6 col-sm-12 col-xs-12" style="margin-left: 26%">
+                    <label style="font-size: 15px" class="col-xs-3 layui-form-label"><i class="required">*</i>银行卡号：</label>
+                    <div class="col-xs-6">
+                        <input  name="number" id="number" class="layui-input" placeholder="请输入您的银行卡号" autocomplete="off" type="text" required  maxlength="100">
+                    </div>
+                </div>
+                <div class="layui-form-item col-lg-6 col-sm-12 col-xs-12" style="margin-left: 26%">
+                    <label style="font-size: 15px" class="col-xs-3 layui-form-label"><i class="required">*</i>银行名称：</label>
+                    <div class="col-xs-6">
+                        <div class="layui-input-inline" >
+                            <div class="layui-input-inline">
+                                <select style="width: 256px" id="bankId" name="bankId" data-placeholder="请选择银行" class="chosen-select-deselect form-control layui-input">
+                                    <option></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="padding-bottom: 10px;margin-left: 41%">
+                    <button class="btn btn-primary " id="btn" style="margin-left: -37.5%;margin-top: 26%" type="button" data-toggle="modal" th:onclick="'complete()'"> <i class="fa fa-save"></i>&nbsp;保存</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>

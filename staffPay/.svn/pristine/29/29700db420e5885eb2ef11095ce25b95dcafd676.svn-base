@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>商品管理</title>
+
+	<head th:include="init :: init"></head>
+
+	<script type="text/javascript">
+        $(function(){
+            uploadImg1();
+            $("#status").val("[[${productCreate?.status }]]");
+            $("#status").trigger("chosen:updated");
+
+            $("#stock").val("[[${productCreate?.stock }]]");
+            $("#stock").trigger("chosen:updated");
+
+
+            var text = "[[${productCreate?.serviceMode }]]";
+            if (text != ""){
+                $("[name='serviceMode'][value="+text+"]").attr("checked", "checked");
+                $(":radio[name='type'][value='" + text + "']").attr("checked", "checked");
+            }
+
+
+            $("#serviceModeClick").click(function(){
+                if ($("input[type='radio']:checked").val() == null){
+                    showMsgError("请选择需要修改的服务方式");
+                    return;
+                }else {
+                    $("#mode").css("display","block");
+                }
+            });
+
+            $("#serviceModeCancel").click(function(){
+                $("#serviceModeCancel").parent().css("display","none");
+            })
+
+            $("#serviceModeOk").click(function(){
+                var html = "";
+                var serviceMode =  $("#serviceModeStr").val();
+                if (serviceMode == ""){
+                    showMsgError("请输入需要修改的服务内容");
+                    return;
+                }
+                $.ajax({
+                    url:"[[${ctx}]]/shopinfo/productCreate/updateServiceMode",    //请求的url地址
+                    dataType:"json",   //返回格式为json
+                    async:true,//请求是否异步，默认为异步，这也是ajax重要特性
+                    data:{
+                        "id":$("input[type='radio']:checked").val(),
+                        "serviceMode":serviceMode
+                    },    //参数值
+                    type:"POST",   //请求方式
+                    success:function(req){
+                        for (var i = 0;i<req.length;i++){
+                            $("#type"+req[i].id).attr("title",req[i].serviceMode);
+                            $("#type"+req[i].id).next().children().next().text(req[i].serviceMode);
+                        }
+                    }
+                });
+
+
+            });
+        })
+
+		//提交表单
+		function validForm(){
+            //商品图片
+            var goodsPicStr = '';
+            jQuery('.goodsPic').each(function(key,value){
+                goodsPicStr +=$(this).val()+",";
+            });
+            goodsPicStr =goodsPicStr.substring(0, goodsPicStr.lastIndexOf(','));
+			$("#goodsPic").val(goodsPicStr);
+			//商品详情图片
+            var goodsPicInfoStr = '';
+            jQuery('.goodsInfoPic').each(function(key,value){
+	                goodsPicInfoStr +=$(this).val()+",";
+            });
+            goodsPicInfoStr =goodsPicInfoStr.substring(0, goodsPicInfoStr.lastIndexOf(','));
+            $("#goodsInfoPic").val(goodsPicInfoStr);
+
+            //服务方式
+
+            //选择框chekcbox
+            $("#serviceMode").val($("input[type='radio']:checked").val());
+
+
+			$('#signupForm').validate({
+		        submitHandler:function(form){
+		            loading();
+		            form.action = '[[${ctx}]]/shopinfo/productCreate/saveProductCreate';
+					form.submit();
+		        }
+			});
+		    $('#signupForm').submit();
+		}
+		function btn2From(){
+			var goodsPic = $("input[class='goodsPic']").val();
+			if (goodsPic != ""){
+				$.post('[[${ctx}]]/upload/deleteFile', {
+					file: goodsPic
+				}, function (result) {
+				});
+			}
+			$('.goodsInfoPic').each(function (index,domEle){
+				if ($(domEle).val()!=""){
+					$.post('[[${ctx}]]/upload/deleteFile', {
+						file: $(domEle).val()
+					}, function (result) {
+					});
+				}
+			});
+			if ($("#goodsVideo").val()!=""){
+				$.post('[[${ctx}]]/upload/deleteFile', {
+					file: $("#goodsVideo").val()
+				}, function (result) {
+				});
+			}
+		}
+
+		function cancelFrom(){
+			var goodsPic = $("input[class='goodsPic']").val();
+			if (goodsPic != ""){
+				$.post('[[${ctx}]]/upload/deleteFile', {
+					file: goodsPic
+				}, function (result) {
+				});
+			}
+			$('.goodsInfoPic').each(function (index,domEle){
+				if ($(domEle).val()!=""){
+					$.post('[[${ctx}]]/upload/deleteFile', {
+						file: $(domEle).val()
+					}, function (result) {
+					});
+				}
+			});
+			if ($("#goodsVideo").val()!=""){
+				$.post('[[${ctx}]]/upload/deleteFile', {
+					file: $("#goodsVideo").val()
+				}, function (result) {
+				});
+			}
+		}
+
+
+        layui.use('upload', function(){
+            var upload = layui.upload;
+            //执行实例
+            var uploadInst = upload.render({
+                elem: '#test2' //绑定元素
+                ,accept:'file'
+                ,url: '[[${ctx}]]/upload/springUpload' //上传接口
+                ,done: function(res){
+					if ($("#goodsVideo").val()!=""){
+						$.post('[[${ctx}]]/upload/deleteFile', {
+							file: $("#goodsVideo").val()
+						}, function (result) {
+						});
+					}
+                    //上传完毕回调
+                    if (res.success == true){
+                        showMsgSuccess('上传成功');
+                    }else {
+                        showMsgError('视频格式不正确');
+                        return;
+                    }
+                    $("#goodsVideo").val(res.data[1]);
+                    $('#test2').val(res.data[1]);
+                    $("#videos").attr("src",res.data[0]);
+                }
+                ,error: function(){
+                    //请求异常回调
+                    if (res.success!=true){
+                        showMsgError('上传失败');
+                        return;
+                    }
+                }
+            });
+        });
+
+
+        //加载layui的upload模块，（图片上传）
+        function uploadImg1() {
+            layui.use(['upload'],function () {
+                var upload = layui.upload;
+                $('form img[lay-imgs]').each(function () {
+                    var _this = this;
+                    var _click = $(_this).attr('lay-imgs');
+                    if(_click != null && _click != undefined && _click != ''){
+                        var $id = $(_this).attr('id'), $name = _click;
+                        //普通图片上传
+                        upload.render({
+                            elem: '#' + $id
+                            ,url: '[[${ctx}]]/upload/ossUploadImg'
+                            ,accept: 'images'
+                            ,done: function(res){
+								if ($('input[name="' + $id + '"]').val() != ""){
+									$.post('[[${ctx}]]/upload/deleteFile', {
+										file: $('input[name="' + $id + '"]').val()
+									}, function (result) {
+									});
+								}
+                                //如果上传失败
+                                if(res.success){
+									$('#' + $id).attr('src', res.data[0]);
+									$('input[name="' + $name + '"]').val(res.data[1]);
+                                }else{
+                                    showMsgWarn(res.msg);
+                                }
+                            }
+                        });
+                    }
+                });
+
+                upload.render({
+                    elem: '#uploadBtn'
+                    ,url: '[[${ctx}]]/upload/uploadFile'
+                    ,accept: 'file'
+                    ,done: function(res){
+                        //如果上传失败
+                        if(res.success){
+                            showMsgSuccess("上传成功");
+                            $('input[name="tempUrl"]').val(res.data[0]);
+                            $('a[name="atempUrl"]').attr("href",res.data[0]);
+                        }else{
+                            showMsgWarn(res.msg);
+                        }
+                    }
+                });
+            });
+        }
+	</script>
+
+	<style type="text/css">
+		.pic :nth-last-child(4){
+			margin-left: 120px;
+		}
+
+	</style>
+</head>
+<body class="gray-bg">
+	<div class="wrapper animated fadeInRight">
+    	<div class="ibox-content">
+    		<div class="row">
+    			<form id="signupForm" class="layui-form form-horizontal m-t">
+    			<input type="hidden" name="id" th:value="${productCreate?.id}">
+					<div class="div-hidden layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<h3 style="color: red" >* 商品图和商品详情图分辨率建议580*580!</h3>
+					</div>
+					<div class="div-hidden layui-form-item col-lg-6 col-sm-12 col-xs-12 pic">
+						<label class="col-xs-3 layui-form-label ">商品图：</label>
+						<div class="col-xs-6" style="width: 27%;float: left;margin-top:10px " th:each="productCreate,userStat:${productCreate.goodsPicList}">
+							<img alt="image"  th:id="${userStat.index}"  title="点击上传商品图" style="cursor:pointer;width:192px;height:192px;"  class=""
+								 th:src="${productCreate}" th:lay-imgs="${userStat.index}">
+						<input  class="goodsPic" type="hidden" th:name="${userStat.index}" th:value="${productCreate}">
+						</div>
+						<input id ="goodsPic" type="hidden" name="goodsPic">
+				    </div>
+					<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12 pic">
+						<label class="col-xs-3 layui-form-label">商品详情图：</label>
+						<div class="col-xs-6 pics" style="width: 27%;float: left;margin-top:10px" th:each="goodsPicInfoList,userStat:${productCreate.goodsPicInfoList}">
+							<img alt="image"  th:id="${userStat.index+10}"  title="点击上传详情图" style="cursor:pointer;width:192px;height:192px;"  class=""
+								 th:src="${goodsPicInfoList}" th:lay-imgs="${userStat.index+10}">
+							<input  class="goodsInfoPic" type="hidden" th:name="${userStat.index+10}" th:value="${goodsPicInfoList}">
+						</div>
+						<input id ="goodsInfoPic" type="hidden" name="goodsInfoPic">
+					</div>
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">商品名：</label>
+				        <div class="col-xs-7">
+    						<input required name="goodsName" class="layui-input " th:value="${productCreate?.goodsName }" placeholder="请输入商品名" autocomplete="off" type="text"  maxlength="255">
+    					</div>
+				    </div>
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">数量：</label>
+				        <div class="col-xs-7">
+    						<input required name="goodsNum" oninput = "value=value.replace(/[^\d]/g,'')" class="layui-input digits" th:value="${productCreate?.goodsNum }" placeholder="请输入数量" autocomplete="off" type="text"  maxlength="11">
+    					</div>
+				    </div>
+					<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">状态：</label>
+						<div class="col-xs-6">
+							<select required id="status" th:value="${productCreate?.status }"  name="status" data-placeholder="请输入状态" class="chosen-select-deselect form-control layui-input">
+								<option value="1">上架</option>
+								<option value="0">下架</option>
+							</select>
+						</div>
+					</div>
+
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">价格：</label>
+				        <div class="col-xs-7">
+    						<input required name="goodsPrice" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.]/g,'')" class="layui-input" th:value="${productCreate?.goodsPrice }" placeholder="请输入价格" autocomplete="off" type="text" >
+    					</div>
+				    </div>
+
+					<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">服务方式：</label>
+						<div class="col-xs-7">
+							<input required type="hidden" id="serviceMode" name = "serviceMode" th:value="${productCreate?.serviceMode}">
+							<input class="ServiceMode"  th:each="serviceMode:${serviceMode }" th:value="${serviceMode.id }" th:title="${serviceMode.serviceMode }"  type="radio" name="type"   th:id="'type'+${serviceMode.id }" th:lay-filter="'serviceMode1'+${serviceMode.id }">
+							<button style="position: absolute;" id="serviceModeClick" class="btn btn-primary " type="button" data-toggle="modal" >自定义命名</button>
+							<div id="mode" style="display: none">
+								<input id="serviceModeStr"  style="width: 200px;margin-top: 12px;" type="text" name="serviceMode"  autocomplete="off" placeholder="请输入服务方式" required class="layui-input">
+								<button id="serviceModeOk" style="left: 240px; position: absolute;bottom: 4px;"  class="btn btn-primary " type="button" data-toggle="modal" >确定</button>
+								<button id="serviceModeCancel" style="left: 240px; position: absolute;bottom: 4px;margin-left: 59px;"  class="btn btn-primary " type="button" data-toggle="modal" >取消</button>
+							</div>
+
+						</div>
+					</div>
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">库存：</label>
+				        <div class="col-xs-6">
+							<select required id="stock"  th:value="${productCreate?.stock }"  name="stock" data-placeholder="请输入库存" class="chosen-select-deselect form-control layui-input">
+								<option value="1">售罄</option>
+								<option value="2">有货</option>
+							</select>
+						</div>
+				    </div>
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label">商品视频：</label>
+
+				        <div class="col-xs-12" >
+							<input  type="hidden" id="goodsVideo" th:value="${productCreate?.goodsVideo}">
+							<video id="videos" th:src="${productCreate?.goodsVideo}" controls="controls" ></video>
+    						<input  style="cursor:pointer" th:value="${productCreate?.goodsVideo}" id="test2" name="goodsVideo" class="layui-input"   placeholder="上传视频" autocomplete="off" type="text"  maxlength="255">
+							<b style="color: red">（*视频建议上传 mp4，rm，rmvb，mov，mtv，avi，3gp，amv，dmv，flv 的格式!）</b>
+    					</div>
+				    </div>
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label required class="col-xs-3 layui-form-label" style="width: 130px">商品文字描述：</label>
+				        <div class="col-xs-6">
+							<textarea th:text="${productCreate?.goodsDescribe }" style="width: 555px; height: 279px;" name="goodsDescribe" autocomplete="off"  placeholder="请输入商品文字描述" required class="layui-input">
+							</textarea>
+						</div>
+				    </div>
+
+    			</form>
+    		</div>
+    	</div>
+    </div>
+</body>
+</html>

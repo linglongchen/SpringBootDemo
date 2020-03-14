@@ -1,0 +1,21 @@
+package com.chunqiu.mrjuly.modules.communicationrecordinfo.dao;
+
+import com.chunqiu.mrjuly.common.persistence.CrudDao;
+import com.chunqiu.mrjuly.common.vo.GridParam;
+import com.chunqiu.mrjuly.modules.communicationrecordinfo.model.CommunicationRecordInfo;
+
+import java.util.List;
+
+/**
+ * 通讯记录DAO接口
+ * @author 周天
+ * @version 2019-03-13
+ */
+public interface CommunicationRecordInfoDao extends CrudDao<CommunicationRecordInfo, Integer> {
+
+    List<CommunicationRecordInfo> communicationRecordInfoList(CommunicationRecordInfo communicationRecordInfo);
+
+    List<CommunicationRecordInfo> exportList(CommunicationRecordInfo communicationRecordInfo);
+
+    int insertRecord(CommunicationRecordInfo communicationRecordInfo);
+}

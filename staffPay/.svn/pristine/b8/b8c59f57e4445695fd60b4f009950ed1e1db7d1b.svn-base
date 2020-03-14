@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>商家信息管理</title>
+
+    <head th:include="init :: init"></head>
+    <head th:include="init_bootstrap_table :: bootstrap_table"></head>
+
+    <script type="text/javascript">
+        $(function () {
+            $('#table').bootstrapTable({
+                undefinedText: '',//defined的默认显示文本
+                striped: true,//条纹
+                method: 'get',
+                url: '[[${ctx}]]/shopinfo/shopInfo/ShopManageList',
+                pagination: true,//显示分页
+                sidePagination: 'server',//定义分页为服务器端分页
+                pageNumber: 1,//起始页数
+                pageSize: 20,//默认显示行数
+                pageList: [20, 50, 100, 200],//可选分页数
+                singleSelect: false,//多选
+                //toolbar : '#toolbar',
+                height: 'auto',
+                columns: [
+                    {
+                        checkbox: true                     // 显示复选框
+
+                    },
+                    {
+                        field: 'createDate',
+                        title: '申请时间 ',
+                        halign: 'center',
+                        align: 'center'
+                    },
+                    {
+                        field: 'shopName',
+                        title: '企业名称',
+                        halign: 'center',
+                        align: 'center'
+                    },
+                    {
+                        field: 'shopNumber',
+                        title: '企业编号',
+                        halign: 'center',
+                        align: 'center'
+                    },
+                    {
+                        field: 'systemNum',
+                        title: '系统预审号',
+                        halign: 'center',
+                        align: 'center'
+                    },
+                    {
+                        field: 'shopTypeName',
+                        title: '商家类别',
+                        halign: 'center',
+                        align: 'center'
+                    },
+                    {
+                        field: 'shopTel',
+                        title: '固定电话',
+                        halign: 'center',
+                        align: 'center'
+                    },
+                    {
+                        field: 'leaseTerm2',
+                        title: '申请租借期',
+                        halign: 'center',
+                        align: 'center',
+                        formatter: function (value, row, index) {
+                            var str = "";
+                            if (value !=null){
+                                if (value.indexOf(",")>0) {
+                                    var str2 = value.split(',');
+                                    for (var i = 0; i < str2.length; i++) {
+                                        str += str2[i] + '<br/>';
+                                    }
+                                }else {
+                                    str = value;
+                                }
+
+                                return str;
+                            }else {
+                                return  "-";
+                            }
+                            }
+
+                    }, {
+                        field: 'hotelName',
+                        title: '入住酒店',
+                        halign: 'center',
+                        align: 'center',
+                        formatter: function (value, row, index) {
+                            if (value!=null && value!=""){
+                                var str = "";
+                                if (value.indexOf(",")>0) {
+                                    var str2 = value.split(',');
+                                    for (var i = 0; i < str2.length; i++) {
+                                        str += str2[i] + '<br/>';
+                                    }
+                                }else {
+                                    str = value;
+                                }
+                                return str;
+                            }else{
+                                return "-";
+                            }
+
+                        }
+                    },
+                    {
+                        field: 'businessLicenseImg',
+                        title: '营业执照照片',
+                        halign: 'center',
+                        align: 'center',
+                        formatter: function (value, row, index) {
+                            return '<img style="width:64px;height:64px;" src="' + value + '">';
+                        }
+                    }
+                    , {
+                        field: 'account',
+                        title: '账户金额',
+                        halign: 'center',
+                        align: 'center',
+                        formatter: function (value, row, index) {
+                            if (value == null) {
+                                return 0;
+                            } else {
+                                return value;
+                            }
+                        }
+                    }, {
+                        field: 'status',
+                        title: '状态',
+                        halign: 'center',
+                        align: 'center',
+                        formatter: function (value, row, index) {
+                            if (value == 0) {
+                                return "正常";
+                            } else {
+                                return "冻结";
+                            }
+                        }
+                    }, {
+                        field: 'option',
+                        title: '操作',
+                        halign: 'center',
+                        align: 'left',
+                        formatter: function (value, row, index) {
+                            var _html = '<ul class="grid_btn_ul">';
+                            _html += '<li><a href="javascript:editShopInfo(' + row.id + ')" class="btn btn-success btn-xs"><i class="fa fa-pencil"></i> 查看详情 </a></li>';
+                            _html += '<li><a href="javascript:payShopInfo(' + row.id + ')" class="btn btn-success btn-xs"><i class="fa fa-pencil"></i> 打款 </a></li>';
+                            _html += '<li><a href="javascript:cutShopInfo(' + row.id + ')" class="btn btn-success btn-xs"><i class="fa fa-pencil"></i> 扣款 </a></li>';
+                            if (row.status == 0) {
+                                _html += '<li><a href="javascript:delShopInfo(' + row.id + ')" class="btn btn-success btn-xs"><i class="fa fa-pencil"></i> 冻结 </a></li>';
+
+                            } else {
+                                _html += '<li><a href="javascript:ShopInfo(' + row.id + ')" class="btn btn-success btn-xs"><i class="fa fa-pencil"></i> 解冻 </a></li>';
+                            }
+                            _html += '<li><a href="javascript:editAdvertiserStar(' + row.id + ')" class="btn btn-success btn-xs"><i class="fa fa-pencil"></i> 星级 </a></li>';
+                            _html += '</ul>';
+                            return _html;
+                        }
+                    }],
+                onLoadSuccess: function (data) {
+                    if (data.total == 0) {
+                        $('#table').bootstrapTable('removeAll');
+                    }
+                    //禁止bootstrap table中的checkbox加载layui样式
+                    $('.table .bs-checkbox input').each(function () {
+                        $(this).attr("lay-ignore", "true");
+                    });
+
+                    $('.table thead .bs-checkbox .th-inner .layui-form-checkbox').remove();
+                }
+            });
+        });
+
+        //获取所选的行信息
+        function getCheckRow(status) {
+            var rows = $('#table').bootstrapTable('getAllSelections');
+            if (rows.length <= 0) {
+                showMsgSuccess('请选中');
+            } else {
+                var array = new Array();
+                for (var i = 0; i < rows.length; i++) {
+                    array.push(rows[i].id)
+                }
+                layer.open({
+                    type: 2,
+                    title: '冻结商家',
+                    area: ['80%', '90%'],
+                    content: '[[${ctx}]]/shopinfo/shopInfo/freezeReason?shopIds=' + array.toString() + '&status=' + status + '', //这里content是一个DOM
+                    closeBtn: '1',
+                    btn: ['保存', '关闭'],
+                    shadeClose: false,//点击遮罩层关闭
+                    shade: [0.8, '#393D49'],
+                    yes: function (index, layero) {
+                        var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                        iframeWin.validForm();
+                    },btn2 : function(index, layero){
+                        exitBombSow(index);
+                        return false;
+                    },cancel : function(index, layero) {
+                        exitBombSow(index);
+                        return false;
+                    }
+                });
+            }
+        }
+
+        //获取所选的行信息
+        function getCheckRow2(status) {
+            var rows = $('#table').bootstrapTable('getAllSelections');
+            if (rows.length <= 0) {
+                showMsgSuccess('请选中');
+            } else {
+                var array = new Array();
+                for (var i = 0; i < rows.length; i++) {
+                    array.push(rows[i].id)
+                }
+                layer.confirm('您确定要解冻商家信息吗？', function () {
+                    parent.loading();
+                    $.post('[[${ctx}]]/shopinfo/shopInfo/freezeAllShop', {
+                        shopIds: array.toString(),
+                        status: status
+                    }, function (result) {
+                        closeLoading();
+                        layer.closeAll();
+                        if (result.success) {
+                            showMsgSuccess('操作成功');
+                            refreshTable();
+                        } else {
+                            showMsgError(result.msg);
+                        }
+                    }, 'json');
+                });
+            }
+        }
+
+        //打款
+        function payShopInfo(id) {
+            layer.open({
+                type: 2,
+                title: '打款',
+                area : ['60%','90%'],
+                content: '[[${ctx}]]/shopinfo/shopInfo/payAdvertiserInfo?id=' + id, //这里content是一个DOM
+                closeBtn: '1',
+                btn: ['保存', '关闭'],
+                shadeClose: false,//点击遮罩层关闭
+                shade: [0.8, '#393D49'],
+                yes: function (index, layero) {
+                    var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                    iframeWin.validForm();
+                },btn2 : function(index, layero){
+                    exitBombSow(index);
+                    return false;
+                },cancel : function(index, layero) {
+                    exitBombSow(index);
+                    return false;
+                }
+            });
+        }
+
+        //扣款
+        function cutShopInfo(id) {
+            layer.open({
+                type: 2,
+                title: '扣款',
+                area : ['60%','90%'],
+                content: '[[${ctx}]]/shopinfo/shopInfo/cutAdvertiserInfo?id=' + id, //这里content是一个DOM
+                closeBtn: '1',
+                btn: ['保存', '关闭'],
+                shadeClose: false,//点击遮罩层关闭
+                shade: [0.8, '#393D49'],
+                yes: function (index, layero) {
+                    var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                    iframeWin.validForm();
+                },btn2 : function(index, layero){
+                    exitBombSow(index);
+                    return false;
+                },cancel : function(index, layero) {
+                    exitBombSow(index);
+                    return false;
+                }
+            });
+        }
+
+        //编辑商家信息
+        function editShopInfo(id) {
+            layer.open({
+                type: 2,
+                title: '编辑商家信息',
+                area: ['80%', '90%'],
+                content: '[[${ctx}]]/shopinfo/shopInfo/ShopManageForm?id=' + id, //这里content是一个DOM
+                closeBtn: '1',
+                shadeClose: false,//点击遮罩层关闭
+                shade: [0.8, '#393D49'],
+                yes: function (index, layero) {
+                    var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                    iframeWin.validForm();
+                },btn2 : function(index, layero){
+                    exitBombSow(index);
+                    return false;
+                },cancel : function(index, layero) {
+                    exitBombSow(index);
+                    return false;
+                }
+            });
+        }
+
+        //解冻
+        function ShopInfo(id) {
+            layer.confirm('您确定要解冻该商家信息吗？', function () {
+                parent.loading();
+                $.post('[[${ctx}]]/shopinfo/shopInfo/ShopInfo', {
+                    id: id
+                }, function (result) {
+                    closeLoading();
+                    layer.closeAll();
+                    if (result.success) {
+                        showMsgSuccess('解冻成功');
+
+                        refreshTable();
+                    } else {
+                        showMsgError(result.msg);
+                    }
+                }, 'json');
+            });
+        }
+
+        //冻结商家信息
+        function delShopInfo(id) {
+            layer.open({
+                type: 2,
+                title: '冻结商家',
+                area : ['60%','90%'],
+                content: '[[${ctx}]]/shopinfo/shopInfo/freezeReason?id=' + id + '&status=' + 1 + '', //这里content是一个DOM
+                closeBtn: '1',
+                btn: ['保存', '关闭'],
+                shadeClose: false,//点击遮罩层关闭
+                shade: [0.8, '#393D49'],
+                yes: function (index, layero) {
+                    var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                    iframeWin.validForm();
+                },btn2 : function(index, layero){
+                    exitBombSow(index);
+                    return false;
+                },cancel : function(index, layero) {
+                    exitBombSow(index);
+                    return false;
+                }
+            });
+        }
+
+      	//调整商家星级
+        function editAdvertiserStar(id) {
+            layer.open({
+                type: 2,
+                title: '商家星级设置',
+                area : ['60%','90%'],
+                content: '[[${ctx}]]/shopinfo/shopInfo/shopStar?id=' + id, //这里content是一个DOM
+                closeBtn: '1',
+                btn : ['保存', '关闭'],
+                shadeClose: false,//点击遮罩层关闭
+                shade: [0.8, '#393D49'],
+                yes: function (index, layero) {
+                    var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                    iframeWin.validForm();
+                },btn2 : function(index, layero){
+                    exitBombSow(index);
+                    return false;
+                },cancel : function(index, layero) {
+                    exitBombSow(index);
+                    return false;
+                }
+            });
+        }
+
+        //查询
+        function search() {
+            var param = $('#searchForm').serialize();
+            $('#table').bootstrapTable('refresh', {url: '[[${ctx}]]/shopinfo/shopInfo/ShopManageList?' + param});
+        }
+    </script>
+    <style type="text/css">
+        .layui-form input[type="checkbox"] {
+            display: block;
+        }
+    </style>
+</head>
+<body layadmin-themealias="default">
+<div class="layui-fluid animated fadeInRight">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+            <div class="layui-form-item form-head">
+                <form id="searchForm" class="layui-form">
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">企业名称：</label>
+                        <div class="layui-input-inline">
+                            <input name="shopName" autocomplete="off" class="layui-input" placeholder="请输入商家名称"
+                                   type="text">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <button class="btn btn-primary " type="button" onclick="search()"><i class="fa fa-search"></i>&nbsp;查询
+                        </button>
+                        <button class="btn btn-primary " type="button" onclick="getCheckRow(1)"><i
+                                class="fa fa-pencil"></i>&nbsp;冻结
+                        </button>
+                        <button class="btn btn-primary " type="button" onclick="getCheckRow2(0)"><i
+                                class="fa fa-pencil"></i>&nbsp;解冻
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <table id="table">
+
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

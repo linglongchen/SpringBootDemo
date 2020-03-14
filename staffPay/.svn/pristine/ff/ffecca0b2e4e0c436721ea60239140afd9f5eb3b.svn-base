@@ -1,0 +1,15 @@
+package com.chunqiu.mrjuly.modules.hotelinfo.service;
+
+import com.chunqiu.mrjuly.common.persistence.CrudService;
+import com.chunqiu.mrjuly.modules.hotelinfo.dao.HotelUniqueCodeDao;
+import com.chunqiu.mrjuly.modules.hotelinfo.model.HotelUniqueCode1;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+
+@Service
+public class HotelUniqueCodeService extends CrudService<HotelUniqueCodeDao, HotelUniqueCode1, Integer> {
+
+    @Resource
+    private HotelUniqueCodeDao hotelUniqueCodeDao;
+}

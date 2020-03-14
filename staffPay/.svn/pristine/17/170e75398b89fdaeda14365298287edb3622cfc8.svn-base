@@ -1,0 +1,20 @@
+package com.chunqiu.mrjuly.modules.install.dao;
+
+import com.chunqiu.mrjuly.common.persistence.CrudDao;
+import com.chunqiu.mrjuly.modules.install.model.Notification;
+
+import java.util.List;
+
+/**
+ * 消息管理
+ */
+public interface NotificationDao extends CrudDao<Notification, Integer> {
+
+    List<Notification> findLis1(Notification notification);
+
+    List<Notification> findList2(Notification notification);
+
+    List<Notification> findList3(Notification notification);
+
+    Notification getMessage(Integer id);
+}

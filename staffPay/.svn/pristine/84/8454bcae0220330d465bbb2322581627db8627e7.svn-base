@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>设备匹配管理</title>
+
+	<head th:include="init :: init"></head>
+    <head th:include="init_bootstrap_table :: bootstrap_table"></head>
+
+	<script type="text/javascript">
+		$(function(){
+			$('#table').bootstrapTable({
+				undefinedText : '',//defined的默认显示文本
+				striped : true,//条纹
+				method : 'get',
+				url : '[[${ctx}]]/devicematchinginfo/deviceMatchingInfo/list',
+				pagination : true,//显示分页
+				sidePagination : 'server',//定义分页为服务器端分页
+				pageNumber : 1,//起始页数
+				pageSize : 20,//默认显示行数
+				pageList : [20, 50, 100 ,200],//可选分页数
+				singleSelect : false,//多选
+				//toolbar : '#toolbar',
+				height : 'auto',
+			    columns: [
+			    {
+			        field: 'hotelCode',
+			        title: '服务端编号',
+			        halign : 'center',
+			        align : 'center'
+			    },{
+			        field: 'clientBianma',
+			        title: '客户端编号',
+			        halign : 'center',
+			        align : 'center'
+			    },{
+			        field: 'status',
+			        title: '状态',
+			        halign : 'center',
+			        align : 'center',
+					width:'200px',
+                        formatter : function(value, row, index){
+                            if (row.status == 1){
+                                value = "匹配正常"
+								return value;
+                            }else {
+                                value = "匹配异常"
+                                return value;
+							}
+                        }
+			    },{
+			        field: 'status',
+			        title: '心跳',
+			        halign : 'center',
+			        align : 'center',
+                        formatter : function(value, row, index){
+                            if (row.status == 1){
+                                return "<img style='width: 30px;' src='/images/asd.gif'>";
+                            }else {
+                                return "";
+                            }
+                        }
+
+			    },{
+			    	field : 'option',
+			    	title : '操作',
+			    	halign : 'center',
+			    	align : 'center',
+			    	formatter : function(value, row, index){
+			    		var _html = '<ul class="grid_btn_ul">';
+			    		_html += '<li><a href="javascript:editDeviceMatchingInfo(' + row.id + ',&#39;'+row.hotelCode+'&#39;)" class="btn btn-success btn-xs"><i class="fa fa-pencil"></i> 查看详情 </a></li>';
+			    		_html += '</ul>';
+			    		return _html;
+			    	}
+			    }],
+			    onLoadSuccess : function(data){
+			    	if(data.total == 0){
+			    		$('#table').bootstrapTable('removeAll');
+			    	}
+			    }
+			});
+		});
+
+		//添加设备匹配
+		function addDeviceMatchingInfo(){
+			layer.open({
+			    type: 2,
+			    title : '新增设备匹配',
+			    area : ['700px','400px'],
+			    content: '[[${ctx}]]/devicematchinginfo/deviceMatchingInfo/form', //这里content是一个DOM
+			    btn : ['保存', '关闭'],
+			    closeBtn : '1',
+			    shadeClose : true,//点击遮罩层关闭
+			    shade : [0.8, '#393D49'],
+			    yes : function(index, layero){
+			        var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+			        iframeWin.validForm();
+			    }
+			});
+		}
+
+		//编辑设备匹配
+		function editDeviceMatchingInfo(id,hotelCode){
+			layer.open({
+			    type: 2,
+			    title : '查看详情',
+			    area : ['700px','400px'],
+			    content: '[[${ctx}]]/devicematchinginfo/deviceMatchingInfo/formInfo?serverSideCodingId='+id+'&hotelCode='+hotelCode, //这里content是一个DOM
+			    btn : [ '关闭'],
+			    closeBtn : '1',
+			    shadeClose : true,//点击遮罩层关闭
+			    shade : [0.8, '#393D49'],
+			    yes : function(index, layero){
+			        var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                    layer.closeAll('iframe');
+			    }
+			});
+		}
+
+		//查询
+		function searchList(){
+			var param = $('#searchForm').serialize();
+			$('#table').bootstrapTable('refresh', {url : '[[${ctx}]]/devicematchinginfo/deviceMatchingInfo/list?' + param});
+		}
+	</script>
+</head>
+<body layadmin-themealias="default">
+<div class="layui-fluid animated fadeInRight">
+
+	<div class="layui-card">
+		<div class="layui-form layui-card-header layuiadmin-card-header-auto">
+			<div class="layui-card-body">
+				<form id="searchForm" class="layui-form form-horizontal m-t">
+				<div style="padding-bottom: 10px;">
+					<div class="layui-input-inline">
+						<input type="text" name="titleStr" autocomplete="off" placeholder="客户端编号/服务端编号" class="layui-input">
+					</div>
+					<button class="btn btn-primary " type="button" data-toggle="modal" onclick="searchList()"><i class="fa fa-search"></i>&nbsp;查询</button>
+					<button class="btn btn-primary " type="button" data-toggle="modal" onclick="addDeviceMatchingInfo()"><i class="fa fa-plus"></i>&nbsp;新增</button>
+				</div>
+				</form>
+			</div>
+			<table id="table">
+
+			</table>
+		</div>
+	</div>
+</div>
+</body>
+</html>

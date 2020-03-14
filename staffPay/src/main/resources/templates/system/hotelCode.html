@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>前缀编码设置</title>
+
+    <head th:include="init :: init"></head>
+    <head th:include="init_bootstrap_table :: bootstrap_table"></head>
+
+    <script type="text/javascript">
+        $(function(){
+            show();
+        });
+
+        //添加保存前缀编码
+        function addHotel(){
+            layer.open({
+                type: 2,
+                title : '新增前缀',
+                area : ['650px','260px'],
+                content: '[[${ctx}]]/system/setup/saveHotel', //这里content是一个DOM
+                btn : ['保存', '关闭'],
+                closeBtn : '1',
+                shadeClose : true,//点击遮罩层关闭
+                shade : [0.8, '#393D49'],
+                yes : function(index, layero){
+                    var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                    iframeWin.validForm();
+                }
+            });
+        }
+
+        //查询table
+        function show(){
+            $('#table').bootstrapTable({
+                undefinedText : '',//defined的默认显示文本
+                striped : true,//条纹
+                method : 'get',
+                url : '[[${ctx}]]/system/setup/codeList',
+                pagination : true,//显示分页
+                sidePagination : 'server',//定义分页为服务器端分页
+                pageNumber : 1,//起始页数
+                pageSize : 20,//默认显示行数
+                pageList : [20, 50, 100 ,200],//可选分页数
+                singleSelect : false,//多选
+                height : 'auto',
+                columns: [
+                    {
+                        field: 'hotelCode',
+                        title: '前缀编号',
+                        halign : 'center',
+                        align : 'center',
+                    },{
+                        field: 'hotelName',
+                        title: '对应酒店',
+                        halign : 'center',
+                        align : 'center'
+                    },{
+                        field: 'uniqueEncoding',
+                        title: '酒店内设备外壳编号',
+                        halign : 'center',
+                        align : 'center'
+                    },{
+                        field : 'option',
+                        title : '操作',
+                        halign : 'center',
+                        align : 'center',
+                        formatter : function(value, row, index){
+                            var _html = '<ul class="grid_btn_ul">';
+                            _html += '<li ><a  href="javascript:codeInfo(&#39;'+row.hotelCode+'&#39;,'+row.id+')" class="btn btn-success btn-xs"><i class="fa fa-pencil"></i> 查看详情 </a></li>';
+                            _html += '<li><a href="javascript:delBaseDriver(' + row.id + ')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> 删除 </a></li>';
+                            _html += '</ul>';
+                            return _html;
+                        }
+                    }],
+                onLoadSuccess : function(data){
+                    if(data.total == 0){
+                        $('#table').bootstrapTable('removeAll');
+                    }
+                }
+            });
+        }
+
+
+        //查看详情
+        function codeInfo(hotelCode,id){
+            layer.open({
+                type: 2,
+                title : '查看详情',
+                area : ['900px','500px'],
+                content: '[[${ctx}]]/system/setup/hotelInfo?hotelCode='+hotelCode+"&id="+id, //这里content是一个DOM
+               /* btn : ['关闭'],*/
+                closeBtn : '2',
+                shadeClose : true,//点击遮罩层关闭
+                shade : [0.8, '#393D49'],
+                yes : function(index, layero){
+                    var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                    iframeWin.validForm();
+                }
+            });
+        }
+
+        //删除
+        function delBaseDriver(id){
+            layer.confirm('您确定要删除该前缀编号吗？',function() {
+                parent.loading();
+                $.post('[[${ctx}]]/system/setup/deletePrefixCode',{
+                    id :id
+                },function(result){
+                    closeLoading();
+                    layer.closeAll();
+                    showMsgSuccess('删除成功');
+                    refreshTable();
+                });
+            });
+
+        }
+    </script>
+
+</head>
+<body>
+<div class="layui-card-body">
+    <div style="padding-bottom: 10px;">
+        <button class="btn btn-primary " type="button" data-toggle="modal" th:onclick="'addHotel()'"><i class="fa fa-plus"></i>&nbsp;新增前缀</button>
+    </div>
+</div>
+<table id="table">
+
+</table>
+</body>
+</html>

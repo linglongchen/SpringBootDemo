@@ -1,0 +1,95 @@
+package com.chunqiu.mrjuly.modules.advertiserinfo.model;
+
+public class AccountMoney {
+    private Float price;
+    private Float accountBalance;
+    private String billOfOriginId;
+    private String remarks;
+    private String admin;
+    private String password;
+    private String createDate;
+    private Integer advertiserInfoId;
+    private Integer shopInfoId;
+    private Integer type;//扣款类型
+
+    public Integer getShopInfoId() {
+        return shopInfoId;
+    }
+
+    public void setShopInfoId(Integer shopInfoId) {
+        this.shopInfoId = shopInfoId;
+    }
+
+    public Integer getAdvertiserInfoId() {
+        return advertiserInfoId;
+    }
+
+    public void setAdvertiserInfoId(Integer advertiserInfoId) {
+        this.advertiserInfoId = advertiserInfoId;
+    }
+
+    public Float getPrice() {
+        return price;
+    }
+
+    public void setPrice(Float price) {
+        this.price = price;
+    }
+
+    public Float getAccountBalance() {
+        return accountBalance;
+    }
+
+    public void setAccountBalance(Float accountBalance) {
+        this.accountBalance = accountBalance;
+    }
+
+    public String getBillOfOriginId() {
+        return billOfOriginId;
+    }
+
+    public void setBillOfOriginId(String billOfOriginId) {
+        this.billOfOriginId = billOfOriginId;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
+    public String getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(String admin) {
+        this.admin = admin;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(String createDate) {
+        this.createDate = createDate;
+    }
+
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
+	}
+    
+}

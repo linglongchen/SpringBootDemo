@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>房源情况</title>
+
+    <head th:include="init :: init"></head>
+    <head th:include="init_bootstrap_table :: bootstrap_table"></head>
+
+    <script type="text/javascript">
+
+    </script>
+</head>
+<body class="gray-bg">
+<div class="wrapper animated fadeInRight">
+    <div class="ibox-content">
+        <div class="row">
+            <form id="signupForm" class="layui-form form-horizontal m-t">
+                <!--<input type="hidden" name="id" th:value="${adviertisementType.id}" id="typeId">-->
+                <div class="layui-inline">
+                    <div class="layui-input-inline">
+                        <input type="text" name="title" autocomplete="off" placeholder="搜素关键字" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline" >
+                    <div class="layui-input-inline">
+                        <select id="statusLabe" name="status" data-placeholder="请选择城市" class="chosen-select-deselect form-control layui-input" style="width: 150px;">
+                            <option></option>
+                            <option value="0">南通</option>
+                            <option value="1">南京</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline" >
+                    <div class="layui-input-inline">
+                        <select id="statusLa" name="status" data-placeholder="请选择行政区域" class="chosen-select-deselect form-control layui-input" style="width: 150px;">
+                            <option></option>
+                            <option value="0">江苏省</option>
+                            <option value="1">浙江省</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline" >
+                    <div class="layui-input-inline">
+                        <select id="stat" name="status" data-placeholder="请选择酒店星级" class="chosen-select-deselect form-control layui-input" style="width: 150px;">
+                            <option></option>
+                            <option value="0">1星</option>
+                            <option value="1">5星</option>
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="layui-inline">
+                    <button class="btn btn-primary " type="button" onclick="search()"><i class="fa fa-search"></i>&nbsp;搜索</button>
+                </div>
+                <div style="width: 100%;height: 500px;">
+                    <div style="width: 50%;height: 500px;float: left">
+                        <table class="layui-table">
+                            <colgroup>
+                                <col width="150">
+                                <col width="200">
+                                <col>
+                            </colgroup>
+                            <tr>
+                                <th>酒店类型</th>
+                                <td>商务型酒店</td>
+                            </tr>
+                            <tr>
+                                <th>地址</th>
+                                <td>上海</td>
+                            </tr>
+                            <tr>
+                                <th>客房数量</th>
+                                <td>450</td>
+                            </tr>
+                            <tr>
+                                <th>客房平均面积</th>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th>客房均价</th>
+                                <td></td>
+                            </tr>
+                            <tr>
+                            <th>客户端月激活率</th>
+                            <td></td>
+                        </tr>
+                            <tr>
+                                <th>客户端月激活率</th>
+                                <td>86.5%</td>
+                            </tr>
+                            <tr>
+                                <th>个性化服务</th>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th>广告播放审核限制</th>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th>2km内大型生活广场或购物广场</th>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th>交通情况</th>
+                                <td></td>
+                            </tr>
+
+                        </table>
+
+                    </div>
+                    <div style="float: right;width: 50%;height: 425px;background-color: red;margin-top: 10px">
+                        <p style="text-align: center">图片展示</p>
+                    </div>
+
+
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+
+</script>
+</html>

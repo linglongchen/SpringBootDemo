@@ -1,0 +1,85 @@
+package com.chunqiu.mrjuly.modules.hotelinfo.model;
+
+import java.util.Date;
+
+public class LyHotelUserPrize {
+    private Long id;//主键ID
+
+    private Long deviceActivateId;//设备激活记录ID
+
+    private Integer hotelId;//酒店ID
+
+    private Integer prizeId;//奖品ID
+
+    private String fullName;//中奖人姓名
+
+    private String idCard;//身份证
+
+    private String telephone;//手机号
+
+    private Date createTime;//创建时间
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getDeviceActivateId() {
+        return deviceActivateId;
+    }
+
+    public void setDeviceActivateId(Long deviceActivateId) {
+        this.deviceActivateId = deviceActivateId;
+    }
+
+    public Integer getHotelId() {
+        return hotelId;
+    }
+
+    public void setHotelId(Integer hotelId) {
+        this.hotelId = hotelId;
+    }
+
+    public Integer getPrizeId() {
+        return prizeId;
+    }
+
+    public void setPrizeId(Integer prizeId) {
+        this.prizeId = prizeId;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName == null ? null : fullName.trim();
+    }
+
+    public String getIdCard() {
+        return idCard;
+    }
+
+    public void setIdCard(String idCard) {
+        this.idCard = idCard == null ? null : idCard.trim();
+    }
+
+    public String getTelephone() {
+        return telephone;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone == null ? null : telephone.trim();
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+}

@@ -1,0 +1,19 @@
+package com.chunqiu.mrjuly.modules.install.dao;
+
+import com.chunqiu.mrjuly.common.persistence.CrudDao;
+import com.chunqiu.mrjuly.modules.install.model.SysParameter;
+
+import java.util.List;
+
+/**
+ * 系统参数Dao接口
+ */
+public interface SysParameterDao extends CrudDao<SysParameter, Integer> {
+
+    List<SysParameter> getAll(Integer id);
+
+    int insertUse(SysParameter sysParameter);
+
+    int updateUse(SysParameter sysParameter);
+
+}

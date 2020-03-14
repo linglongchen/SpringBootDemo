@@ -1,0 +1,117 @@
+package com.chunqiu.mrjuly.modules.install.model;
+
+import com.chunqiu.mrjuly.common.persistence.DataEntity;
+
+/**
+ * 系统参数设置
+ */
+public class SysParameter extends DataEntity<SysParameter, Integer> {
+
+    private static final long serialVersionUID = 1L;
+    private Integer id;
+    private Integer minAccountBalance;
+    private Integer eductAccountBalance;
+    private Double minAuctionPrice;
+    private Integer eductPrepayAd;
+    private Integer checkTime;
+
+    private Integer overDaysOrders;
+
+    private String cid;
+
+    private Integer picSize;//上传图片大小
+    private Integer videoSize;//上传视频大小
+    private Integer uploadTime;//上传视频时长
+
+    public Integer getCheckTime() {
+        return checkTime;
+    }
+
+    public void setCheckTime(Integer checkTime) {
+        this.checkTime = checkTime;
+    }
+
+    public String getCid() {
+        return cid;
+    }
+
+    public void setCid(String cid) {
+        this.cid = cid;
+    }
+
+    @Override
+    public Integer getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getMinAccountBalance() {
+        return minAccountBalance;
+    }
+
+    public void setMinAccountBalance(Integer minAccountBalance) {
+        this.minAccountBalance = minAccountBalance;
+    }
+
+    public Integer getEductAccountBalance() {
+        return eductAccountBalance;
+    }
+
+    public void setEductAccountBalance(Integer eductAccountBalance) {
+        this.eductAccountBalance = eductAccountBalance;
+    }
+
+
+    public Integer getEductPrepayAd() {
+        return eductPrepayAd;
+    }
+
+    public void setEductPrepayAd(Integer eductPrepayAd) {
+        this.eductPrepayAd = eductPrepayAd;
+    }
+
+    public Double getMinAuctionPrice() {
+        return minAuctionPrice;
+    }
+
+    public void setMinAuctionPrice(Double minAuctionPrice) {
+        this.minAuctionPrice = minAuctionPrice;
+    }
+
+    public Integer getOverDaysOrders() {
+        return overDaysOrders;
+    }
+
+    public void setOverDaysOrders(Integer overDaysOrders) {
+        this.overDaysOrders = overDaysOrders;
+    }
+
+	public Integer getPicSize() {
+		return picSize;
+	}
+
+	public void setPicSize(Integer picSize) {
+		this.picSize = picSize;
+	}
+
+	public Integer getVideoSize() {
+		return videoSize;
+	}
+
+	public void setVideoSize(Integer videoSize) {
+		this.videoSize = videoSize;
+	}
+
+	public Integer getUploadTime() {
+		return uploadTime;
+	}
+
+	public void setUploadTime(Integer uploadTime) {
+		this.uploadTime = uploadTime;
+	}
+    
+}

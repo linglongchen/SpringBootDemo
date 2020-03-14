@@ -1,0 +1,169 @@
+package com.chunqiu.mrjuly.modules.websocketserver;
+
+import com.alibaba.fastjson.JSON;
+import com.chunqiu.mrjuly.common.utils.Task;
+import com.chunqiu.mrjuly.modules.hotelinfo.service.HotelInfoService;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import javax.websocket.*;
+import javax.websocket.server.PathParam;
+import javax.websocket.server.ServerEndpoint;
+import java.io.IOException;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.concurrent.ConcurrentHashMap;
+
+/**
+ * @Description:
+ * @Date: 2019/3/11
+ * @Author: qj
+ */
+@ServerEndpoint("/websocket/{uniqueEncoding}")
+@Component
+public class WebSocketServer {
+
+    private static final Logger log = LoggerFactory.getLogger(WebSocketServer.class);
+    //静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
+    private static int onlineCount = 0;
+    //与某个客户端的连接会话，需要通过它来给客户端发送数据
+    private Session session;
+    //新：使用map对象，便于根据userId来获取对应的WebSocket
+    public static  ConcurrentHashMap<String,WebSocketServer> websocketList = new ConcurrentHashMap<>();
+    //接收sid
+    private String uniqueEncoding="";
+
+    public static HotelInfoService hotelInfoService;
+
+
+    // 注入的时候，给类的 service 注入
+    @Autowired
+    public void setChatService(HotelInfoService hotelInfoService) {
+        WebSocketServer.hotelInfoService=hotelInfoService;
+    }
+
+
+    /**
+     * 连接建立成功调用的方法*/
+    @OnOpen
+    public void onOpen(Session session,@PathParam("uniqueEncoding") String uniqueEncoding) {
+        this.session = session;
+        boolean flag = true;
+        //判断连接的设备是否存在
+        if (websocketList.size()!= 0){
+            Iterator keys = websocketList.keySet().iterator();
+            while(keys.hasNext()){
+                String key = (String)keys.next();
+                if(uniqueEncoding.equals(key)){
+                    flag = false;
+                    break;
+                }
+            }
+        }
+
+        websocketList.put(uniqueEncoding,this);
+        log.info("websocketList->"+ JSON.toJSONString(websocketList));
+        if (flag){
+            addOnlineCount();           //在线数加1
+        }
+        log.info("有新窗口开始监听:"+uniqueEncoding+",当前在线人数为" + getOnlineCount());
+        this.uniqueEncoding=uniqueEncoding;
+        hotelInfoService.changeUnicode(this.uniqueEncoding);
+        Date date = new Date();
+        Task.concurrentHashMap.put(this.uniqueEncoding,date);
+        log.info(Task.concurrentHashMap.toString());
+        try {
+            sendMessage("连接成功");
+        } catch (IOException e) {
+            log.error("websocket IO异常");
+        }
+    }
+
+
+    /**
+     * 连接关闭调用的方法
+     */
+    @OnClose
+    public void onClose() {
+        if(websocketList.get(this.uniqueEncoding)!=null){
+            websocketList.remove(this.uniqueEncoding);
+            subOnlineCount();           //在线数减1
+            hotelInfoService.changeUnicode2(this.uniqueEncoding);
+            log.info("有一连接关闭！当前在线人数为" + getOnlineCount()+"，用户id为"+this.uniqueEncoding);
+        }
+    }
+
+    /**
+     * 收到客户端消息后调用的方法
+     * @param message
+     * */
+    @OnMessage
+    public void onMessage(String message, Session session) {
+        if(StringUtils.isNotBlank(message)) {
+                try {
+                    Date date = new Date();
+                    Task.concurrentHashMap.put(this.uniqueEncoding,date);
+                    log.info(Task.concurrentHashMap.toString());
+                    log.info("收到来自窗口"+this.uniqueEncoding+"的信息:"+message);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+        }
+    }
+
+
+
+    /**
+     *
+     * @param session
+     * @param error
+     */
+    @OnError
+    public void onError(Session session, Throwable error) {
+        log.error("发生错误");
+        error.printStackTrace();
+    }
+
+    /**
+     * 实现服务器主动推送
+     */
+    public void sendMessage(String message) throws IOException {
+        this.session.getBasicRemote().sendText(message);
+    }
+
+
+    /**
+     * 群发自定义消息
+     * */
+    /*public static void sendInfo(String message,@PathParam("userId") String userId) throws IOException {
+        log.info("推送消息到窗口"+userId+"，推送内容:"+message);
+        for (ImController item : webSocketSet) {
+            try {
+                //这里可以设定只推送给这个sid的，为null则全部推送
+                if(userId==null) {
+                    item.sendMessage(message);
+                }else if(item.userId.equals(userId)){
+                    item.sendMessage(message);
+                }
+            } catch (IOException e) {
+                continue;
+            }
+        }
+    }*/
+
+    public static synchronized int getOnlineCount() {
+        return onlineCount;
+    }
+
+    public static synchronized void addOnlineCount() {
+        WebSocketServer.onlineCount++;
+    }
+
+    public static synchronized void subOnlineCount() {
+        WebSocketServer.onlineCount--;
+    }
+
+}

@@ -1,0 +1,13 @@
+package com.chunqiu.mrjuly.modules.platform.dao;
+
+import com.chunqiu.mrjuly.common.persistence.CrudDao;
+import com.chunqiu.mrjuly.modules.platform.model.MessageTemplate;
+
+/**
+ * 保存消息DAO接口
+ * @author dwl 
+ * @version 2019-04-09
+ */
+public interface MessageTemplateDao extends CrudDao<MessageTemplate, Integer> {
+	
+}

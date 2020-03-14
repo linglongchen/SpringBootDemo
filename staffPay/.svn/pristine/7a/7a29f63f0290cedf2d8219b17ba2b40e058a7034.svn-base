@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>广告投诉管理</title>
+
+	<head th:include="init :: init"></head>
+
+	<script type="text/javascript">
+
+		//提交表单
+		function validForm(){
+			$('#signupForm').validate({
+		        submitHandler:function(form){
+		            loading();
+		            form.action = '[[${ctx}]]/advertisingcomplain/advertisingComplain/saveAdvertisingComplain';
+					form.submit();
+		        }
+			});
+		    $('#signupForm').submit();
+		}
+	</script>
+</head>
+<body class="gray-bg">
+	<div class="wrapper animated fadeInRight">
+    	<div class="ibox-content">
+    		<div class="row">
+    			<form id="signupForm" class="layui-form form-horizontal m-t">
+    			<input type="hidden" name="id" th:value="${advertisingComplain.id}">
+					<div class="layui-form-item col-lg-12 col-sm-12 col-xs-12">
+						<label class="col-xs-6 layui-form-label" style="width:200px">交易编号：</label>
+						<div class="col-xs-6">
+							<input name="transactionodersn" class="layui-input" th:value="${advertisingComplain.transactionodersn }"  autocomplete="off" type="text"  maxlength="255" readonly style="border-style:none">
+						</div>
+					</div>
+					<div class="layui-form-item col-lg-12 col-sm-12 col-xs-12">
+						<label class="col-xs-6 layui-form-label" style="width:200px">订单编号：</label>
+						<div class="col-xs-6">
+							<input name="ordernumber" class="layui-input" th:value="${advertisingComplain.ordernumber }"  autocomplete="off" type="text"  maxlength="255" readonly style="border-style:none">
+						</div>
+					</div>
+					<div class="layui-form-item col-lg-12 col-sm-12 col-xs-12">
+						<label class="col-xs-6 layui-form-label" style="width:200px">投放端：</label>
+						<div class="col-xs-6">
+							<input th:if="${advertisingComplain.type == 1 }"name="type" class="layui-input" value="商家"  autocomplete="off" type="text"  maxlength="255" readonly style="border-style:none">
+							<input th:if="${advertisingComplain.type == 2 }"name="type" class="layui-input" value="广告商"  autocomplete="off" type="text"  maxlength="255" readonly style="border-style:none">
+							<input th:if="${advertisingComplain.type == 3 }"name="type" class="layui-input" value="酒店"  autocomplete="off" type="text"  maxlength="255" readonly style="border-style:none">
+							<input th:if="${advertisingComplain.type == 4 }"name="type" class="layui-input" value="总控"  autocomplete="off" type="text"  maxlength="255" readonly style="border-style:none">
+						</div>
+					</div>
+					<div class="layui-form-item col-lg-12 col-sm-12 col-xs-12">
+						<label class="col-xs-6 layui-form-label" style="width:200px">投放人：</label>
+						<div class="col-xs-6">
+							<input name="objectName" class="layui-input" th:value="${advertisingComplain.objectName }"  autocomplete="off" type="text"  maxlength="255" readonly style="border-style:none">
+						</div>
+					</div>
+					<div class="layui-form-item col-lg-12 col-sm-12 col-xs-12">
+						<label class="col-xs-6 layui-form-label" style="width:200px">投放人地址：</label>
+						<div class="col-xs-6">
+							<input name="objectAddress" class="layui-input" th:value="${advertisingComplain.objectAddress }"  autocomplete="off" type="text"  maxlength="255" readonly style="border-style:none">
+						</div>
+					</div>
+					<div class="layui-form-item col-lg-12 col-sm-12 col-xs-12">
+						<label class="col-xs-6 layui-form-label" style="width:200px">投放人联系方式：</label>
+						<div class="col-xs-6">
+							<input name="objectPhone" class="layui-input" th:value="${advertisingComplain.objectPhone }"  autocomplete="off" type="text"  maxlength="255" readonly style="border-style:none">
+						</div>
+					</div>
+					<div class="layui-form-item col-lg-12 col-sm-12 col-xs-12">
+						<label class="col-xs-6 layui-form-label" style="width:200px">投放酒店集团：</label>
+						<div class="col-xs-6">
+							<input name="hotelGroups" class="layui-input" th:value="${advertisingComplain.hotelGroups }"  autocomplete="off" type="text"  maxlength="255" readonly style="border-style:none">
+						</div>
+					</div>
+					<div class="layui-form-item col-lg-12 col-sm-12 col-xs-12">
+						<label class="col-xs-6 layui-form-label" style="width:200px">投放酒店名称：</label>
+						<div class="col-xs-6">
+							<input name="hotelName" class="layui-input" th:value="${advertisingComplain.hotelName }"  autocomplete="off" type="text"  maxlength="255" readonly style="border-style:none">
+						</div>
+					</div>
+					<div class="layui-form-item col-lg-12 col-sm-12 col-xs-12">
+						<label class="col-xs-6 layui-form-label" style="width:200px">投放酒店地址：</label>
+						<div class="col-xs-6">
+							<input name="hotelAddress" class="layui-input" th:value="${advertisingComplain.hotelAddress }"  autocomplete="off" type="text"  maxlength="255" readonly style="border-style:none">
+						</div>
+					</div>
+					<div class="layui-form-item col-lg-12 col-sm-12 col-xs-12">
+						<label class="col-xs-6 layui-form-label" style="width:200px">投放酒店联系方式：</label>
+						<div class="col-xs-6">
+							<input name="hotelPhone" class="layui-input" th:value="${advertisingComplain.hotelPhone }"  autocomplete="off" type="text"  maxlength="255" readonly style="border-style:none">
+						</div>
+					</div>
+					<div class="layui-form-item col-lg-12 col-sm-12 col-xs-12">
+						<label class="col-xs-6 layui-form-label" style="width:200px">广告投放类型：</label>
+						<div class="col-xs-6">
+							<input th:if="${advertisingComplain.deliveryType == 1 }"name="deliveryType" class="layui-input" value="图文"  autocomplete="off" type="text"  maxlength="255" readonly style="border-style:none">
+							<input th:if="${advertisingComplain.deliveryType == 2 }"name="deliveryType" class="layui-input" value="视频"  autocomplete="off" type="text"  maxlength="255" readonly style="border-style:none">
+						</div>
+					</div>
+					<div class="layui-form-item col-lg-12 col-sm-12 col-xs-12">
+						<label class="col-xs-6 layui-form-label" style="width:200px">广告投放时间：</label>
+						<div class="col-xs-6">
+							<input th:value="${advertisingComplain.putInTime}"name="putInTime" class="layui-input"  autocomplete="off" type="text"  maxlength="255" readonly style="border-style:none">
+						</div>
+					</div>
+					<div class="layui-form-item col-lg-12 col-sm-12 col-xs-12">
+						<label class="col-xs-6 layui-form-label" style="width:200px">广告投放数量：</label>
+						<div class="col-xs-6">
+							<input th:value="${advertisingComplain.quantityDelivered}"name="quantityDelivered" class="layui-input"   autocomplete="off" type="text"  maxlength="255" readonly style="border-style:none">
+						</div>
+					</div>
+					<div class="layui-form-item col-lg-12 col-sm-12 col-xs-12">
+						<label class="col-xs-6 layui-form-label" style="width:200px">广告价格类型：</label>
+						<div class="col-xs-6">
+							<input th:if="${advertisingComplain.priceType == 1 }"name="priceType" class="layui-input" value="竞拍价"  autocomplete="off" type="text"  maxlength="255" readonly style="border-style:none">
+							<input th:if="${advertisingComplain.priceType == 2 }"name="priceType" class="layui-input" value="一口价"  autocomplete="off" type="text"  maxlength="255" readonly style="border-style:none">
+						</div>
+					</div>
+					<div class="layui-form-item col-lg-12 col-sm-12 col-xs-12">
+						<label class="col-xs-6 layui-form-label" style="width:200px">广告投放价格（元）：</label>
+						<div class="col-xs-6">
+							<input th:value="${advertisingComplain.priceTypePrice}"name="priceTypePrice" class="layui-input"  autocomplete="off" type="text"  maxlength="255" readonly style="border-style:none">
+						</div>
+					</div>
+					<div class="layui-form-item col-lg-12 col-sm-12 col-xs-12">
+						<label class="col-xs-6 layui-form-label" style="width:200px">广告投放次数：</label>
+						<div class="col-xs-6">
+							<input th:value="${advertisingComplain.complainMount}"name="complainMount" class="layui-input"  autocomplete="off" type="text"  maxlength="255" readonly style="border-style:none">
+						</div>
+					</div>
+					<div class="layui-form-item col-lg-12 col-sm-12 col-xs-12">
+						<label class="col-xs-6 layui-form-label" style="width:200px">广告投诉首次时间：</label>
+						<div class="col-xs-6">
+							<input th:value="${#dates.format(advertisingComplain.createDate,'yyyy-MM-dd HH:mm:ss')}" name="createDate" class="layui-input"  autocomplete="off" type="text"  maxlength="255" readonly style="border-style:none">
+						</div>
+					</div>
+					<div class="layui-form-item col-lg-12 col-sm-12 col-xs-12">
+						<label class="col-xs-6 layui-form-label" style="width:200px">广告投诉最新时间：</label>
+						<div class="col-xs-6">
+							<input th:value="${#dates.format(advertisingComplain.updateDate,'yyyy-MM-dd HH:mm:ss')}" name="updateDate" class="layui-input"  autocomplete="off" type="text"  maxlength="255" readonly style="border-style:none">
+						</div>
+					</div>
+					<div class="layui-form-item col-lg-12 col-sm-12 col-xs-12">
+						<label class="col-xs-6 layui-form-label" style="width:200px">广告详情：</label>
+						<div class="col-xs-6" th:if="${advertisingComplain.priceType == 1 }">
+							<video th:src="${advertisingComplain?.advertisingContent}" controls="controls"></video>
+						</div>
+						<div class="col-xs-6" th:if="${advertisingComplain.priceType == 2 }">
+							<a th:href="${advertisingComplain?.advertisingUrl}"><img alt="image" th:src="${advertisingComplain?.advertisingContent}"></a>
+						</div>
+					</div>
+    			</form>
+    		</div>
+    	</div>
+    </div>
+</body>
+</html>

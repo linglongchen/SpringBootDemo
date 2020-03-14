@@ -1,0 +1,283 @@
+package com.chunqiu.mrjuly.modules.shopinfo.controller;
+
+import com.chunqiu.mrjuly.common.annotation.Log;
+import com.chunqiu.mrjuly.common.persistence.BaseController;
+import com.chunqiu.mrjuly.common.utils.OssUtils.OSSClientConstants;
+import com.chunqiu.mrjuly.common.utils.OssUtils.OSSClientUtils;
+import com.chunqiu.mrjuly.common.utils.UserUtils;
+import com.chunqiu.mrjuly.common.vo.Grid;
+import com.chunqiu.mrjuly.common.vo.GridParam;
+import com.chunqiu.mrjuly.common.vo.Json;
+import com.chunqiu.mrjuly.modules.hotelinfo.service.DepartmentInfoService;
+import com.chunqiu.mrjuly.modules.shopinfo.model.ProductCreate;
+import com.chunqiu.mrjuly.modules.shopinfo.service.ProductCreateService;
+
+import lombok.extern.slf4j.Slf4j;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * 商品创建Controller
+ * @author wyy
+ * @version 2019-03-14
+ */
+@Slf4j
+@Controller
+@RequestMapping(value = "${adminPath}/shopinfo/productCreate")
+public class ProductCreateController extends BaseController {
+
+	@Autowired
+	private ProductCreateService productCreateService;
+	@Autowired
+	private DepartmentInfoService departmentInfoService;
+	/**
+	 * @Description：商品创建列表页面
+	 * @author wyy
+	 */
+	@Log("打开商品创建列表页面")
+	@RequestMapping("index")
+	@RequiresPermissions("shopinfo:productCreate:view")
+	public String index(){
+
+		return "shopinfo/productCreateList";
+	}
+
+	/**
+	 * @Description：商品创建列表数据
+	 * @author wyy
+	 */
+	@Log("获取商品创建列表数据")
+	@RequestMapping("list")
+	@ResponseBody
+	@RequiresPermissions("shopinfo:productCreate:view")
+	public Grid list(ProductCreate productCreate, GridParam param) {
+
+		if(productCreate.getShopId()!= null){
+			productCreate.setShopId(productCreate.getShopId());
+		}else{
+			productCreate.setShopId(UserUtils.getUser().getBusinessId());
+		}
+
+		return productCreateService.findPage(productCreate, param);
+	}
+	/**
+	 * @Description：商品创建表单页面--新增/编辑
+	 * @author wyy
+	 */
+	@Log("打开商品创建表单页面--新增/编辑")
+	@RequestMapping(value = "form")
+	@RequiresPermissions("shopinfo:productCreate:view")
+	public String form(ProductCreate productCreate, ModelMap model) {
+
+		try {
+			List<String> stringList = new ArrayList<>();
+			List<String> stringInfoList = new ArrayList<>();
+			if (productCreate.getId() == null){
+				stringList.add("/images/default2.png");
+				productCreate.setGoodsPicList(stringList);
+				for (int i = 0;i< 6;i++){
+					stringInfoList.add("/images/default2.png");
+					productCreate.setGoodsPicInfoList(stringInfoList);
+				}
+			}else {
+				productCreate = productCreateService.get(productCreate.getId());
+				String [] goodsPic = productCreate.getGoodsPic().split(",");
+				String [] goodsInfoPic = productCreate.getGoodsInfoPic().split(",");
+				int sum1 = 0;
+				for (int i = 0;i<goodsPic.length;i++){
+					sum1 ++;
+					stringList.add(goodsPic[i]);
+					productCreate.setGoodsPicList(stringList);
+				}
+
+				if (sum1 == 0){
+					stringList.add("/images/default2.png");
+				}
+
+				int sum = 0;
+				for (int i = 0;i<goodsInfoPic.length;i++){
+					sum++;
+					stringInfoList.add(goodsInfoPic[i]);
+					productCreate.setGoodsPicInfoList(stringInfoList);
+				}
+				if (sum==1){
+					stringInfoList.add("/images/default2.png");
+					stringInfoList.add("/images/default2.png");
+					stringInfoList.add("/images/default2.png");
+					stringInfoList.add("/images/default2.png");
+					stringInfoList.add("/images/default2.png");
+				}else if (sum==2){
+					stringInfoList.add("/images/default2.png");
+					stringInfoList.add("/images/default2.png");
+					stringInfoList.add("/images/default2.png");
+					stringInfoList.add("/images/default2.png");
+				}else if (sum==3){
+					stringInfoList.add("/images/default2.png");
+					stringInfoList.add("/images/default2.png");
+					stringInfoList.add("/images/default2.png");
+				}else if (sum==4){
+					stringInfoList.add("/images/default2.png");
+					stringInfoList.add("/images/default2.png");
+				}else if (sum==5){
+					stringInfoList.add("/images/default2.png");
+				}else if (sum == 0){
+					stringInfoList.add("/images/default2.png");
+					stringInfoList.add("/images/default2.png");
+					stringInfoList.add("/images/default2.png");
+					stringInfoList.add("/images/default2.png");
+					stringInfoList.add("/images/default2.png");
+					stringInfoList.add("/images/default2.png");
+				}
+			}
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+        //查询服务方式
+
+        productCreate.setShopId(UserUtils.getUser().getBusinessId());
+        List<ProductCreate> serviceModeList = productCreateService.serviceModeList(productCreate);
+		model.addAttribute("serviceMode", serviceModeList);
+
+		model.addAttribute("productCreate", productCreate);
+		return "shopinfo/productCreateForm";
+	}
+	/**
+	 * @Description：商品创建新增/编辑 保存方法
+	 * @author wyy
+	 */
+	@Log("新增/编辑商品创建")
+	@RequestMapping("saveProductCreate")
+	@RequiresPermissions("shopinfo:productCreate:edit")
+	public String saveProductCreate(ProductCreate productCreate, ModelMap model){
+		productCreate.setShopId(UserUtils.getUser().getBusinessId());
+		try{
+			String[] serviceMode = productCreate.getServiceMode().split(",");
+			productCreate.setServiceMode(serviceMode[0]);
+			if (StringUtils.isBlank(productCreate.getGoodsInfoPic())) {
+				productCreate.setGoodsInfoPic("/images/default2.png");
+			}
+			//商品图
+			String goodsPic = OSSClientUtils.ossUploadPictures(productCreate.getGoodsPic());
+			productCreate.setGoodsPic(goodsPic);
+			//商品详情图
+			String goodsInfoPic = OSSClientUtils.ossUploadPictures(productCreate.getGoodsInfoPic());
+			productCreate.setGoodsInfoPic(goodsInfoPic);
+			//商品视频
+			if (productCreate.getGoodsVideo()!=null&&!"".equals(productCreate.getGoodsVideo())){
+				if (!productCreate.getGoodsVideo().contains("http")){
+					boolean status = productCreate.getGoodsVideo().contains(":/");
+					if(status){
+						String position = (productCreate.getGoodsVideo().split(":/"))[1];
+						productCreate.setGoodsVideo(OSSClientConstants.URL+position);
+					}else {
+						productCreate.setGoodsVideo(OSSClientConstants.URL+productCreate.getGoodsVideo());
+					}
+				}
+			}
+			productCreateService.save(productCreate);
+		}catch(Exception e){
+			log.error("保存失败！ msg={}", e.getMessage(), e);
+			model.addAttribute("error", "保存失败！");
+			return form(productCreate, model);
+		}
+		return successPath;
+	}
+	/**
+	 * @Description：商品创建数据删除方法
+	 * @author wyy
+	 */
+	@Log("删除商品创建")
+	@RequestMapping("delProductCreate")
+	@ResponseBody
+	@RequiresPermissions("shopinfo:productCreate:edit")
+	public Json delProductCreate(ProductCreate productCreate){
+		Json json = new Json();
+		try{
+			productCreateService.delete(productCreate);
+			json.setSuccess(true);
+		}catch(Exception e){
+			log.error("删除失败！ msg={}", e.getMessage(), e);
+
+			json.setSuccess(false);
+			json.setMsg("删除失败！");
+		}
+		return json;
+	}
+
+	@Log("批量删除商品创建")
+	@RequestMapping("framesDelGoods")
+	@ResponseBody
+	@RequiresPermissions("shopinfo:productCreate:edit")
+	public Json framesDelGoods(ProductCreate productCreate){
+		Json json = new Json();
+		try{
+			List<ProductCreate> productCreates = new ArrayList<>();
+			String[] idList = productCreate.getIdList().split(",");
+			for (int i = 0;i<idList.length;i++){
+				ProductCreate goodsInfo = new ProductCreate();
+				goodsInfo.setId(Integer.valueOf(idList[i]));
+				productCreates.add(goodsInfo);
+			}
+			productCreate.preUpdate();
+			productCreateService.delFramesByIdList(productCreate,productCreates);
+			json.setSuccess(true);
+		}catch(Exception e){
+			log.error("删除失败！ msg={}", e.getMessage(), e);
+
+			json.setSuccess(false);
+			json.setMsg("删除失败！");
+		}
+		return json;
+	}
+
+	@Log("更新上下架状态")
+	@RequestMapping("framesStatus")
+	@ResponseBody
+	@RequiresPermissions("shopinfo:productCreate:edit")
+	public Json framesStatus(ProductCreate productCreate){
+		Json json = new Json();
+		try{
+			List<ProductCreate> productCreates = new ArrayList<>();
+			String[] idList = productCreate.getIdList().split(",");
+			for (int i = 0;i<idList.length;i++){
+				ProductCreate goodsInfo = new ProductCreate();
+				goodsInfo.setId(Integer.valueOf(idList[i]));
+				productCreates.add(goodsInfo);
+			}
+			productCreate.preUpdate();
+			productCreateService.updateFramesByIdList(productCreate,productCreates);
+			json.setSuccess(true);
+		}catch(Exception e){
+			log.error("失败！ msg={}", e.getMessage(), e);
+
+			json.setSuccess(false);
+			json.setMsg("失败！");
+		}
+		return json;
+	}
+
+
+    @Log("更改服务方式")
+    @RequestMapping("updateServiceMode")
+    @ResponseBody
+    public List<ProductCreate> updateServiceMode(ProductCreate productCreate, ModelMap modelMap){
+        //更新服务方式
+        productCreateService.updateServceMode(productCreate);
+        //查询服务方式
+        productCreate.setShopId(UserUtils.getUser().getBusinessId());
+        List<ProductCreate> serviceModeList = productCreateService.serviceModeList(productCreate);
+        return serviceModeList;
+    }
+
+
+}

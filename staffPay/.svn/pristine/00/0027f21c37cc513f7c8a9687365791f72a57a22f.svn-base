@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chunqiu.mrjuly.modules.hotelinfo.dao.DepartmentGoodsInfoDao">
+
+	<sql id="departmentGoodsInfoColumns">
+		a.id AS "id",
+		a.department_goods_pic AS "departmentGoodsPic",
+		a.department_goods_info_pic AS "departmentGoodsInfoPic",
+		a.department_goods_name AS "departmentGoodsName",
+		a.department_goods_num AS "departmentGoodsNum",
+		a.department_goods_language AS "departmentGoodsLanguage",
+		a.department_goods_price AS "departmentGoodsPrice",
+		a.department_type_id AS "departmentTypeId",
+		a.department_id AS "departmentId",
+		a.stock AS "stock",
+		a.service_mode AS "serviceMode",
+		a.department_goods_video AS "departmentGoodsVideo",
+		a.department_goods_describe AS "departmentGoodsDescribe",
+		a.is_shelf AS "isShelf",
+		a.create_date AS "createDate",
+		a.create_by AS "createBy.id",
+		a.update_date AS "updateDate",
+		a.update_by AS "updateBy.id",
+		a.del_flag AS "delFlag"
+	</sql>
+
+	<sql id="departmentGoodsInfoJoins">
+	</sql>
+
+	<select id="get" resultType="DepartmentGoodsInfo">
+		SELECT
+			<include refid="departmentGoodsInfoColumns"/>
+		FROM department_goods_info a
+		<include refid="departmentGoodsInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="DepartmentGoodsInfo">
+		SELECT
+			c.service_mode as "serviceMode",
+			d.category_name as "categoryName",
+			b.department_name as "departmentName",
+			<include refid="departmentGoodsInfoColumns"/>
+		FROM department_goods_info a
+		left join  (select * from  department_info where hotel_code_id = #{hotelCodeId} and del_flag = '0') b on a.department_id = b.id
+		left join service_mode as c on c.id = a.service_mode
+		left join department_categories as d on d.id = a.department_type_id
+		<include refid="departmentGoodsInfoJoins"/>
+		<where>
+			 a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="departmentGoodsPic != null and departmentGoodsPic != ''">
+				AND a.department_goods_pic = #{departmentGoodsPic}
+			</if>
+			<if test="departmentGoodsInfoPic != null and departmentGoodsInfoPic != ''">
+				AND a.department_goods_info_pic = #{departmentGoodsInfoPic}
+			</if>
+			<if test="departmentGoodsName != null and departmentGoodsName != ''">
+				AND a.department_goods_name = #{departmentGoodsName}
+			</if>
+			<if test="departmentGoodsNum != null and departmentGoodsNum != ''">
+				AND a.department_goods_num = #{departmentGoodsNum}
+			</if>
+			<if test="departmentGoodsLanguage != null and departmentGoodsLanguage != ''">
+				AND a.department_goods_language = #{departmentGoodsLanguage}
+			</if>
+			<if test="departmentGoodsPrice != null and departmentGoodsPrice != ''">
+				AND a.department_goods_price = #{departmentGoodsPrice}
+			</if>
+			<if test="departmentTypeId != null and departmentTypeId != ''">
+				AND a.department_type_id = #{departmentTypeId}
+			</if>
+			<if test="departmentName != null and departmentName != ''">
+				AND a.department_goods_name like CONCAT(CONCAT('%',#{departmentName},'%'))
+			</if>
+
+			<if test="departmentId != null and departmentId != ''">
+				AND a.department_id = #{departmentId}
+			</if>
+			<if test="departmentId == null ">
+				AND a.department_id in (select id from  department_info where hotel_code_id = #{hotelCodeId} and del_flag = '0')
+			</if>
+
+			<if test="stock != null and stock != ''">
+				AND a.stock = #{stock}
+			</if>
+			<if test="serviceMode != null and serviceMode != ''">
+				AND a.service_mode = #{serviceMode}
+			</if>
+			<if test="departmentGoodsVideo != null and departmentGoodsVideo != ''">
+				AND a.department_goods_video = #{departmentGoodsVideo}
+			</if>
+			<if test="departmentGoodsDescribe != null and departmentGoodsDescribe != ''">
+				AND a.department_goods_describe = #{departmentGoodsDescribe}
+			</if>
+			<if test="isShelf != null and isShelf != ''">
+				AND a.is_shelf = #{isShelf}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date = #{createDate}
+			</if>
+			<if test="createBy != null and createBy.id != null and createBy.id != ''">
+				AND a.create_by = #{createBy.id}
+			</if>
+			<if test="updateDate != null and updateDate != ''">
+				AND a.update_date = #{updateDate}
+			</if>
+			<if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+				AND a.update_by = #{updateBy.id}
+			</if>
+			<if test="delFlag != null and delFlag != ''">
+				AND a.del_flag = #{delFlag}
+			</if>
+		</where>
+		<choose>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.id DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="DepartmentGoodsInfo">
+		SELECT
+			<include refid="departmentGoodsInfoColumns"/>
+		FROM department_goods_info a
+		<include refid="departmentGoodsInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO department_goods_info(
+						department_goods_pic,
+						department_goods_info_pic,
+						department_goods_name,
+						department_goods_num,
+						department_goods_language,
+						department_goods_price,
+						department_type_id,
+						department_id,
+						stock,
+						service_mode,
+						department_goods_video,
+						department_goods_describe,
+						create_date,
+						create_by
+		) VALUES (
+						#{departmentGoodsPic},
+						#{departmentGoodsInfoPic},
+						#{departmentGoodsName},
+						#{departmentGoodsNum},
+						#{departmentGoodsLanguage},
+						#{departmentGoodsPrice},
+						#{departmentTypeId},
+						#{departmentId},
+						#{stock},
+						#{serviceMode},
+						#{departmentGoodsVideo},
+						#{departmentGoodsDescribe},
+						#{createDate},
+						#{createBy.id}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE department_goods_info
+		<set>
+			<if test="departmentGoodsPic != null and departmentGoodsPic != ''">
+				department_goods_pic = #{departmentGoodsPic},
+			</if>
+			<if test="departmentGoodsInfoPic != null and departmentGoodsInfoPic != ''">
+				department_goods_info_pic = #{departmentGoodsInfoPic},
+			</if>
+			<if test="departmentGoodsName != null and departmentGoodsName != ''">
+				department_goods_name = #{departmentGoodsName},
+			</if>
+			<if test="departmentGoodsNum != null">
+				department_goods_num = #{departmentGoodsNum},
+			</if>
+			<if test="departmentGoodsLanguage != null">
+				department_goods_language = #{departmentGoodsLanguage},
+			</if>
+				department_goods_price = #{departmentGoodsPrice},
+			<if test="departmentTypeId != null">
+				department_type_id = #{departmentTypeId},
+			</if>
+			<if test="departmentId != null">
+				department_id = #{departmentId},
+			</if>
+			<if test="stock != null">
+				stock = #{stock},
+			</if>
+			<if test="serviceMode != null and serviceMode != ''">
+				service_mode = #{serviceMode},
+			</if>
+			<if test="departmentGoodsVideo != null and departmentGoodsVideo != ''">
+				department_goods_video = #{departmentGoodsVideo},
+			</if>
+			<if test="departmentGoodsDescribe != null and departmentGoodsDescribe != ''">
+				department_goods_describe = #{departmentGoodsDescribe},
+			</if>
+				update_date = #{updateDate},
+				update_by = #{updateBy.id},
+		</set>
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		UPDATE department_goods_info SET
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<select id="departmentCategoriesList" resultType="DepartmentCategories">
+		select id,category_name as "categoryName" from department_categories where hotel_code_id = #{hotelCodeId} and del_flag = '0'
+	</select>
+
+	<update id="delFramesByIdList">
+		UPDATE department_goods_info SET
+			del_flag = '1'
+		WHERE
+		id in
+		(
+		<foreach collection="departmentGoodsInfoList" item="item" index="index" open="" close="" separator=",">
+			#{item.id}
+		</foreach>
+		)
+	</update>
+
+	<select id="departmentGoodsInfoList" resultType="DepartmentInfoList">
+			select id,department_name as "departmentName" from department_info where del_flag = '0' and  hotel_code_id =#{hotelCodeId}
+			<if test="departmentId != '' and departmentId != null">
+				and id = #{departmentId}
+			</if>
+	</select>
+
+	<update id="updateFramesByIdList" >
+		UPDATE `department_goods_info`
+			SET
+			 `is_shelf` =  #{departmentGoodsInfo.isShelf},
+			 `update_date` = #{departmentGoodsInfo.updateDate},
+			 `update_by` = #{departmentGoodsInfo.updateBy.id}
+			WHERE
+				id in
+				(
+				<foreach collection="departmentGoodsInfoList" item="item" index="index" open="" close="" separator=",">
+					#{item.id}
+				</foreach>
+				)
+	</update>
+
+
+	<update id="updateServceMode">
+		UPDATE `service_mode`
+		SET
+		 `service_mode` = #{serviceMode}
+		WHERE
+			id =#{id}
+	</update>
+</mapper>

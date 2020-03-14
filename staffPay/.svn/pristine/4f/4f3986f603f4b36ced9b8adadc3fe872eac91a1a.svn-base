@@ -1,0 +1,243 @@
+package com.chunqiu.mrjuly.modules.system.service;
+
+import com.chunqiu.mrjuly.common.exception.ServiceException;
+import com.chunqiu.mrjuly.common.persistence.CrudService;
+import com.chunqiu.mrjuly.common.vo.Grid;
+import com.chunqiu.mrjuly.common.vo.GridParam;
+import com.chunqiu.mrjuly.modules.system.dao.SystemSetupDao;
+import com.chunqiu.mrjuly.modules.system.model.BankInfo;
+import com.chunqiu.mrjuly.modules.system.model.CodeExport;
+import com.chunqiu.mrjuly.modules.system.model.HotelCode;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.List;
+
+@Service
+public class SystemSetupService extends CrudService<SystemSetupDao, HotelCode, Long> {
+    @Resource
+    private SystemSetupDao systemSetupDao;
+
+    /**
+     * 查询所有银行
+     * @return
+     */
+    public List<BankInfo> bankList(){
+        return systemSetupDao.bankList();
+    }
+
+    /**
+     * 新增一个对公账户
+     * @param bankInfo
+     * @return
+     */
+    public int insertBank(BankInfo bankInfo){
+        //获取当前创建人，创建时间
+        bankInfo.preInsert();
+        return systemSetupDao.insertBank(bankInfo);
+    }
+
+    /**
+     * 查询对开账户信息
+     * @return
+     */
+    public BankInfo bankInfo(){
+        return systemSetupDao.bankInfo();
+    }
+
+
+    /**
+     * 更新对开账户信息
+     * @param bankInfo
+     * @return
+     */
+    public int updateBankInfoById(BankInfo bankInfo){
+        //获取当前更新人，更新时间
+        bankInfo.preInsert();
+        return systemSetupDao.updateBankInfoById(bankInfo);
+    }
+
+
+    /**
+     * 查询当前前缀下的设备
+     * @param hotelCode
+     * @param param
+     * @return
+     */
+    public Grid findCodePage(HotelCode hotelCode, GridParam param){
+        Grid grid = new Grid();
+
+        Page page = PageHelper.offsetPage(param.getOffset(), param.getLimit(), true);
+        systemSetupDao.findCodeList(hotelCode);
+
+        grid.setRows(page.getResult());
+        grid.setTotal(page.getTotal());
+        return grid;
+    }
+
+    /**
+     * 新增前缀编码
+     * @param hotelCode
+     * @return
+     */
+    public void insertCode(HotelCode hotelCode){
+        hotelCode.preInsert();
+        //当type为1时判断编码
+        hotelCode.setType(1);
+        int count = systemSetupDao.isHotel(hotelCode);
+        //当存在编码时
+        if (count > 0){
+            throw new ServiceException();
+        }
+        //当type为2时判断酒店名称
+        hotelCode.setType(2);
+        int count1 = systemSetupDao.isHotel(hotelCode);
+        if (count1 > 0){
+            throw new ServiceException();
+        }
+        //新增酒店信息
+        systemSetupDao.insertSaveHotel(hotelCode);
+    }
+
+
+    /**
+     * 更新前缀编码
+     * @param hotelCode
+     */
+    public void updateCodeById(HotelCode hotelCode){
+        hotelCode.preUpdate();
+        //判断是否有重复的
+        int count = systemSetupDao.isNameByStr(hotelCode);
+        if (count > 0){
+            throw new ServiceException();
+        }
+        systemSetupDao.updateCodeById(hotelCode);
+    }
+
+    /**
+     * 获取前缀
+     * @return
+     */
+    public List<HotelCode> getSelect(){
+        return dao.getSelect();
+    }
+
+
+    /**
+     * 新增外壳设备编码
+     * @param codeExport
+     */
+    public void insertShellCoding(List<CodeExport> codeExport){
+        systemSetupDao.insertShellCoding(codeExport);
+    }
+
+
+    /**
+     * 查询外壳设备编号
+     * @param hotelCode
+     * @param param
+     * @return
+     */
+    public Grid findShellCodingList(HotelCode hotelCode, GridParam param){
+        Grid grid = new Grid();
+
+        Page page = PageHelper.offsetPage(param.getOffset(), param.getLimit(), true);
+        systemSetupDao.findShellCodingList(hotelCode);
+
+        grid.setRows(page.getResult());
+        grid.setTotal(page.getTotal());
+        return grid;
+    }
+
+    /**
+     * 查询所有酒店前缀编码
+     * @return
+     */
+    public List<HotelCode> hotelCodingList(){
+      return   systemSetupDao.hotelCodingList();
+    }
+
+
+    /**
+     * 单条归入设备编码
+     * @param hotelCode
+     */
+    public void SingleCode(HotelCode hotelCode){
+        hotelCode.preUpdate();
+        //插入编码
+        systemSetupDao.SingleCode(hotelCode);
+        //更新外壳编号状态
+        systemSetupDao.updateShellCodeById(hotelCode);
+    }
+
+
+    /**
+     * 更新绑定过的前缀编码
+     * @param hotelCode
+     * @return
+     */
+    public int updateCodeBindingById(HotelCode hotelCode){
+        hotelCode.preUpdate();
+        return  systemSetupDao.updateCodeBindingById(hotelCode);
+    }
+
+
+    /**
+     * 批量归入设备外壳编号
+     * @param hotelCodes
+     */
+    public void insertManyCodeById(List<HotelCode> hotelCodes){
+        systemSetupDao.insertManyCodeById(hotelCodes);
+        systemSetupDao.updateManyCodeById(hotelCodes);
+    }
+
+    /**
+     * 删除设备外壳编号
+     * @param hotelCode
+     */
+    public void deleteCodeById(HotelCode hotelCode){
+        systemSetupDao.deleteCodeById(hotelCode);
+        systemSetupDao.deleteBindingById(hotelCode);
+    }
+
+    /**
+     * 单条断开外壳设备
+     * @param hotelCode
+     */
+    public void breakEncodingById(HotelCode hotelCode){
+            systemSetupDao.breakEncodingById(hotelCode);
+            systemSetupDao.deleteBindingById(hotelCode);
+    }
+
+    /**
+     * 多条断开外壳设备
+     * @param hotelCode
+     */
+    public void multipleEncodingById(List<HotelCode> hotelCode){
+        systemSetupDao.updateMultipleBreakById(hotelCode);
+        systemSetupDao.deleteMultipleBreakById(hotelCode);
+    }
+
+    /**
+     * 删除前缀编码
+     * @param hotelCode
+     */
+    public void deletePrefixCode(HotelCode hotelCode){
+        //查询已经绑定过的外壳编码id
+        hotelCode.setCodeId(hotelCode.getId());
+        List<HotelCode> hotelCodeList = systemSetupDao.hotelCodeIdById(hotelCode);
+        hotelCode.preUpdate();
+        //更新前缀编码删除状态
+        systemSetupDao.updatePrefixCodeById(hotelCode);
+        hotelCode.preUpdate();
+        //解绑当前前缀编码下的外壳编码
+        systemSetupDao.updateMatchingCodeById(hotelCode);
+        //更改王编码绑定状态
+        if (hotelCodeList.size()> 0){
+            systemSetupDao.updateMultipleBreakById(hotelCodeList);
+        }
+        }
+
+}

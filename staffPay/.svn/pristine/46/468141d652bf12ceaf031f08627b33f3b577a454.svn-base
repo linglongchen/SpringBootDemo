@@ -1,0 +1,17 @@
+package com.chunqiu.mrjuly.modules.hotelinfo.dao;
+
+import java.util.List;
+
+import com.chunqiu.mrjuly.modules.hotelinfo.model.LyHotelDeviceActivate;
+
+public interface LyHotelDeviceActivateDao {
+    int deleteByPrimaryKey(Long id);
+
+    int insertSelective(LyHotelDeviceActivate record);
+
+    LyHotelDeviceActivate selectByPrimaryKey(Long id);
+
+    int updateByPrimaryKeySelective(LyHotelDeviceActivate record);
+
+    List<LyHotelDeviceActivate> selectRecordsByCondition(LyHotelDeviceActivate condition);
+}

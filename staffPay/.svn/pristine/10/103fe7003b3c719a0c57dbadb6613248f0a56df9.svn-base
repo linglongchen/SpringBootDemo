@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>空閑廣告位上傳</title>
+
+    <head th:include="init :: init"></head>
+    <head th:include="init_bootstrap_table :: bootstrap_table"></head>
+
+    <script type="text/javascript">
+        //提交表单
+        function validForm() {
+            if (getRows()) {
+                var url = $('#advertisingUrl').val();
+                var reg = /^https?:\/\//i;
+                if (!reg.test(url)) {
+                    showMsgError("这网址不是以http://https://开头，请重新输入！");
+                    return false;
+                } else {
+                    $('#signupForm').validate({
+                        submitHandler: function (form) {
+                            loading();
+                            form.action = '[[${ctx}]]/adviertisement/adviertisementType/uploadAll';
+                            form.submit();
+                        }
+                    });
+                    $('#signupForm').submit();
+                }
+            }
+        }
+
+        function btn2From(){
+            if ($('#advertisingContent').val()!=""){
+                $.post('[[${ctx}]]/upload/deleteFile', {
+                    file: $('#advertisingContent').val()
+                }, function (result) {
+                });
+            }
+        }
+
+        function cancelFrom(){
+            if ($('#advertisingContent').val()!=""){
+                $.post('[[${ctx}]]/upload/deleteFile', {
+                    file: $('#advertisingContent').val()
+                }, function (result) {
+                });
+            }
+        }
+
+        $(function () {
+            $('#table').bootstrapTable({
+                undefinedText: '',//defined的默认显示文本
+                striped: true,//条纹
+                method: 'get',
+                url: '[[${ctx}]]/adviertisement/adviertisementType/getPutInTime',
+                pagination: false,//显示分页
+                sidePagination: 'server',//定义分页为服务器端分页
+                pageNumber: 1,//起始页数
+                pageSize: 20,//默认显示行数
+                pageList: [20, 50, 100, 200],//可选分页数
+                singleSelect: false,//单选
+                //toolbar : '#toolbar',
+                clickToSelect: true, //是否启用点击选中行
+                height: 'auto',
+                columns: [
+                    {
+                        field:'state',
+                        checkbox:true,
+                        formatter: function (value, row, index) {
+                            if (value == 0) {
+                                return {
+                                    disabled: true//设置可选
+                                };
+                            } else if (value == 1) {
+                                return {
+                                    disabled: false//设置不可选
+                                };
+                            }
+                        }
+                    },
+                    {
+                        field: 'putInTime',
+                        title: '投放日期',
+                        halign: 'center',
+                        align: 'center'
+                    }
+                ],
+                onLoadSuccess: function (data) {
+                    if (data.total == 0) {
+                        $('#table').bootstrapTable('removeAll');
+                    }
+                    //禁止bootstrap table中的checkbox加载layui样式
+                    $('.table .bs-checkbox input').each(function () {
+                        $(this).attr("lay-ignore", "true");
+                    });
+
+                    $('.table thead .bs-checkbox .th-inner .layui-form-checkbox').remove();
+                }
+            });
+        })
+        function getRows() {
+            var rows = $('#table').bootstrapTable('getAllSelections');
+            if (rows.length==0){
+                showMsgError("请选择投放日期");
+                return false;
+            }
+            var timeArray =new Array();
+            for (var i=0;i<rows.length;i++){
+                timeArray.push(rows[i].putInTime);
+            }
+            $('#putInTime').val(timeArray.toString())
+            return true;
+        }
+
+    </script>
+    <style type="text/css">
+        .layui-form input[type="checkbox"] {
+            display: block;
+        }
+    </style>
+</head>
+<body class="gray-bg">
+<div class="wrapper animated fadeInRight">
+    <div class="ibox-content">
+        <div class="row">
+            <form id="signupForm" class="layui-form form-horizontal m-t" enctype="multipart/form-data" method="post">
+                <input type="hidden" name="ids" th:value="${ids}" id="hotelIds">
+                <input type="hidden" name="hotelIds" th:value="${hotelIds}">
+                <input type="hidden" id="putInTime" name="timeArray">
+                <input type="hidden" id="uploadTime" th:value="${time}">
+                <div class="layui-form-item col-lg-12 col-sm-12 col-xs-12">
+                    <label class="col-xs-3 layui-form-label">投放日期</label>
+                    <table id="table"></table>
+                </div>
+                <div class="layui-form-item col-lg-12 col-sm-12 col-xs-12">
+                    <label class="col-xs-3 layui-form-label"><i class="required">*</i>内容上传：</label>
+                    <div class="col-xs-6">
+                        <button type="button" class="layui-btn" id="test2">
+                            <i class="layui-icon">&#xe67c;</i>上传文件
+                        </button>
+                        <input name="advertisingContent" class="layui-input" placeholder="点击上传图片或视频" autocomplete="off" id="advertisingContent" type="hidden">
+                    </div>
+                </div>
+                <div class="layui-form-item col-lg-12 col-sm-12 col-xs-12">
+                    <b style="color: red">*视频建议上传 mp4，rm，rmvb，mov，mtv，avi，3gp，amv，dmv，flv 的格式!</b>
+                    <br>
+                    <b style="color: red" th:text="'*上传视频广告时长'+${time}+'秒!'"></b>
+                    <br>
+                    <b style="color: red" th:text="'*上传图文广告大小'+${picSize}+'MB!'"></b>
+                    <br>
+                    <b style="color: red" th:text="'*上传视频广告大小'+${videoSize}+'MB!'"></b>
+                </div>
+                <div class="layui-form-item col-lg-12 col-sm-12 col-xs-12" id="imgContent" style="display: none">
+                    <label class="col-xs-3 layui-form-label">图片：</label>
+                    <div class="col-xs-6">
+                        <img style="width:600px;height:300px;" id="img">
+                    </div>
+                </div>
+                <div class="layui-form-item col-lg-12 col-sm-12 col-xs-12" id="videoContent" style="display: none">
+                    <label class="col-xs-3 layui-form-label">视频：</label>
+                    <div class="col-xs-6">
+                        <video controls="controls" style="max-width:600px;max-height:300px;" id="video"></video>
+                    </div>
+                </div>
+                <div class="layui-form-item col-lg-12 col-sm-12 col-xs-12">
+                    <label class="col-xs-3 layui-form-label"><i class="required">*</i>文字描述：</label>
+                    <!--<label class="col-xs-3 layui-form-label"><i class="required">*</i>内容上传：</label>-->
+                    <div class="col-xs-6">
+                        <textarea name="advertisingDescription" class="layui-textarea" placeholder="文字描述（前台不显示）"
+                              required    autocomplete="off" type="text" style="width: 600px;height: 200px"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item col-lg-12 col-sm-12 col-xs-12">
+                    <label class="col-xs-3 layui-form-label"><i class="required">*</i>链接地址</label>
+                    <div class="col-xs-6">
+                        <input name="advertisingUrl" id="advertisingUrl" class="layui-input" placeholder="请输入以http://https://开头的链接地址" autocomplete="off" type="text" >
+                    </div>
+                </div>
+                <div class="layui-form-item col-lg-12 col-sm-12 col-xs-12">
+                    <label class="col-xs-3 layui-form-label"><i class="required">*</i>链接描述：</label>
+                    <div class="col-xs-6">
+                        <textarea name="urlDescription" class="layui-textarea" placeholder="文字描述（前台不显示）" autocomplete="off"
+                                  required type="text" style="width: 600px;height: 200px"></textarea>
+                    </div>
+                </div>
+                <input type="hidden" id="type" name="type">
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    $(function () {
+        $('#imgContent').style.display="none";
+        $('#videoContent').style.display="none";
+    })
+
+    layui.use('upload', function(){
+        var upload = layui.upload;
+        //执行实例
+        var uploadInst = upload.render({
+            elem: '#test2' //绑定元素
+            ,accept:'file'
+            ,url: '[[${ctx}]]/upload/springUploadAll' //上传接口
+            ,done: function(res){
+                if ($("#advertisingContent").val()!=""){
+                    $.post('[[${ctx}]]/upload/deleteFile', {
+                        file: $("#advertisingContent").val()
+                    }, function (result) {
+                    });
+                }
+                $('#advertisingContent').val(res.data[1]);
+                $('#type').val(res.type);
+                //上传完毕回调
+                if (res.success==true){
+                    if (res.type==1){
+                        document.getElementById("imgContent").style.display="block";
+                        $('#img').attr("src",res.data[0]);
+                        showMsgSuccess('上传成功');
+                    } else{
+                        document.getElementById("videoContent").style.display="block";
+                        $('#video').attr("src",res.data[0]);
+                        setTimeout(function () {
+                        	var uploadTime = $("#uploadTime").val();
+                            var video_time = document.getElementById("video").duration;
+                            var time_length=Math.floor(video_time);//转为整型
+                            if (time_length>uploadTime){
+                                showMsgError("请上传小于" + uploadTime + "秒的视频");
+                                $('#video').attr("src", "");
+                                $.post('[[${ctx}]]/upload/deleteFile', {
+                                    file: $("#advertisingContent").val()
+                                }, function (result) {
+                                });
+                                $('#advertisingContent').val("");
+                                document.getElementById("videoContent").style.display="none";
+                            }else {
+                                showMsgSuccess('上传成功');
+                            }
+                        },800);
+                    }
+                } else {
+                    showMsgError(res.msg);
+                }
+
+
+            }
+            ,error: function(){
+                //请求异常回调
+                if (res.success!=true){
+                    showMsgError("上传失败");
+                }
+            }
+        });
+    });
+    layui.use('upload', function(){
+        var upload = layui.upload;
+        //执行实例
+        var uploadInst = upload.render({
+            elem: '#test3' //绑定元素
+            ,accept:'file'
+            ,url: '[[${ctx}]]/api/upload/springUploadAll' //上传接口
+            ,done: function(res){
+                //上传完毕回调
+                if (res.success==true){
+                    layer.msg('上传成功');
+                } else {
+                    showMsgError(res.msg);
+                }
+                $('#advertisingUrl').val(res.data);
+            }
+            ,error: function(){
+                //请求异常回调
+                if (res.success!=true){
+                    layer.msg('上传失败');
+                }
+            }
+        });
+    });
+</script>
+</html>

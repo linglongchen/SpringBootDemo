@@ -1,0 +1,57 @@
+package com.chunqiu.mrjuly.modules.communicationrecordinfo.model;
+
+import com.chunqiu.mrjuly.common.utils.excel.annotation.ExcelField;
+
+import javax.validation.constraints.NotEmpty;
+
+/**
+ * @Description:
+ * @Date: 2018/3/15
+ * @Author: wcf
+ */
+public class CommunicationRecordVo {
+    @ExcelField(title = "固定端编号", type = 0, align = 2, sort = 0)
+    @NotEmpty
+    private String codeName;
+    @ExcelField(title = "呼出/呼入", type = 0, align = 2, sort = 1)
+    @NotEmpty
+    private String status;
+    @ExcelField(title = "通话时间", type = 0, align = 2, sort = 2)
+    @NotEmpty
+    private String createDate;
+    @ExcelField(title = "通话时长", type = 0, align = 2, sort = 3)
+    @NotEmpty
+    private String talkTime;
+
+    public String getCodeName() {
+        return codeName;
+    }
+
+    public void setCodeName(String codeName) {
+        this.codeName = codeName;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(String createDate) {
+        this.createDate = createDate;
+    }
+
+    public String getTalkTime() {
+        return talkTime;
+    }
+
+    public void setTalkTime(String talkTime) {
+        this.talkTime = talkTime;
+    }
+}

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>抽奖规则预设</title>
+    <head th:include="init :: init"></head>
+    <script>
+        //保存抽奖规则
+        function saveType(ruleType) {
+
+            $('#signupForm').validate({
+                submitHandler: function (form) {
+                    loading();
+                    form.action = '[[${ctx}]]/install/lotteryRules/save';
+                    form.submit();
+                }
+            });
+            $('#signupForm').submit();
+            closeLoading();
+            showMsgSuccess('保存成功');
+
+
+
+        }
+
+
+        //保存奖品领取规则
+        function saveType1(){
+            $('#signupForm1').validate({
+                submitHandler:function(form){
+                    loading();
+                    form.action = '[[${ctx}]]/install/lotteryRules/save';
+                    form.submit();
+                }
+            });
+            $('#signupForm1').submit();
+            closeLoading();
+            showMsgSuccess('保存成功');
+        }
+
+    </script>
+</head>
+<body class="gray-bg">
+<div class="wrapper animated fadeInRight">
+    <div class="ibox-content">
+        <div class="row">
+            <form id="signupForm" class="layui-form form-horizontal m-t">
+                <input type="hidden" name="id" th:value="${id}">
+                <div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+                    <label class="col-xs-6 layui-form-label" style="left: -77px;width: 165px;font-weight:bold;font-size:15px;">抽奖规则</label>
+                    <div class="col-xs-12 col-lg-6 col-sm-12" style="margin-left: -165px;margin-top: 46px;">
+                        <textarea style="width: 500px;" name="prizeContent" th:text="${prizeContent}" placeholder="" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item col-lg-6 col-sm-12 col-xs-12" style="margin-left: 6px;margin-top: 45px;">
+                    <label class="col-xs-3 layui-form-label" style="margin-top: -48px;margin-left: -48px;width: 165px;font-weight:bold;font-size:15px;">奖品领取规则</label>
+                    <div class="col-xs-12 col-lg-6 col-sm-12">
+                        <textarea style="width: 500px;" name="ruleContent" th:text="${ruleContent}" placeholder="" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+                <div class="layui-inline" style="position: relative;margin-top: 323px;margin-left: -134px;">
+                    <button class="btn btn-primary " type="button" onclick="saveType()"><i class="fa fa-save"></i>&nbsp;确认</button>
+                </div>
+            </form>
+            <!--<form id="signupForm1" class="layui-form form-horizontal m-t">
+                <input type="hidden" name="id" th:value="${id1}">
+                <div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+                    <label class="col-xs-3 layui-form-label">奖品领取规则</label>
+                    <div class="col-xs-6">
+                        <textarea style="width: 600px;" name="ruleContent" id="ruleContent" th:text="${ruleContent }" placeholder="请输入内容" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+                <div style="padding-bottom: 10px;margin-left: 41%">
+                    <button class="btn btn-primary " id="btn1" style="margin-top: 15%" type="button" data-toggle="modal" onclick="saveType1()"> <i class="fa fa-save"></i>&nbsp;保存</button>
+                </div>
+            </form>-->
+        </div>
+    </div>
+</div>
+</body>
+</html>

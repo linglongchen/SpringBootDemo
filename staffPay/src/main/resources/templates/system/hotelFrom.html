@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:c="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>新增前缀</title>
+    <head th:include="init :: init"></head>
+
+    <script type="text/javascript">
+        function validForm(){
+            $('#signupForm').validate({
+                submitHandler:function(form){
+                    loading();
+                    form.action = '[[${ctx}]]/system/setup/saveHotelInfo';
+                    form.submit();
+                }
+            });
+            $('#signupForm').submit();
+        }
+
+    </script>
+
+
+        <script th:inline="javascript" type="text/javascript">
+            $(function(){
+                var error = [[${error}]];
+                if (error != null){
+                    showMsgError(error);
+                }
+            });
+        </script>
+
+</head>
+<body>
+<div class="wrapper animated fadeInRight">
+    <div class="ibox-content">
+        <div class="row">
+            <form id="signupForm" class="layui-form form-horizontal m-t">
+                <div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+                    <label class="col-xs-3 layui-form-label"><i class="required">*</i>前缀编码：</label>
+                    <div class="col-xs-6">
+                        <input name="hotelCode" class="layui-input"  placeholder="请输入前缀编码" th:value="${hotelCode.hotelCode}" autocomplete="off" type="text" required  maxlength="100">
+                    </div>
+                </div>
+                <div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+                    <label class="col-xs-3 layui-form-label"><i class="required">*</i>对应酒店：</label>
+                    <div class="col-xs-6">
+                        <input name="hotelName" class="layui-input"  placeholder="请输入对应酒店" th:value="${hotelCode.hotelName}" autocomplete="off" type="text" required  maxlength="100">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

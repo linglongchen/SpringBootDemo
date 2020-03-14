@@ -1,0 +1,116 @@
+package com.chunqiu.mrjuly.modules.shopinfo.service;
+
+import java.util.Date;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.chunqiu.mrjuly.common.vo.Grid;
+import com.chunqiu.mrjuly.common.vo.GridParam;
+import com.chunqiu.mrjuly.modules.shopinfo.dao.LyHotelMarketBusinessRelationDao;
+import com.chunqiu.mrjuly.modules.shopinfo.model.LyHotelMarketBusinessRelation;
+import com.chunqiu.mrjuly.modules.shopinfo.model.MarketBindShopCondition;
+import com.chunqiu.mrjuly.modules.shopinfo.model.MarketListModel;
+import com.chunqiu.mrjuly.modules.system.dao.UserDao;
+import com.chunqiu.mrjuly.modules.system.model.User;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+
+@Service
+public class LyHotelMarketBusinessRelationService {
+	
+	@Resource
+	LyHotelMarketBusinessRelationDao relationDao;
+	@Resource
+	private UserDao userDao;
+	
+	public int deleteByPrimaryKey(Long id) {
+		return relationDao.deleteByPrimaryKey(id);
+	}
+
+	public int insertSelective(LyHotelMarketBusinessRelation record) {
+		return relationDao.insertSelective(record);
+	}
+
+	public LyHotelMarketBusinessRelation selectByPrimaryKey(Long id) {
+		return relationDao.selectByPrimaryKey(id);
+	}
+
+	public int updateByPrimaryKeySelective(LyHotelMarketBusinessRelation record) {
+		return relationDao.updateByPrimaryKeySelective(record);
+	}
+
+	public Grid selectMarketList(MarketListModel condition, GridParam param){
+		Grid grid = new Grid();
+        Page page = PageHelper.offsetPage(param.getOffset(), param.getLimit(), true);
+        relationDao.selectMarketList(condition);
+        grid.setRows(page.getResult());
+        grid.setTotal(page.getTotal());
+        return grid;
+	}
+	
+	public Grid selectMarketBindShops(MarketBindShopCondition condition, GridParam param){
+		Grid grid = new Grid();
+        Page page = PageHelper.offsetPage(param.getOffset(), param.getLimit(), true);
+        relationDao.selectMarketBindShops(condition);
+        grid.setRows(page.getResult());
+        grid.setTotal(page.getTotal());
+        return grid;
+	}
+	
+	public Grid selectMarketUnbindShops(MarketBindShopCondition condition, GridParam param){
+		Grid grid = new Grid();
+        Page page = PageHelper.offsetPage(param.getOffset(), param.getLimit(), true);
+        relationDao.selectMarketUnbindShops(condition);
+        grid.setRows(page.getResult());
+        grid.setTotal(page.getTotal());
+        return grid;
+	}
+	
+	/**
+	 * 商场绑定或解绑功能
+	 * @param condition 参数:marketId-商场ID,shopId-商家ID
+	 * @param bind true-绑定,false-解绑
+	 * @return 成功的记录数
+	 * @author wy
+	 */
+	public int updateBindType(MarketBindShopCondition condition, boolean bind){
+		int row = 0;
+		User user = userDao.getByBusinessId(condition.getShopId());
+		if (user != null) {
+			condition.setShopId(user.getId());
+		} else {
+			return 0;
+		}
+		LyHotelMarketBusinessRelation relation = relationDao.selectByMarketIdAndShopId(condition);
+		if (bind) {
+			//绑定
+			if (relation == null) {
+				//新增记录
+				relation = new LyHotelMarketBusinessRelation();
+				relation.setBusinessId(condition.getShopId());
+				relation.setMarketId(condition.getMarketId());
+				relation.setType((byte) 1);
+				row = relationDao.insertSelective(relation);
+			} else {
+				//更新绑定类型
+				LyHotelMarketBusinessRelation update = new LyHotelMarketBusinessRelation();
+				update.setId(relation.getId());
+				update.setType((byte) 1);
+				update.setBindingDate(new Date());
+				row = relationDao.updateByPrimaryKeySelective(update);
+			}
+		} else {
+			//解绑
+			if (relation != null) {
+				LyHotelMarketBusinessRelation update = new LyHotelMarketBusinessRelation();
+				update.setId(relation.getId());
+				update.setType((byte) 2);
+				update.setUntieDate(new Date());
+				row = relationDao.updateByPrimaryKeySelective(update);
+			}
+		}
+		return row;
+	}
+}

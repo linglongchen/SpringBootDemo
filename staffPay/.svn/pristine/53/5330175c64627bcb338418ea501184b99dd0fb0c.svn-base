@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chunqiu.mrjuly.modules.getaccommodation.dao.GetAccommodationDao">
+
+	<sql id="getAccommodationColumns">
+		a.id AS "id",
+		a.service_number AS "serviceNumber",
+		a.employee_id AS "employeeId",
+		a.room_id AS "roomId",
+		a.name AS "name",
+		a.gender AS "gender",
+		a.check_in_time AS "checkInTime",
+		a.departure_time AS "departureTime",
+		a.create_date AS "createDate",
+		a.del_flag AS "delFlag",
+		a.hotel_code_id AS "hotelCodeId",
+		a.derpartment_id AS "derpartmentId",
+		a.dormant_time AS "dormantTime"
+	</sql>
+
+	<sql id="getAccommodationJoins">
+	</sql>
+
+	<select id="get" resultType="GetAccommodation">
+		SELECT
+			<include refid="getAccommodationColumns"/>
+		FROM get_accommodation a
+		<include refid="getAccommodationJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="GetAccommodation">
+		SELECT
+			<include refid="getAccommodationColumns"/>
+			,b.code AS "roomName"
+			,(concat(b.device_coding,c.hotel_code,"C",b.code)) AS "customerNum"
+			,d.name AS "employeeName"
+		FROM get_accommodation a
+		LEFT JOIN ly_hotel_device_relation b ON a.room_id = b.id
+		LEFT JOIN hotel_unique_code c ON a.hotel_code_id = c.id
+		LEFT JOIN admin_user d ON a.employee_id = d.id
+		<include refid="getAccommodationJoins"/>
+		<where>
+			<if test="hotelCodeId != null">
+				AND a.hotel_code_id = #{hotelCodeId}
+			</if>
+			<if test="beginDate !=null and beginDate !=''">
+				AND a.create_date <![CDATA[>= ]]> #{beginDate}
+			</if>
+			<if test="endDate !=null and endDate !=''">
+				AND a.create_date  <![CDATA[<= ]]> #{endDate}
+			</if>
+		</where>
+		<choose>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			order by a.id desc
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="getAccommodationList" resultType="GetAccommodation">
+		SELECT
+		<include refid="getAccommodationColumns"/>
+		,b.code AS "roomName"
+		,(concat(b.device_coding,c.hotel_code,"C",b.code)) AS "customerNum"
+		,d.name AS "employeeName"
+		FROM get_accommodation a
+		LEFT JOIN ly_hotel_device_relation b ON a.room_id = b.id
+		LEFT JOIN hotel_unique_code c ON a.hotel_code_id = c.id
+		LEFT JOIN admin_user d ON a.employee_id = d.id
+		<include refid="getAccommodationJoins"/>
+		<where>
+			<if test="hotelCodeId != null">
+				AND a.hotel_code_id = #{hotelCodeId}
+			</if>
+			<if test="beginDate !=null and beginDate !=''">
+				AND a.create_date <![CDATA[>= ]]> #{beginDate}
+			</if>
+			<if test="endDate !=null and endDate !=''">
+				AND a.create_date  <![CDATA[<= ]]> #{endDate}
+			</if>
+		</where>
+		order by a.id desc
+	</select>
+
+	<select id="findAllList" resultType="GetAccommodation">
+		SELECT
+			<include refid="getAccommodationColumns"/>
+		FROM get_accommodation a
+		<include refid="getAccommodationJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				order by a.id desc
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO get_accommodation(
+								service_number,
+						employee_id,
+						room_id,
+						name,
+						gender,
+						check_in_time,
+						departure_time,
+						create_date,
+						del_flag,
+						hotel_code_id,
+						derpartment_id,
+						dormant_time
+		) VALUES (
+								#{serviceNumber},
+						#{employeeId},
+						#{roomId},
+						#{name},
+						#{gender},
+						#{checkInTime},
+						#{departureTime},
+						#{createDate},
+						#{delFlag},
+						#{hotelCodeId},
+						#{derpartmentId},
+						#{dormantTime}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE get_accommodation
+		<set>
+			<if test="serviceNumber != null and serviceNumber != ''">
+				service_number = #{serviceNumber},
+			</if>
+			<if test="employeeId != null">
+				employee_id = #{employeeId},
+			</if>
+			<if test="roomId != null">
+				room_id = #{roomId},
+			</if>
+			<if test="name != null and name != ''">
+				name = #{name},
+			</if>
+			<if test="gender != null">
+				gender = #{gender},
+			</if>
+			<if test="checkInTime != null and checkInTime != ''">
+				check_in_time = #{checkInTime},
+			</if>
+			<if test="departureTime != null and departureTime != ''">
+				departure_time = #{departureTime},
+			</if>
+			<if test="createDate != null and createDate != ''">
+				create_date = #{createDate},
+			</if>
+			<if test="delFlag != null and delFlag != ''">
+				del_flag = #{delFlag},
+			</if>
+			<if test="hotelCodeId != null">
+				hotel_code_id = #{hotelCodeId},
+			</if>
+			<if test="derpartmentId != null">
+				derpartment_id = #{derpartmentId},
+			</if>
+			<if test="dormantTime != null and dormantTime != ''">
+				dormant_time = #{dormantTime},
+			</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		UPDATE get_accommodation SET
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+</mapper>

@@ -1,0 +1,82 @@
+package com.chunqiu.mrjuly.modules.install.service;
+
+import com.chunqiu.mrjuly.common.persistence.CrudService;
+import com.chunqiu.mrjuly.modules.install.dao.PrizeInfoDao;
+import com.chunqiu.mrjuly.modules.install.model.NoticeInfo;
+import com.chunqiu.mrjuly.modules.install.model.PrizeInfo;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.util.List;
+
+/**
+ * 奖品设置
+ */
+@Service
+public class PrizeInfoService extends CrudService<PrizeInfoDao, PrizeInfo, Integer> {
+    @Resource
+    private PrizeInfoDao prizeInfoDao;
+
+    /**
+     * 更新开始抽奖/结束抽奖的状态
+     * @param prizeInfo
+     */
+    public void updateType(PrizeInfo prizeInfo){
+        if (prizeInfo.getPrizeType() != 1){
+           /* prizeInfo.preUpdate();*/
+            dao.updateType(prizeInfo);
+        }
+    }
+
+    /**
+     * 查找所有的的奖品
+     * @param prizeInfo
+     * @return
+     */
+    public PrizeInfo findType(PrizeInfo prizeInfo){
+        return dao.findType(prizeInfo);
+    }
+
+    /**
+     * 查找所有的奖项
+     * @return
+     */
+    public List<PrizeInfo> prizeInfoList(){
+        return dao.prizeInfoList();
+    }
+
+    /**
+     * 查找所有的参与人
+     * @return
+     */
+    public List<PrizeInfo> participant(){
+        return dao.participant();
+    }
+
+    /**
+     * 新增一条客户端信息
+     * @param noticeInfo
+     * @return
+     */
+    public int NoticeInfo(NoticeInfo noticeInfo){
+        return dao.NoticeInfo(noticeInfo);
+    }
+
+    /**
+     * 更新奖项为已中状态
+     * @param prizeInfo
+     * @return
+     */
+    public  int updatePrize(PrizeInfo prizeInfo){
+        return dao.updatePrize(prizeInfo);
+    }
+
+    /**
+     * 清空所有所有参与人名单
+     * @return
+     */
+    public  int delPrize(){
+        return dao.delPrize();
+    }
+}

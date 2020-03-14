@@ -1,0 +1,866 @@
+package com.chunqiu.mrjuly.modules.advertisingorder.model;
+
+import com.chunqiu.mrjuly.common.persistence.DataEntity;
+import com.chunqiu.mrjuly.common.utils.excel.annotation.ExcelField;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.hibernate.validator.constraints.Length;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.validation.constraints.NotEmpty;
+import java.math.BigDecimal;
+import java.util.Date;
+
+/**
+ * 广告订单Entity
+ * @author 周天
+ * @version 2019-03-21
+ */
+public class AdvertisingOrder extends DataEntity<AdvertisingOrder, Integer> {
+
+	private static final long serialVersionUID = 1L;
+	private String transactionodersn;		// 交易编号
+    @ExcelField(title = "订单号", type = 0, align = 2, sort = 0)
+    @NotEmpty
+	private String ordernumber;		// 订单编号
+	private Date paymentDate;		// 付款时间
+	private Date releaseDate;		// 发布时间
+	private Integer type;		// 类别 1.商家 2.广告商
+	private Integer hotelCodeId;		// 酒店前缀id
+	@ExcelField(title = "投放类型（1.图文 2.视频）", type = 0, align = 2, sort = 0)
+	@NotEmpty
+	private Integer deliveryType;		// 投放类型 1.图文 2.视频
+	private BigDecimal deliveryTypeStartingPrice;		// 投放类型起拍价
+    @ExcelField(title = "投放数量", type = 0, align = 2, sort = 0)
+    @NotEmpty
+	private Integer quantityDelivered;		// 投放数量
+    @ExcelField(title = "下单总价", type = 0, align = 2, sort = 0)
+    @NotEmpty
+	private double auctionAmount;		// 投放总金额
+	private Integer couponId;		// 优惠券id
+	private Integer auctionStatus;		// 竞拍状态 1.竞拍失败 2.竞拍中 3.竞拍成功
+	private Integer payStatus;		// 支付状态 0.未结算1.待结算 2.支付成功
+    @ExcelField(title = "投放时间段", type = 0, align = 2, sort = 0)
+    @NotEmpty
+	private String putInTime;		// 投放时间
+	private Integer priceType;		// 价格类型 1.当前价 2.一口价
+	private double priceTypePrice;		// 价格类型的价格（当前价的价格或者一口价的价格）
+	private Integer objectId;		// 广告商id/在线商家id
+	private Integer uploadId;		// 广告位id
+	private int sort;
+	private String hotelCode;
+    @ExcelField(title = "覆盖酒店", type = 0, align = 2, sort = 0)
+    @NotEmpty
+	private String hotelName;
+	private String date;
+	private double nowPrice2;
+	private double nowPrice;
+	private int status;
+	private double totalPrice;
+	private double totalPrice2;
+	private double totalOrderPrice;
+	private String list;
+	private String account;
+	private Integer advertiseInfoId;
+    @ExcelField(title = "审核状态(状态  0：待审核  1:已通过审核   2：未通过审核)", type = 0, align = 2, sort = 0)
+    @NotEmpty
+	private Integer state; //状态  0：待审核  1:已通过审核   2：未通过审核
+	private String startTime;
+	private String endTime;
+	private Integer orderType;
+    @ExcelField(title = "经办人", type = 0, align = 2, sort = 0)
+    @NotEmpty
+	private String userName;
+	private String stateName;
+	@ExcelField(title = "投放天数", type = 0, align = 2, sort = 0)
+	@NotEmpty
+	private String days;
+	@ExcelField(title = "下单日期", type = 0, align = 2, sort = 0)
+	@NotEmpty
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date createDate;
+	@ExcelField(title = "广告类型", type = 0, align = 2, sort = 0)
+	@NotEmpty
+	private String type3Name;
+	@ExcelField(title = "广告主", type = 0, align = 2, sort = 0)
+	@NotEmpty
+	private String advertisementName;
+	private Integer uploadCount;
+	private Integer type3Id;
+	private Integer hotelStar;
+	private String province;
+	private String city;
+	private String area;
+	private String advertiserNumber;
+	private Integer advertiseInfoMasterId;
+
+	private String advertisingContent;
+
+	private String advertisementMark;
+	private String advertisingUrl;
+	private String advertisingDescription;
+	private String urlDescription;
+
+	private Integer advertiseMaterId;		//广告主id
+    private String masterName;
+    private String stand;
+    private String orderType2;
+
+    private Integer preferentialQuota;
+
+
+    private double savingMoney;
+    private String putInTime2;
+
+
+    /****1.5版本*********/
+    private String lngX;
+    private String latY;
+
+
+	public String getLngX() {
+		return lngX;
+	}
+
+	public void setLngX(String lngX) {
+		this.lngX = lngX;
+	}
+
+	public String getLatY() {
+		return latY;
+	}
+
+	public void setLatY(String latY) {
+		this.latY = latY;
+	}
+
+	public String getPutInTime2() {
+		return putInTime2;
+	}
+
+	public void setPutInTime2(String putInTime2) {
+		this.putInTime2 = putInTime2;
+	}
+
+	public double getSavingMoney() {
+		return savingMoney;
+	}
+
+	public void setSavingMoney(double savingMoney) {
+		this.savingMoney = savingMoney;
+	}
+
+	public Integer getPreferentialQuota() {
+		return preferentialQuota;
+	}
+
+	public void setPreferentialQuota(Integer preferentialQuota) {
+		this.preferentialQuota = preferentialQuota;
+	}
+
+	public String getOrderType2() {
+		return orderType2;
+	}
+
+	public void setOrderType2(String orderType2) {
+		this.orderType2 = orderType2;
+	}
+
+	public String getStand() {
+		return stand;
+	}
+
+	public void setStand(String stand) {
+		this.stand = stand;
+	}
+
+	public String getAdvertisingContent() {
+        return advertisingContent;
+    }
+
+    public void setAdvertisingContent(String advertisingContent) {
+        this.advertisingContent = advertisingContent;
+    }
+
+    public String getMasterName() {
+        return masterName;
+    }
+
+    public void setMasterName(String masterName) {
+        this.masterName = masterName;
+    }
+
+    public Integer getAdvertiseInfoMasterId() {
+		return advertiseInfoMasterId;
+	}
+
+	public Integer getAdvertiseMaterId() {
+		return advertiseMaterId;
+	}
+
+	public void setAdvertiseMaterId(Integer advertiseMaterId) {
+		this.advertiseMaterId = advertiseMaterId;
+	}
+
+	public void setAdvertiseInfoMasterId(Integer advertiseInfoMasterId) {
+		this.advertiseInfoMasterId = advertiseInfoMasterId;
+	}
+
+	public Integer getAdvertiseInfoId() {
+		return advertiseInfoId;
+	}
+
+	public void setAdvertiseInfoId(Integer advertiseInfoId) {
+		this.advertiseInfoId = advertiseInfoId;
+	}
+
+	public String getAdvertiserNumber() {
+		return advertiserNumber;
+	}
+
+	public void setAdvertiserNumber(String advertiserNumber) {
+		this.advertiserNumber = advertiserNumber;
+	}
+
+
+	public Integer getType3Id() {
+		return type3Id;
+	}
+
+	public void setType3Id(Integer type3Id) {
+		this.type3Id = type3Id;
+	}
+
+
+	public String getAdvertisementMark() {
+		return advertisementMark;
+	}
+
+	public void setAdvertisementMark(String advertisementMark) {
+		this.advertisementMark = advertisementMark;
+	}
+
+	public String getAdvertisingUrl() {
+		return advertisingUrl;
+	}
+
+	public void setAdvertisingUrl(String advertisingUrl) {
+		this.advertisingUrl = advertisingUrl;
+	}
+
+	public String getAdvertisingDescription() {
+		return advertisingDescription;
+	}
+
+	public void setAdvertisingDescription(String advertisingDescription) {
+		this.advertisingDescription = advertisingDescription;
+	}
+
+	public String getUrlDescription() {
+		return urlDescription;
+	}
+
+	public void setUrlDescription(String urlDescription) {
+		this.urlDescription = urlDescription;
+	}
+	public Integer getUploadCount() {
+		return uploadCount;
+	}
+
+	public void setUploadCount(Integer uploadCount) {
+		this.uploadCount = uploadCount;
+	}
+
+	public String getAdvertisementName() {
+		return advertisementName;
+	}
+
+	public void setAdvertisementName(String advertisementName) {
+		this.advertisementName = advertisementName;
+	}
+
+	public String getType3Name() {
+		return type3Name;
+	}
+
+	public void setType3Name(String type3Name) {
+		this.type3Name = type3Name;
+	}
+
+	@Override
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	@Override
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+
+	public String getDays() {
+        return days;
+    }
+
+    public void setDays(String days) {
+        this.days = days;
+    }
+
+    public String getStateName() {
+        return stateName;
+    }
+
+    public void setStateName(String stateName) {
+        this.stateName = stateName;
+    }
+
+    public String getEndTime() {
+		return endTime;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+
+	public Integer getOrderType() {
+		return orderType;
+	}
+
+	public void setOrderType(Integer orderType) {
+		this.orderType = orderType;
+	}
+
+	public String getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+
+	public Integer getState() {
+		return state;
+	}
+
+	public void setState(Integer state) {
+		this.state = state;
+	}
+
+
+
+	private Integer sum;
+	private String hotelAddress;
+	private String hotelType;
+	private Integer hotelNumber;
+	private String hotelAcreage;
+	private float  hotelPrice;
+	private String hotelService;
+	private  String hotelAdStandard;
+	private  String hotelMall;
+	private String hotelTraffic;
+	private Integer bid;
+	private String typeName;
+	private String type2Name;
+	private String hotelLat;
+	private String hotelLng;
+
+	private Integer scrollingNumber;
+	private Integer radarNumber;
+	private Integer clickNumber;
+
+
+	private Integer totalNumber;
+	private Integer auctionFailure;
+	private Integer auctionSuccess;
+	private double couponPrice;
+
+	private double bitePrice;
+	private double currentPrice;
+
+	public double getBitePrice() {
+		return bitePrice;
+	}
+
+	public void setBitePrice(double bitePrice) {
+		this.bitePrice = bitePrice;
+	}
+
+	public double getCurrentPrice() {
+		return currentPrice;
+	}
+
+	public void setCurrentPrice(double currentPrice) {
+		this.currentPrice = currentPrice;
+	}
+
+	public Integer getTotalNumber() {
+		return totalNumber;
+	}
+
+	public void setTotalNumber(Integer totalNumber) {
+		this.totalNumber = totalNumber;
+	}
+
+	public Integer getAuctionFailure() {
+		return auctionFailure;
+	}
+
+	public void setAuctionFailure(Integer auctionFailure) {
+		this.auctionFailure = auctionFailure;
+	}
+
+	public Integer getAuctionSuccess() {
+		return auctionSuccess;
+	}
+
+	public void setAuctionSuccess(Integer auctionSuccess) {
+		this.auctionSuccess = auctionSuccess;
+	}
+
+	public double getCouponPrice() {
+		return couponPrice;
+	}
+
+	public void setCouponPrice(double couponPrice) {
+		this.couponPrice = couponPrice;
+	}
+
+	public Integer getScrollingNumber() {
+		return scrollingNumber;
+	}
+
+	public void setScrollingNumber(Integer scrollingNumber) {
+		this.scrollingNumber = scrollingNumber;
+	}
+
+	public Integer getRadarNumber() {
+		return radarNumber;
+	}
+
+	public void setRadarNumber(Integer radarNumber) {
+		this.radarNumber = radarNumber;
+	}
+
+	public Integer getClickNumber() {
+		return clickNumber;
+	}
+
+	public void setClickNumber(Integer clickNumber) {
+		this.clickNumber = clickNumber;
+	}
+
+	public Integer getSum() {
+		return sum;
+	}
+
+	public void setSum(Integer sum) {
+		this.sum = sum;
+	}
+
+	public String getHotelLat() {
+		return hotelLat;
+	}
+
+	public void setHotelLat(String hotelLat) {
+		this.hotelLat = hotelLat;
+	}
+
+	public String getHotelLng() {
+		return hotelLng;
+	}
+
+	public void setHotelLng(String hotelLng) {
+		this.hotelLng = hotelLng;
+	}
+
+	public String getTypeName() {
+		return typeName;
+	}
+
+	public void setTypeName(String typeName) {
+		this.typeName = typeName;
+	}
+
+	public String getType2Name() {
+		return type2Name;
+	}
+
+	public void setType2Name(String type2Name) {
+		this.type2Name = type2Name;
+	}
+
+	public Integer getBid() {
+		return bid;
+	}
+
+	public void setBid(Integer bid) {
+		this.bid = bid;
+	}
+
+	public String getHotelTraffic() {
+		return hotelTraffic;
+	}
+
+	public void setHotelTraffic(String hotelTraffic) {
+		this.hotelTraffic = hotelTraffic;
+	}
+
+	public String getHotelAddress() {
+		return hotelAddress;
+	}
+
+	public void setHotelAddress(String hotelAddress) {
+		this.hotelAddress = hotelAddress;
+	}
+
+	public String getHotelType() {
+		return hotelType;
+	}
+
+	public void setHotelType(String hotelType) {
+		this.hotelType = hotelType;
+	}
+
+	public Integer getHotelNumber() {
+		return hotelNumber;
+	}
+
+	public void setHotelNumber(Integer hotelNumber) {
+		this.hotelNumber = hotelNumber;
+	}
+
+	public String getHotelAcreage() {
+		return hotelAcreage;
+	}
+
+	public void setHotelAcreage(String hotelAcreage) {
+		this.hotelAcreage = hotelAcreage;
+	}
+
+	public float getHotelPrice() {
+		return hotelPrice;
+	}
+
+	public void setHotelPrice(float hotelPrice) {
+		this.hotelPrice = hotelPrice;
+	}
+
+	public String getHotelService() {
+		return hotelService;
+	}
+
+	public void setHotelService(String hotelService) {
+		this.hotelService = hotelService;
+	}
+
+	public String getHotelAdStandard() {
+		return hotelAdStandard;
+	}
+
+	public void setHotelAdStandard(String hotelAdStandard) {
+		this.hotelAdStandard = hotelAdStandard;
+	}
+
+	public String getHotelMall() {
+		return hotelMall;
+	}
+
+	public void setHotelMall(String hotelMall) {
+		this.hotelMall = hotelMall;
+	}
+
+	public String getProvince() {
+		return province;
+	}
+
+	public void setProvince(String province) {
+		this.province = province;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getArea() {
+		return area;
+	}
+
+	public void setArea(String area) {
+		this.area = area;
+	}
+
+	public Integer getHotelStar() {
+		return hotelStar;
+	}
+
+	public void setHotelStar(Integer hotelStar) {
+		this.hotelStar = hotelStar;
+	}
+
+
+
+	public String getAccount() {
+		return account;
+	}
+
+	public void setAccount(String account) {
+		this.account = account;
+	}
+
+	public String getList() {
+		return list;
+	}
+
+	public void setList(String list) {
+		this.list = list;
+	}
+
+	public double getTotalOrderPrice() {
+		return totalOrderPrice;
+	}
+
+	public void setTotalOrderPrice(double totalOrderPrice) {
+		this.totalOrderPrice = totalOrderPrice;
+	}
+
+	public double getTotalPrice() {
+		return totalPrice;
+	}
+
+	public void setTotalPrice(double totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+
+	public double getTotalPrice2() {
+		return totalPrice2;
+	}
+
+	public void setTotalPrice2(double totalPrice2) {
+		this.totalPrice2 = totalPrice2;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	public double getNowPrice2() {
+		return nowPrice2;
+	}
+
+	public void setNowPrice2(double nowPrice2) {
+		this.nowPrice2 = nowPrice2;
+	}
+
+	public double getNowPrice() {
+		return nowPrice;
+	}
+
+	public void setNowPrice(double nowPrice) {
+		this.nowPrice = nowPrice;
+	}
+
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
+	}
+
+	public String getHotelName() {
+		return hotelName;
+	}
+
+	public void setHotelName(String hotelName) {
+		this.hotelName = hotelName;
+	}
+
+	public String getHotelCode() {
+		return hotelCode;
+	}
+
+	public void setHotelCode(String hotelCode) {
+		this.hotelCode = hotelCode;
+	}
+
+	public int getSort() {
+		return sort;
+	}
+
+	public void setSort(int sort) {
+		this.sort = sort;
+	}
+
+	public AdvertisingOrder() {
+		super();
+	}
+
+	public AdvertisingOrder(Integer id){
+		super(id);
+	}
+
+	@Length(min=0, max=255, message="交易编号长度必须介于 0 和 255 之间")
+	public String getTransactionodersn() {
+		return transactionodersn;
+	}
+
+	public void setTransactionodersn(String transactionodersn) {
+		this.transactionodersn = transactionodersn;
+	}
+
+	@Length(min=0, max=255, message="订单编号长度必须介于 0 和 255 之间")
+	public String getOrdernumber() {
+		return ordernumber;
+	}
+
+	public void setOrdernumber(String ordernumber) {
+		this.ordernumber = ordernumber;
+	}
+
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	public Date getPaymentDate() {
+		return paymentDate;
+	}
+
+	public void setPaymentDate(Date paymentDate) {
+		this.paymentDate = paymentDate;
+	}
+
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	public Date getReleaseDate() {
+		return releaseDate;
+	}
+
+	public void setReleaseDate(Date releaseDate) {
+		this.releaseDate = releaseDate;
+	}
+
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
+	}
+
+	public Integer getHotelCodeId() {
+		return hotelCodeId;
+	}
+
+	public void setHotelCodeId(Integer hotelCodeId) {
+		this.hotelCodeId = hotelCodeId;
+	}
+
+	public Integer getDeliveryType() {
+		return deliveryType;
+	}
+
+	public void setDeliveryType(Integer deliveryType) {
+		this.deliveryType = deliveryType;
+	}
+
+	public BigDecimal getDeliveryTypeStartingPrice() {
+		return deliveryTypeStartingPrice;
+	}
+
+	public void setDeliveryTypeStartingPrice(BigDecimal deliveryTypeStartingPrice) {
+		this.deliveryTypeStartingPrice = deliveryTypeStartingPrice;
+	}
+
+	public Integer getQuantityDelivered() {
+		return quantityDelivered;
+	}
+
+	public void setQuantityDelivered(Integer quantityDelivered) {
+		this.quantityDelivered = quantityDelivered;
+	}
+
+	public double getAuctionAmount() {
+		return auctionAmount;
+	}
+
+	public void setAuctionAmount(double auctionAmount) {
+		this.auctionAmount = auctionAmount;
+	}
+
+	public Integer getCouponId() {
+		return couponId;
+	}
+
+	public void setCouponId(Integer couponId) {
+		this.couponId = couponId;
+	}
+
+	public Integer getAuctionStatus() {
+		return auctionStatus;
+	}
+
+	public void setAuctionStatus(Integer auctionStatus) {
+		this.auctionStatus = auctionStatus;
+	}
+
+	public Integer getPayStatus() {
+		return payStatus;
+	}
+
+	public void setPayStatus(Integer payStatus) {
+		this.payStatus = payStatus;
+	}
+
+	@Length(min=0, max=266, message="投放时间长度必须介于 0 和 266 之间")
+	public String getPutInTime() {
+		return putInTime;
+	}
+
+	public void setPutInTime(String putInTime) {
+		this.putInTime = putInTime;
+	}
+
+	public Integer getPriceType() {
+		return priceType;
+	}
+
+	public void setPriceType(Integer priceType) {
+		this.priceType = priceType;
+	}
+
+	public double getPriceTypePrice() {
+		return priceTypePrice;
+	}
+
+	public void setPriceTypePrice(double priceTypePrice) {
+		this.priceTypePrice = priceTypePrice;
+	}
+
+	public Integer getObjectId() {
+		return objectId;
+	}
+
+	public void setObjectId(Integer objectId) {
+		this.objectId = objectId;
+	}
+
+	public Integer getUploadId() {
+		return uploadId;
+	}
+
+	public void setUploadId(Integer uploadId) {
+		this.uploadId = uploadId;
+	}
+
+}

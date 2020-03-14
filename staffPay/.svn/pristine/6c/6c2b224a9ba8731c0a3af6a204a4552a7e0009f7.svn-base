@@ -1,0 +1,177 @@
+package com.chunqiu.mrjuly.modules.advertisingorder.controller;
+
+import com.chunqiu.mrjuly.common.annotation.Log;
+import com.chunqiu.mrjuly.common.persistence.BaseController;
+import com.chunqiu.mrjuly.common.utils.UserUtils;
+import com.chunqiu.mrjuly.modules.advertiserinfo.model.AdvertiserInfo;
+import com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder;
+import com.chunqiu.mrjuly.modules.advertisingorder.model.DeliverySituation;
+import com.chunqiu.mrjuly.modules.advertisingorder.service.AdvertisingOrderService;
+import com.chunqiu.mrjuly.modules.advertisingorder.service.AdvertisingService;
+import com.chunqiu.mrjuly.modules.adviertisement.service.AdviertisementTypeService;
+import com.chunqiu.mrjuly.modules.hotelinfo.model.HotelInfo;
+import com.chunqiu.mrjuly.modules.hotelinfo.model.MenuInfo;
+import com.chunqiu.mrjuly.modules.hotelinfo.service.HotelInfoService;
+import com.chunqiu.mrjuly.modules.system.model.User;
+import com.chunqiu.mrjuly.modules.system.service.UserService;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+/**
+ * 投放情况
+ */
+@Slf4j
+@Controller
+@RequestMapping(value = "${adminPath}/advertisingorder/advertising")
+public class AdvertisingOrderStatusController extends BaseController{
+
+    @Autowired
+    private AdvertisingOrderService advertisingOrderService;
+    @Autowired
+    private AdvertisingService advertisingService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private HotelInfoService hotelInfoService;
+    @Autowired
+    private AdviertisementTypeService adviertisementTypeService;
+
+    @Log("打开在线投放情况页面")
+    @RequestMapping("index")
+    @RequiresPermissions("advertisingorder:advertising:view")
+    public String index(AdvertisingOrder advertisingOrder, ModelMap modelMap){
+        advertisingOrder.setObjectId(UserUtils.getUser().getBusinessId());
+        //今日投放
+        advertisingOrder.setType(1);
+        DeliverySituation deliverySituation = adviertisementTypeService.shopPutInInfo(advertisingOrder);
+        if (deliverySituation.getProjectionNumber() == null){
+            deliverySituation.setProjectionNumber(0);
+        }
+        //竞拍成功
+        advertisingOrder.setType(2);
+        DeliverySituation deliverySituation1 = adviertisementTypeService.shopPutInInfo(advertisingOrder);
+        if (deliverySituation1.getProjectionNumber() == null){
+            deliverySituation1.setProjectionNumber(0);
+        }
+        //今日到期
+        advertisingOrder.setType(1);
+        DeliverySituation deliverySituation2 = adviertisementTypeService.shopPutInInfo(advertisingOrder);
+        if (deliverySituation2.getProjectionNumber() == null){
+            deliverySituation2.setProjectionNumber(0);
+        }
+        //审核驳回
+        advertisingOrder.setType(3);
+        DeliverySituation deliverySituation3 = adviertisementTypeService.shopPutInInfo(advertisingOrder);
+        if (deliverySituation3.getProjectionNumber() == null){
+            deliverySituation3.setProjectionNumber(0);
+        }
+
+
+        //订单列表
+        List<AdvertisingOrder> advertisingOrderList = adviertisementTypeService.shopOrderList(advertisingOrder);
+
+        modelMap.addAttribute("deliverySituation", deliverySituation);
+        modelMap.addAttribute("deliverySituation1", deliverySituation1);
+        modelMap.addAttribute("deliverySituation2", deliverySituation2);
+        modelMap.addAttribute("deliverySituation3", deliverySituation3);
+        modelMap.addAttribute("list", advertisingOrderList);
+        return "advertisingorder/advertisingOrderStatus";
+    }
+
+    @Log("打开查询页面")
+    @ResponseBody
+    @RequestMapping("select1")
+    public Map<String,Object> check1(AdvertisingOrder advertisingOrder) throws ParseException {
+        Map<String,Object> map = new HashMap<String,Object>();
+        //这里写你的查询
+        advertisingOrder =  advertisingOrderService.selAllIn(advertisingOrder);
+        map.put("advertisingOrder",advertisingOrder);
+        return map;//返回到页面  map里面定义的XXX  到页面上直接data.XX
+    }
+
+    @Log("打开广告投放情况页面")
+    @RequestMapping("index1")
+    @RequiresPermissions("advertisingorder:advertising:view")
+    public String index1(AdvertisingOrder advertisingOrder, ModelMap modelMap){
+        advertisingOrder.setObjectId(UserUtils.getUser().getBusinessId());
+        //今日投放
+        advertisingOrder.setType(1);
+        DeliverySituation deliverySituation = adviertisementTypeService.deliverySituationAdvertisementInfo(advertisingOrder);
+        if (deliverySituation.getProjectionNumber() == null){
+            deliverySituation.setProjectionNumber(0);
+        }
+        //竞拍成功
+        advertisingOrder.setType(2);
+        DeliverySituation deliverySituation1 = adviertisementTypeService.deliverySituationAdvertisementInfo(advertisingOrder);
+        if (deliverySituation1.getProjectionNumber() == null){
+            deliverySituation1.setProjectionNumber(0);
+        }
+        //今日到期
+        advertisingOrder.setType(1);
+        DeliverySituation deliverySituation2 = adviertisementTypeService.deliverySituationAdvertisementInfo(advertisingOrder);
+        if (deliverySituation2.getProjectionNumber() == null){
+            deliverySituation2.setProjectionNumber(0);
+        }
+        //审核驳回
+        advertisingOrder.setType(3);
+        DeliverySituation deliverySituation3 = adviertisementTypeService.deliverySituationAdvertisementInfo(advertisingOrder);
+        if (deliverySituation3.getProjectionNumber() == null){
+            deliverySituation3.setProjectionNumber(0);
+        }
+
+        //广告主列表
+        List<DeliverySituation> deliverySituationList = adviertisementTypeService.masterInfoList(advertisingOrder);
+
+        modelMap.addAttribute("deliverySituation", deliverySituation);
+        modelMap.addAttribute("deliverySituation1", deliverySituation1);
+        modelMap.addAttribute("deliverySituation2", deliverySituation2);
+        modelMap.addAttribute("deliverySituation3", deliverySituation3);
+        modelMap.addAttribute("list", deliverySituationList);
+        return "advertisingorder/advertisingStatus";
+    }
+
+    @Log("打开查询页面")
+    @ResponseBody
+    @RequestMapping("select2")
+    @RequiresPermissions("advertisingorder:advertising:view")
+    public Map<String,Object> check2(AdvertisingOrder advertisingOrder,AdvertiserInfo advertiserInfo){
+        Map<String,Object> map = new HashMap<String,Object>();
+        //这里写你的查询
+        advertisingOrder.setObjectId(UserUtils.getUser().getBusinessId());
+        List<AdvertisingOrder> list = advertisingOrderService.selNum(advertisingOrder);
+        map.put("list1",list);
+        return map;//返回到页面  map里面定义的XXX  到页面上直接data.XX
+    }
+
+    @Log("打开查询页面")
+    @ResponseBody
+    @RequestMapping("select")
+    public Map<String,Object> check(AdvertisingOrder advertisingOrder) throws ParseException {
+        Map<String,Object> map = new HashMap<String,Object>();
+        //这里写你的查询
+         advertisingOrder =  advertisingOrderService.selAllIn(advertisingOrder);
+         map.put("advertisingOrder",advertisingOrder);
+        return map;//返回到页面  map里面定义的XXX  到页面上直接data.XX
+    }
+
+    /**
+     * 通过时间秒毫秒数判断两个时间的间隔
+     * @param date1
+     * @param date2
+     * @return
+     */
+    public static int differentDaysByMillisecond(Date date1,Date date2)
+    {
+        int days = (int) ((date2.getTime() - date1.getTime()) / (1000*3600*24));
+        return days;
+    }
+}

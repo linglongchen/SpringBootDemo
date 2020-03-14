@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>禁播广告管理</title>
+
+	<head th:include="init :: init"></head>
+    <head th:include="init_bootstrap_table :: bootstrap_table"></head>
+	
+	<script type="text/javascript">
+		$(function(){
+			$('#table').bootstrapTable({
+				undefinedText : '',//defined的默认显示文本
+				striped : true,//条纹
+				method : 'get',
+				url : '[[${ctx}]]/advertisement/banAdvertisementType/list',
+				pagination : true,//显示分页
+				sidePagination : 'server',//定义分页为服务器端分页
+				pageNumber : 1,//起始页数
+				pageSize : 20,//默认显示行数
+				pageList : [20, 50, 100 ,200],//可选分页数
+				singleSelect : false,//多选
+				//toolbar : '#toolbar',
+				height : 'auto',
+			    columns: [
+			    {
+			        field: 'typeId',
+			        title: '广告类型id',
+			        halign : 'center',
+			        align : 'right'
+			    },{
+			        field: 'typeStatus',
+			        title: '禁播级别 1：一级 2：二级  3：三级',
+			        halign : 'center',
+			        align : 'right'
+			    },{
+			        field: 'hotelCodeId',
+			        title: '酒店唯一编码id',
+			        halign : 'center',
+			        align : 'right'
+			    },{
+			    	field : 'option',
+			    	title : '操作',
+			    	halign : 'center',
+			    	align : 'left',
+			    	formatter : function(value, row, index){
+			    		var _html = '<ul class="grid_btn_ul">';
+			    		_html += '<li><a href="javascript:editBanAdvertisementType(' + row.id + ')" class="btn btn-success btn-xs"><i class="fa fa-pencil"></i> 编辑 </a></li>';
+			    		_html += '<li><a href="javascript:delBanAdvertisementType(' + row.id + ')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> 删除 </a></li>';
+			    		_html += '</ul>';
+			    		return _html;
+			    	}
+			    }],
+			    onLoadSuccess : function(data){
+			    	if(data.total == 0){
+			    		$('#table').bootstrapTable('removeAll');
+			    	}
+			    }
+			});
+		});
+		
+		//添加禁播广告
+		function addBanAdvertisementType(){
+			layer.open({
+			    type: 2,
+			    title : '新增禁播广告',
+				area : ['60%','90%'],
+			    content: '[[${ctx}]]/advertisement/banAdvertisementType/form', //这里content是一个DOM
+			    btn : ['保存', '关闭'],
+			    closeBtn : '1',
+			    shadeClose : false,//点击遮罩层关闭
+			    shade : [0.8, '#393D49'],
+			    yes : function(index, layero){
+			        var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+			        iframeWin.validForm();
+			    },btn2 : function(index, layero){
+					exitBombSow(index);
+					return false;
+				},cancel : function(index, layero) {
+					exitBombSow(index);
+					return false;
+				}
+			});
+		}
+		
+		//编辑禁播广告
+		function editBanAdvertisementType(id){
+			layer.open({
+			    type: 2,
+			    title : '编辑禁播广告',
+				area : ['60%','90%'],
+			    content: '[[${ctx}]]/advertisement/banAdvertisementType/form?id=' + id, //这里content是一个DOM
+			    btn : ['保存', '关闭'],
+			    closeBtn : '1',
+			    shadeClose : false,//点击遮罩层关闭
+			    shade : [0.8, '#393D49'],
+			    yes : function(index, layero){
+			        var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+			        iframeWin.validForm();
+			    },btn2 : function(index, layero){
+					exitBombSow(index);
+					return false;
+				},cancel : function(index, layero) {
+					exitBombSow(index);
+					return false;
+				}
+			});
+		}
+		//删除禁播广告
+		function delBanAdvertisementType(id){
+			layer.confirm('您确定要删除该禁播广告吗？',function(){
+				parent.loading();
+				$.post('[[${ctx}]]/advertisement/banAdvertisementType/delBanAdvertisementType',{
+					id : id
+				},function(result){
+					closeLoading();
+					layer.closeAll();
+					if(result.success){
+						showMsgSuccess('删除成功');
+						
+						refreshTable();
+					}else{
+						showMsgError(result.msg);
+					}
+				},'json');
+			});
+		}
+		
+		//查询
+		function search(){
+			var param = $('#searchForm').serialize();
+			$('#table').bootstrapTable('refresh', {url : '[[${ctx}]]/advertisement/banAdvertisementType/list?' + param});
+		}
+	</script>
+</head>
+<body layadmin-themealias="default">
+	<div class="layui-fluid animated fadeInRight">
+        <div class="layui-card">
+        	<div class="layui-form layui-card-header layuiadmin-card-header-auto">
+                <div class="layui-form-item form-head">
+					<form id="searchForm" class="layui-form">
+						<div class="layui-inline">
+							<label class="layui-form-label">广告类型id：</label>
+							<div class="layui-input-inline">
+								<input name="typeId" autocomplete="off" class="layui-input" placeholder="请输入广告类型id" type="text">
+							</div>
+						</div>
+						<div class="layui-inline">
+							<label class="layui-form-label">禁播级别 1：一级 2：二级  3：三级：</label>
+							<div class="layui-input-inline">
+								<input name="typeStatus" autocomplete="off" class="layui-input" placeholder="请输入禁播级别 1：一级 2：二级  3：三级" type="text">
+							</div>
+						</div>
+						<div class="layui-inline">
+							<label class="layui-form-label">酒店唯一编码id：</label>
+							<div class="layui-input-inline">
+								<input name="hotelCodeId" autocomplete="off" class="layui-input" placeholder="请输入酒店唯一编码id" type="text">
+							</div>
+						</div>
+						<div class="layui-inline">
+							<button class="btn btn-primary " type="button" onclick="search()"><i class="fa fa-search"></i>&nbsp;查询</button>
+						</div>
+					</form>
+				</div>
+				<div class="layui-card-body">
+					<div style="padding-bottom: 10px;">
+						<button class="btn btn-primary " type="button" data-toggle="modal" onclick="addBanAdvertisementType()"><i class="fa fa-plus"></i>&nbsp;新增</button>
+					</div>
+				</div>
+				<table id="table">
+
+				</table>
+	        </div>
+		</div>
+    </div>
+</body>
+</html>

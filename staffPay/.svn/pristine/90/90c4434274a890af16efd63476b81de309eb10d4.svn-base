@@ -1,0 +1,465 @@
+package com.chunqiu.mrjuly.modules.install.model;
+
+import com.chunqiu.mrjuly.common.persistence.DataEntity;
+import com.chunqiu.mrjuly.common.utils.excel.annotation.ExcelField;
+import com.chunqiu.mrjuly.modules.hotelinfo.model.DepartmentCategories;
+import com.chunqiu.mrjuly.modules.hotelinfo.model.DepartmentGoodsInfo;
+import com.chunqiu.mrjuly.modules.hotelinfo.model.DepartmentInfoList;
+import com.chunqiu.mrjuly.modules.hotelinfo.model.HotelInfo;
+import com.chunqiu.mrjuly.modules.system.model.User;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.validation.constraints.NotEmpty;
+import java.util.Date;
+
+/**
+ * 我的-订单数据统计
+ * 客户订单表
+ */
+public class CustomerOrder1 extends DataEntity<CustomerOrder1, Integer> {
+    private static final long serialVersionUID = 1L;
+    private Integer id;  //客户订单表id
+    @ExcelField(title = "订单号", type = 0, align = 2, sort = 0)
+    @NotEmpty
+    private String orderSn;  //订单号
+    @ExcelField(title = "所属酒店",value = "hotelName", type = 0, align = 2, sort = 0)
+    private String hotelName;
+    @ExcelField(title = "下单房间号", type = 0, align = 2, sort = 0)
+    @NotEmpty
+    private String  orderRoom; //下单房间号
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @ExcelField(title = "下单时间", type = 0, align = 2, sort = 0)
+    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date createDate; //下单时间
+    @ExcelField(title = "下单数量", type = 0, align = 2, sort = 0)
+    @NotEmpty
+    private Integer goodsNum;  //商品购买数量
+    @ExcelField(title = "商品名称",value = "shopGoodsInfo.goodsName", type = 0, align = 2, sort = 0)
+    private ShopGoodsInfo shopGoodsInfo; //商品引用类型
+    @ExcelField(title = "服务方式",value = "serviceMode.serviceMode", type = 0, align = 2, sort = 0)
+    private ServiceMode serviceMode; //服务方式引用类型
+    @ExcelField(title = "金额(元)", sort = 4)
+    private float goodsTotalPrice; //商品总价
+    private Integer status; //'状态 0.未接单 1.已接单 2.已完成 3.取消订单'
+    private String categoryName;
+    private Integer goodsId; //商品id
+    private Integer type;  //'1 部门  2 酒店'
+
+
+
+    private String requirement;  //客户要求
+
+
+    private Long singlePerson; //接单人
+
+    private Date orderTime;//接单时间
+
+    private String responseTime; //响应时间
+
+    private Long completionPerson; //完成订单人员
+
+    private String totalTime; //总耗时
+
+/*
+
+    @ExcelField(title = "完成订单时间", type = 0, align = 2, sort = 0)
+    @NotEmpty*/
+    private Date completionTime; //完成订单时间
+
+
+
+    private Integer hotelCodeId;//酒店前缀编码id
+    private Integer objectId; //在线商家id或者部门id
+    private Integer departmentTypeId;//商品类别id
+    private HotelInfo hotelInfo; //酒店引用对象
+    private String serviceMode2;
+
+
+    private DepartmentGoodsInfo departmentGoodsInfo;//部门创建的商品
+    private DepartmentInfoList departmentInfoList; //部门
+    private User user;//接单人
+    private DepartmentCategories departmentCategories;
+    //新增属性 接收前台时间字符串
+    private String dateString;
+    private String goodsName;
+    private Integer serviceId;
+
+
+
+    private String completionPersonStr;
+    private String singlePersonStr;
+
+
+
+    private String date;
+
+
+    private Integer completeOrder;
+    private Integer notOrder;
+    private Integer totalOrder;
+    private Integer codeOrder;
+
+    private String totalTimeTwo;
+
+    public String getCompletionPersonStr() {
+        return completionPersonStr;
+    }
+
+    public void setCompletionPersonStr(String completionPersonStr) {
+        this.completionPersonStr = completionPersonStr;
+    }
+
+    public String getSinglePersonStr() {
+        return singlePersonStr;
+    }
+
+    public void setSinglePersonStr(String singlePersonStr) {
+        this.singlePersonStr = singlePersonStr;
+    }
+
+    public String getTotalTimeTwo() {
+        return totalTimeTwo;
+    }
+
+    public void setTotalTimeTwo(String totalTimeTwo) {
+        this.totalTimeTwo = totalTimeTwo;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public Integer getCompleteOrder() {
+        return completeOrder;
+    }
+
+    public void setCompleteOrder(Integer completeOrder) {
+        this.completeOrder = completeOrder;
+    }
+
+    public Integer getNotOrder() {
+        return notOrder;
+    }
+
+    public void setNotOrder(Integer notOrder) {
+        this.notOrder = notOrder;
+    }
+
+    public Integer getTotalOrder() {
+        return totalOrder;
+    }
+
+    public void setTotalOrder(Integer totalOrder) {
+        this.totalOrder = totalOrder;
+    }
+
+    public Integer getCodeOrder() {
+        return codeOrder;
+    }
+
+    public void setCodeOrder(Integer codeOrder) {
+        this.codeOrder = codeOrder;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getHotelName() {
+        return hotelName;
+    }
+
+    public void setHotelName(String hotelName) {
+        this.hotelName = hotelName;
+    }
+
+    public Integer getServiceId() {
+        return serviceId;
+    }
+
+    public void setServiceId(Integer serviceId) {
+        this.serviceId = serviceId;
+    }
+
+    public String getGoodsName() {
+        return goodsName;
+    }
+
+    public void setGoodsName(String goodsName) {
+        this.goodsName = goodsName;
+    }
+
+    public String getServiceMode2() {
+        return serviceMode2;
+    }
+
+    public void setServiceMode2(String serviceMode2) {
+        this.serviceMode2 = serviceMode2;
+    }
+
+    public String getDateString() {
+        return dateString;
+    }
+
+    public void setDateString(String dateString) {
+        this.dateString = dateString;
+    }
+
+
+    public DepartmentCategories getDepartmentCategories() {
+        return departmentCategories;
+    }
+
+    public void setDepartmentCategories(DepartmentCategories departmentCategories) {
+        this.departmentCategories = departmentCategories;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    private String dateBegin;
+    private String dateEnd;
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Override
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Override
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    public Date getOrderTime() {
+        return orderTime;
+    }
+
+    public void setOrderTime(Date orderTime) {
+        this.orderTime = orderTime;
+    }
+
+
+    public Integer getDepartmentTypeId() {
+        return departmentTypeId;
+    }
+
+    public void setDepartmentTypeId(Integer departmentTypeId) {
+        this.departmentTypeId = departmentTypeId;
+    }
+
+
+    public String getDateBegin() {
+        return dateBegin;
+    }
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    public void setDateBegin(String dateBegin) {
+        this.dateBegin = dateBegin;
+    }
+
+    public String getDateEnd() {
+        return dateEnd;
+    }
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    public void setDateEnd(String dateEnd) {
+        this.dateEnd = dateEnd;
+    }
+
+    public DepartmentInfoList getDepartmentInfoList() {
+        return departmentInfoList;
+    }
+
+    public void setDepartmentInfoList(DepartmentInfoList departmentInfoList) {
+        this.departmentInfoList = departmentInfoList;
+    }
+
+    public DepartmentGoodsInfo getDepartmentGoodsInfo() {
+        return departmentGoodsInfo;
+    }
+
+    public void setDepartmentGoodsInfo(DepartmentGoodsInfo departmentGoodsInfo) {
+        this.departmentGoodsInfo = departmentGoodsInfo;
+    }
+
+    public ServiceMode getServiceMode() {
+        return serviceMode;
+    }
+
+    public void setServiceMode(ServiceMode serviceMode) {
+        this.serviceMode = serviceMode;
+    }
+
+    public ShopGoodsInfo getShopGoodsInfo() {
+        return shopGoodsInfo;
+    }
+
+    public void setShopGoodsInfo(ShopGoodsInfo shopGoodsInfo) {
+        this.shopGoodsInfo = shopGoodsInfo;
+    }
+
+    public HotelInfo getHotelInfo() {
+        return hotelInfo;
+    }
+
+    public void setHotelInfo(HotelInfo hotelInfo) {
+        this.hotelInfo = hotelInfo;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    @Override
+    public Integer getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getOrderSn() {
+        return orderSn;
+    }
+
+    public void setOrderSn(String orderSn) {
+        this.orderSn = orderSn;
+    }
+
+    public String getOrderRoom() {
+        return orderRoom;
+    }
+
+    public void setOrderRoom(String orderRoom) {
+        this.orderRoom = orderRoom;
+    }
+
+
+    public Integer getGoodsId() {
+        return goodsId;
+    }
+
+    public void setGoodsId(Integer goodsId) {
+        this.goodsId = goodsId;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public Integer getGoodsNum() {
+        return goodsNum;
+    }
+
+    public void setGoodsNum(Integer goodsNum) {
+        this.goodsNum = goodsNum;
+    }
+
+    public float getGoodsTotalPrice() {
+        return goodsTotalPrice;
+    }
+
+    public void setGoodsTotalPrice(float goodsTotalPrice) {
+        this.goodsTotalPrice = goodsTotalPrice;
+    }
+
+    public String getRequirement() {
+        return requirement;
+    }
+
+    public void setRequirement(String requirement) {
+        this.requirement = requirement;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+
+
+
+    public Date getCompletionTime() {
+        return completionTime;
+    }
+
+    public void setCompletionTime(Date completionTime) {
+        this.completionTime = completionTime;
+    }
+
+
+    public String getResponseTime() {
+        return responseTime;
+    }
+
+    public void setResponseTime(String responseTime) {
+        this.responseTime = responseTime;
+    }
+    @DateTimeFormat(pattern = "yyyy-MM-dd-HH-mm-ss")
+    public String getTotalTime() {
+        return totalTime;
+    }
+
+    public void setTotalTime(String totalTime) {
+        this.totalTime = totalTime;
+    }
+
+    public Integer getHotelCodeId() {
+        return hotelCodeId;
+    }
+
+    public void setHotelCodeId(Integer hotelCodeId) {
+        this.hotelCodeId = hotelCodeId;
+    }
+
+    public Integer getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(Integer objectId) {
+        this.objectId = objectId;
+    }
+
+    public Long getSinglePerson() {
+        return singlePerson;
+    }
+
+    public void setSinglePerson(Long singlePerson) {
+        this.singlePerson = singlePerson;
+    }
+
+    public Long getCompletionPerson() {
+        return completionPerson;
+    }
+
+    public void setCompletionPerson(Long completionPerson) {
+        this.completionPerson = completionPerson;
+    }
+}

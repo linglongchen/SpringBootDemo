@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chunqiu.mrjuly.modules.advertisingorder.dao.AdvertisingDao">
+
+	<sql id="advertisingOrderColumns">
+		a.id AS "id",
+		a.transactionOderSn AS "transactionodersn",
+		a.orderNumber AS "ordernumber",
+		a.create_date AS "createDate",
+		a.payment_date AS "paymentDate",
+		a.create_by AS "createBy.id",
+		a.type AS "type",
+		a.hotel_code_id AS "hotelCodeId",
+		a.delivery_type AS "deliveryType",
+		a.delivery_type_starting_price AS "deliveryTypeStartingPrice",
+		a.quantity_delivered AS "quantityDelivered",
+		a.auction_amount AS "auctionAmount",
+		a.coupon_id AS "couponId",
+		a.del_flag AS "delFlag",
+		a.auction_status AS "auctionStatus",
+		a.pay_status AS "payStatus",
+		a.put_in_time AS "putInTime",
+		a.price_type AS "priceType",
+		a.price_type_price AS "priceTypePrice",
+		a.object_id AS "objectId",
+		a.upload_id AS "uploadId",
+		a.start_time as "startTime",
+		a.end_time as "endTime"
+	</sql>
+
+	<sql id="advertisingOrderJoins">
+	</sql>
+
+	<select id="selCount" resultType="int">
+		SELECT
+			count(id)
+		FROM advertising_order
+		WHERE del_flag = 0 and type=1 and  auction_status=3 and pay_status=2 and state=1 and object_id=#{objectId} AND start_time &lt;= date_format(now(),'%Y-%m-%d') and date_format(now(),'%Y-%m-%d')&lt;=end_time
+	</select>
+	<select id="getSum" resultType="com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder">
+		select IFNULL(sum(quantity_delivered),'0') as "quantityDelivered" from advertising_order
+		WHERE del_flag = 0 and type=1 and  auction_status=3 and pay_status=2 and state=1 and object_id=#{objectId} AND start_time &lt;= date_format(now(),'%Y-%m-%d') and date_format(now(),'%Y-%m-%d')&lt;=end_time
+	</select>
+	<select id="getSum1" resultType="com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder">
+		select IFNULL(sum(quantity_delivered),'0') as "quantityDelivered" from advertising_order
+		WHERE del_flag = 0 AND delivery_type=1 and type=1 and  auction_status=3 and pay_status=2 and state=1 and object_id=#{objectId} AND start_time &lt;= date_format(now(),'%Y-%m-%d') and date_format(now(),'%Y-%m-%d')&lt;=end_time
+	</select>
+	<select id="getSum2" resultType="com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder">
+		select IFNULL(sum(quantity_delivered),'0') as "quantityDelivered" from advertising_order
+		WHERE del_flag = 0 AND delivery_type=2 and type=1 and  auction_status=3 and pay_status=2 and state=1 and object_id=#{objectId} AND start_time &lt;= date_format(now(),'%Y-%m-%d') and date_format(now(),'%Y-%m-%d')&lt;=end_time
+	</select>
+	<select id="selDisCount" resultType="int">
+		select count(distinct hotel_code_id) from advertising_order
+		WHERE del_flag = 0 and type=1 and  auction_status=3 and pay_status=2 and state=1 and object_id=#{objectId} AND start_time &lt;= date_format(now(),'%Y-%m-%d') and date_format(now(),'%Y-%m-%d')&lt;=end_time
+	</select>
+	<select id="getTotal" resultType="com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder">
+		select IFNULL(sum(auction_amount),'0') as "auctionAmount" from advertising_order
+		WHERE del_flag = 0 AND type=1 and  auction_status=3 and pay_status=2 and state=1 and object_id=#{objectId} AND start_time &lt;= date_format(now(),'%Y-%m-%d') and date_format(now(),'%Y-%m-%d')&lt;=end_time
+	</select>
+
+
+	<select id="selCount1" resultType="int">
+		SELECT
+		count(id)
+		FROM advertising_order
+		WHERE del_flag = 0 and type=1 and  auction_status=3 and pay_status=2 and state=1 and object_id=#{objectId}
+	</select>
+	<select id="getSum3" resultType="com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder">
+		select IFNULL(sum(quantity_delivered),'0') as "quantityDelivered" from advertising_order
+		WHERE del_flag = 0 and type=1 and  auction_status=3 and pay_status=2 and state=1 and object_id=#{objectId}
+	</select>
+	<select id="getSum4" resultType="com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder">
+		select IFNULL(sum(quantity_delivered),'0') as "quantityDelivered" from advertising_order
+		WHERE del_flag = 0 AND delivery_type=1 and type=1 and  auction_status=3 and pay_status=2 and state=1 and object_id=#{objectId}
+	</select>
+	<select id="getSum5" resultType="com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder">
+		select IFNULL(sum(quantity_delivered),'0') as "quantityDelivered" from advertising_order
+		WHERE del_flag = 0 AND delivery_type=2 and type=1 and  auction_status=3 and pay_status=2 and state=1 and object_id=#{objectId}
+	</select>
+	<select id="selDisCount1" resultType="int">
+		select  count(distinct hotel_code_id) from advertising_order
+		WHERE del_flag = 0 and type=1 and  auction_status=3 and pay_status=2 and state=1 and object_id=#{objectId}
+	</select>
+	<select id="getTotal1" resultType="com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder">
+		select IFNULL(sum(auction_amount),'0') as "auctionAmount" from advertising_order
+		WHERE del_flag = 0 and type=1 and  auction_status=3 and pay_status=2 and state=1 and object_id=#{objectId}
+	</select>
+
+
+	<select id="selCount2" resultType="int">
+		select COUNT(*) from advertising_order
+		WHERE del_flag=0 AND auction_status=3 and pay_status=2 and state=1 and object_id=#{objectId} AND type =1 AND end_time = date_format(now(),'%Y-%m-%d')
+	</select>
+	<select id="getSum6" resultType="com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder">
+		select IFNULL(sum(quantity_delivered),'0') as "quantityDelivered" from advertising_order
+		WHERE del_flag=0 AND auction_status=3 and pay_status=2 and state=1 and object_id=#{objectId} AND type =1 AND end_time = date_format(now(),'%Y-%m-%d')
+	</select>
+	<select id="getSum7" resultType="com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder">
+		select IFNULL(sum(quantity_delivered),'0') as "quantityDelivered" from advertising_order
+		WHERE del_flag=0 AND auction_status=3 and pay_status=2 and state=1 and object_id=#{objectId} AND type =1 AND delivery_type=1 AND end_time = date_format(now(),'%Y-%m-%d')
+	</select>
+	<select id="getSum8" resultType="com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder">
+		select IFNULL(sum(quantity_delivered),'0') as "quantityDelivered" from advertising_order
+		WHERE del_flag=0 AND auction_status=3 and pay_status=2 and state=1 and object_id=#{objectId} AND type =1 AND delivery_type=2 AND end_time = date_format(now(),'%Y-%m-%d')
+	</select>
+	<select id="selDisCount2" resultType="int">
+		select count(distinct hotel_code_id) from advertising_order
+		WHERE del_flag=0 AND type =1 and pay_status=2 and state=1 and object_id=#{objectId} AND auction_status=3 AND end_time = date_format(now(),'%Y-%m-%d')
+	</select>
+	<select id="getTotal2" resultType="com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder">
+		select IFNULL(sum(auction_amount),'0') as "auctionAmount" from advertising_order
+		WHERE del_flag=0 AND auction_status=3 and pay_status=2 and state=1 and object_id=#{objectId} AND type =1 AND end_time = date_format(now(),'%Y-%m-%d')
+	</select>
+
+
+	<select id="selState" resultType="int">
+		select COUNT(*) from advertising_order a
+		WHERE a.del_flag=0 and a.object_id=#{objectId} AND a.type =1 AND a.state=2
+	</select>
+	<select id="getStateSum" resultType="com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder">
+		select IFNULL(sum(quantity_delivered),'0') as "quantityDelivered" from advertising_order a
+		WHERE a.del_flag=0  and a.object_id=#{objectId} AND a.type =1 AND a.state=2
+	</select>
+	<select id="getStateSum1" resultType="com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder">
+		select IFNULL(sum(quantity_delivered),'0') as "quantityDelivered" from advertising_order a
+		WHERE a.del_flag=0 and a.object_id=#{objectId} AND a.type =1 AND a.state=2 AND a.delivery_type=1
+	</select>
+	<select id="getStateSum2" resultType="com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder">
+		select IFNULL(sum(quantity_delivered),'0') as "quantityDelivered" from advertising_order a
+		WHERE a.del_flag=0 and a.object_id=#{objectId} AND a.type =1 AND a.state=2 AND a.delivery_type=2
+	</select>
+	<select id="selDisCount3" resultType="int">
+		select count(distinct hotel_code_id) from advertising_order a
+		WHERE a.del_flag=0 AND a.type =1 and a.object_id=#{objectId} AND a.state=2
+	</select>
+	<select id="getTotal3" resultType="com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder">
+		select IFNULL(sum(auction_amount),'0') as "auctionAmount" from advertising_order a
+		WHERE a.del_flag=0 and a.object_id=#{objectId} AND  a.type =1 AND a.state=2
+	</select>
+
+
+	<select id="selAll" resultType="com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder">
+		SELECT * FROM advertising_order WHERE
+		auction_status=3 AND pay_status=2 AND del_flag=0 AND type=1 AND object_id = #{objectId}
+	</select>
+	<select id="selAllIn" resultType="com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder">
+		SELECT
+		a.start_time AS "startTime",
+		a.end_time AS "endTime",
+		a.delivery_type AS "deliveryType",
+		a.create_date AS "createDate",
+		a.auction_amount AS "auctionAmount",
+		a.quantity_delivered AS "quantityDelivered",
+		f.hotel_name AS "hotelName",
+		f.hotel_lng AS "hotelLng",
+		f.hotel_lat AS "hotelLat",
+		f.hotel_address AS "hotelAddress",
+		f.hotel_code_id as "hotelCodeId",
+		c.type3_name as "typeName"
+		FROM
+		(SELECT * from advertising_order WHERE auction_status=3 AND pay_status=2 AND del_flag=0 AND type=1)as a
+		LEFT JOIN hotel_info AS f ON a.hotel_code_id=f.hotel_code_id
+		LEFT JOIN adviertisement_type3 AS c ON a.type3_id=c.id
+		LEFT JOIN adviertisement_type2 AS d ON c.type2_id=d.id
+		LEFT JOIN adviertisement_type AS e ON d.type_id=e.id
+		WHERE a.id=#{id}
+	</select>
+
+</mapper>

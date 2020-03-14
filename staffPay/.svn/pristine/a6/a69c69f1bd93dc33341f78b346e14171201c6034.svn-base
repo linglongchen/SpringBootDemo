@@ -1,0 +1,15 @@
+package com.chunqiu.mrjuly.modules.advertisingorder.dao;
+
+import com.chunqiu.mrjuly.common.persistence.CrudDao;
+import com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder;
+
+/**
+ * 房源详情DAO接口
+ * @author wyy
+ * @version 2019-03-25
+ */
+public interface HousingSituationDao extends CrudDao<AdvertisingOrder, Integer> {
+
+
+    AdvertisingOrder selAllIn(AdvertisingOrder advertisingOrder);
+}

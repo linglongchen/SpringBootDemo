@@ -1,0 +1,615 @@
+package com.chunqiu.mrjuly.modules.advertiserinfo.controller;
+
+import com.chunqiu.mrjuly.common.annotation.Log;
+import com.chunqiu.mrjuly.common.enums.RedisKeyCode;
+import com.chunqiu.mrjuly.common.persistence.BaseController;
+import com.chunqiu.mrjuly.common.utils.CacheRedisUtil;
+import com.chunqiu.mrjuly.common.utils.MD5Util;
+import com.chunqiu.mrjuly.common.utils.OssUtils.OSSClientUtils;
+import com.chunqiu.mrjuly.common.utils.UserUtils;
+import com.chunqiu.mrjuly.common.utils.publicBean;
+import com.chunqiu.mrjuly.common.vo.Grid;
+import com.chunqiu.mrjuly.common.vo.GridParam;
+import com.chunqiu.mrjuly.common.vo.Json;
+import com.chunqiu.mrjuly.modules.accountrecharge.model.AccountRecharge;
+import com.chunqiu.mrjuly.modules.accountrecharge.service.AccountRechargeService;
+import com.chunqiu.mrjuly.modules.advertiserinfo.model.AccountMoney;
+import com.chunqiu.mrjuly.modules.advertiserinfo.model.AdvertiserInfo;
+import com.chunqiu.mrjuly.modules.advertiserinfo.service.AdvertiserInfoService;
+import com.chunqiu.mrjuly.modules.advertisingorder.model.AdvertisingOrder;
+import com.chunqiu.mrjuly.modules.advertisingorder.service.AdvertisingOrderService;
+import com.chunqiu.mrjuly.modules.adviertisement.service.AdviertisementTypeService;
+import com.chunqiu.mrjuly.modules.hotelinfo.model.HotelInfo;
+import com.chunqiu.mrjuly.modules.hotelinfo.service.HotelInfoService;
+import com.chunqiu.mrjuly.modules.system.model.LyConfigStar;
+import com.chunqiu.mrjuly.modules.system.model.User;
+import com.chunqiu.mrjuly.modules.system.service.LyConfigStarService;
+import com.chunqiu.mrjuly.modules.system.service.UserService;
+
+import lombok.extern.slf4j.Slf4j;
+import net.sourceforge.pinyin4j.PinyinHelper;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+/**
+ * 广告商管理Controller
+ *
+ * @author chen
+ * @version 2019-03-14
+ */
+@Slf4j
+@Controller
+@RequestMapping(value = "${adminPath}/advertiserinfo/advertiserInfo")
+@Transactional
+public class AdvertiserInfoController extends BaseController {
+
+    @Autowired
+    private AdvertiserInfoService advertiserInfoService;
+    @Autowired
+    private AccountRechargeService accountRechargeService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private HotelInfoService hotelInfoService;
+    @Autowired
+    private AdvertisingOrderService advertisingOrderService;
+    @Autowired
+    private AdviertisementTypeService adviertisementTypeService;
+	@Autowired
+	private LyConfigStarService lyConfigStarService;
+	@Autowired
+	private CacheRedisUtil redisUtil;
+
+    /**
+     * @Description：广告商管理列表页面
+     * @author chen
+     */
+
+    @Log("打开广告商管理列表页面")
+    @RequestMapping("index")
+    @RequiresPermissions("advertiserinfo:advertiserInfo:view")
+    public String index() {
+        return "advertiserinfo/advertiserInfoList";
+    }
+
+    /**
+     * @Description：广告商管理列表数据
+     * @author chen
+     */
+
+    @Log("获取广告商管理列表数据")
+    @RequestMapping("list")
+    @ResponseBody
+    @RequiresPermissions("advertiserinfo:advertiserInfo:view")
+    public Grid list(AdvertiserInfo advertiserInfo, GridParam param) {
+        return advertiserInfoService.findPage(advertiserInfo, param);
+    }
+
+    /**
+     * @Description：广告商管理表单页面--新增/编辑
+     * @author chen
+     */
+
+    @Log("打开广告商管理表单页面--新增/编辑")
+    @RequestMapping(value = "form")
+    @RequiresPermissions("advertiserinfo:advertiserInfo:view")
+    public String form(AdvertiserInfo advertiserInfo, ModelMap model) {
+        advertiserInfo = advertiserInfoService.get(advertiserInfo.getId());
+        if (advertiserInfo.getAccountBalance()==null ){
+            advertiserInfo.setAccountBalance(0.0f);
+        }
+        model.addAttribute("advertiserInfo", advertiserInfo);
+        return "advertiserinfo/advertiserInfoForm";
+    }
+
+    /**
+     * @Description：广告商管理新增/编辑 保存方法
+     * @author chen
+     */
+    @Log("新增/编辑广告商管理")
+    @RequestMapping("saveAdvertiserInfo")
+    @RequiresPermissions("advertiserinfo:advertiserInfo:edit")
+    public String saveAdvertiserInfo(AdvertiserInfo advertiserInfo, ModelMap model) {
+        try {
+            advertiserInfoService.save(advertiserInfo);
+        } catch (Exception e) {
+            log.error("保存失败！ msg={}", e.getMessage(), e);
+            model.addAttribute("error", "保存失败！");
+            return form(advertiserInfo, model);
+        }
+        return successPath;
+    }
+
+    /**
+     * @Description：广告商管理数据删除方法
+     * @author chen
+     */
+
+    @Log("删除广告商管理")
+    @RequestMapping("delAdvertiserInfo")
+    @ResponseBody
+    @RequiresPermissions("advertiserinfo:advertiserInfo:edit")
+    public Json delAdvertiserInfo(AdvertiserInfo advertiserInfo) {
+        Json json = new Json();
+        try {
+            advertiserInfoService.delete(advertiserInfo);
+            json.setSuccess(true);
+        } catch (Exception e) {
+            log.error("删除失败！ msg={}", e.getMessage(), e);
+
+            json.setSuccess(false);
+            json.setMsg("删除失败！");
+        }
+        return json;
+    }
+
+
+    @Log("解冻广告商管理")
+    @RequestMapping("relieveAdvertiserInfo")
+    @ResponseBody
+    @RequiresPermissions("advertiserinfo:advertiserInfo:edit")
+    public Json relieveAdvertiserInfo(AdvertiserInfo advertiserInfo) {
+        Json json = new Json();
+        try {
+            if (advertiserInfo.getIds() != null && advertiserInfo.getIds() != "") {
+                List<AdvertiserInfo> advertiserInfoList = new ArrayList<>();
+                String[] strings = advertiserInfo.getIds().split(",");
+                for (String id : strings) {
+                    AdvertiserInfo advertiserInfo1 = new AdvertiserInfo();
+                    advertiserInfo1.setId(Integer.parseInt(id));
+                    advertiserInfo1.setStatus(advertiserInfo.getStatus());
+                    advertiserInfoList.add(advertiserInfo1);
+                }
+                advertiserInfoService.relieveAdvertiserInfo(advertiserInfoList);
+            } else {
+                advertiserInfoService.save(advertiserInfo);
+            }
+            json.setSuccess(true);
+        } catch (Exception e) {
+            //异常回滚
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            log.error("操作失败！ msg={}", e.getMessage(), e);
+            json.setSuccess(false);
+            json.setMsg("操作失败！");
+        }
+        return json;
+    }
+
+
+    @Log("打开广告商管理表单页面--新增/编辑")
+    @RequestMapping(value = "freezeAdvertiserInfoForm")
+    @RequiresPermissions("advertiserinfo:advertiserInfo:view")
+    public String freezeAdvertiserInfoForm(AdvertiserInfo advertiserInfo, ModelMap model) {
+        model.addAttribute("advertiserInfo", advertiserInfo);
+        return "advertiserinfo/freezeAdvertiserInfoForm";
+    }
+
+    /**
+     * 冻结
+     *
+     * @param advertiserInfo
+     * @param model
+     * @return
+     */
+    @Log("冻结")
+    @RequestMapping("saveFreezeAdvertiserInfo")
+    @RequiresPermissions("advertiserinfo:advertiserInfo:edit")
+    public String saveFreezeAdvertiserInfo(AdvertiserInfo advertiserInfo, ModelMap model) {
+        try {
+            if (advertiserInfo.getIds() != null && advertiserInfo.getIds() != "") {
+                List<AdvertiserInfo> advertiserInfoList = new ArrayList<>();
+                String[] strings = advertiserInfo.getIds().split(",");
+                for (String id : strings) {
+                    AdvertiserInfo advertiserInfo1 = new AdvertiserInfo();
+                    advertiserInfo1.setId(Integer.parseInt(id));
+                    advertiserInfo1.setStatus(advertiserInfo.getStatus());
+                    advertiserInfo1.setFreezeReason(advertiserInfo.getFreezeReason());
+                    advertiserInfoList.add(advertiserInfo1);
+                }
+                advertiserInfoService.saveList(advertiserInfoList);
+            } else {
+                advertiserInfoService.save(advertiserInfo);
+            }
+
+        } catch (Exception e) {
+            //异常回滚
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            log.error("保存失败！ msg={}", e.getMessage(), e);
+            model.addAttribute("error", "保存失败！");
+            return freezeAdvertiserInfoForm(advertiserInfo, model);
+        }
+        return successPath;
+    }
+
+
+    @Log("打款")
+    @RequestMapping(value = "payAdvertiserInfo")
+    @RequiresPermissions("advertiserinfo:advertiserInfo:view")
+    public String payAdvertiserInfo(AdvertiserInfo advertiserInfo, ModelMap model) {
+        advertiserInfo = advertiserInfoService.get(advertiserInfo.getId());
+        if (advertiserInfo.getAccountBalance() == null) {
+            advertiserInfo.setAccountBalance(0f);
+        }
+        List<AccountRecharge> list = advertiserInfoService.accountRechargeList(advertiserInfo.getId());
+        Map<Integer,String> map = new HashMap<>();
+        for (int i=0;i<list.size();i++){
+            map.put(list.get(i).getId(),list.get(i).getRemittanceFlowNumber());
+        }
+        advertiserInfo.setRemark("");
+        advertiserInfo.setPrice(0.0f);
+        model.addAttribute("map", list);
+        model.addAttribute("advertiserInfo", advertiserInfo);
+        return "advertiserinfo/payAdvertiserInfoForm";
+    }
+
+    @Log("扣款")
+    @RequestMapping(value = "cutAdvertiserInfo")
+    @RequiresPermissions("advertiserinfo:advertiserInfo:view")
+    public String cutAdvertiserInfo(AdvertiserInfo advertiserInfo, ModelMap model) {
+        advertiserInfo = advertiserInfoService.get(advertiserInfo.getId());
+        if (advertiserInfo.getAccountBalance() == null) {
+            advertiserInfo.setAccountBalance(0f);
+        }
+        advertiserInfo.setRemark("");
+        advertiserInfo.setPrice(0.0f);
+        model.addAttribute("advertiserInfo", advertiserInfo);
+        return "advertiserinfo/cutAdvertiserInfoForm";
+    }
+
+    /**
+     * 汇款单号列表
+     *
+     * @return
+     */
+    @Log("汇款单号列表")
+    @RequestMapping("accountRechargeList")
+    @ResponseBody
+    public List<AccountRecharge> accountRechargeList(Integer objectId) {
+        return advertiserInfoService.accountRechargeList(objectId);
+    }
+
+    @Log("在线商家汇款单号")
+    @RequestMapping("accountRechargeList2")
+    @ResponseBody
+    public Map<Integer,String> accountRechargeList2(Integer objectId) {
+        List<AccountRecharge> list = advertiserInfoService.accountRechargeLis2(objectId);
+        Map<Integer,String> map = new HashMap<>();
+        for (int i=0;i<list.size();i++){
+            map.put(list.get(i).getId(),list.get(i).getRemittanceFlowNumber());
+        }
+        return map;
+    }
+
+
+    @Log("保存打款信息")
+    @RequestMapping("saveAccountRecharge")
+    @RequiresPermissions("advertiserinfo:advertiserInfo:edit")
+    public String saveAccountRecharge(AccountMoney accountMoney, ModelMap modelMap) {
+        try {
+            String user = UserUtils.getUser().getAccount();
+            String password = UserUtils.getUser().getPassword();
+            String pwd = MD5Util.encrypt(accountMoney.getPassword());
+        	AdvertiserInfo advertiserInfo = advertiserInfoService.get(accountMoney.getAdvertiserInfoId());
+        	advertiserInfo.setPrice(accountMoney.getPrice());
+        	advertiserInfo.setRemark(accountMoney.getRemarks());
+            List<AccountRecharge> list = advertiserInfoService.accountRechargeList(advertiserInfo.getId());
+            Map<Integer,String> map = new HashMap<>();
+            for (int i=0;i<list.size();i++){
+                map.put(list.get(i).getId(),list.get(i).getRemittanceFlowNumber());
+            }
+            modelMap.addAttribute("map", list);
+            modelMap.addAttribute("advertiserInfo",advertiserInfo);
+            if (accountMoney.getPrice() == null || accountMoney.getPrice() <= 0) {
+                modelMap.addAttribute("error", "请输入打款金额！");
+                return "advertiserinfo/payAdvertiserInfoForm";
+			} else if (StringUtils.isBlank(accountMoney.getBillOfOriginId())) {
+				modelMap.addAttribute("error", "请选择汇款单！");
+                return "advertiserinfo/payAdvertiserInfoForm";
+			} else if (!(user.equals(accountMoney.getAdmin()) && password.equals(pwd))) {
+                modelMap.addAttribute("error", "账号密码错误！");
+                return "advertiserinfo/payAdvertiserInfoForm";
+			} else {
+                advertiserInfoService.saveAccountRecharge(accountMoney);
+            }
+        } catch (Exception e) {
+            //异常回滚
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            e.printStackTrace();
+            modelMap.addAttribute("error", "保存失败！");
+            return "advertiserinfo/payAdvertiserInfoForm";
+        }
+        return successPath;
+    }
+
+    @Log("保存扣款信息")
+    @RequestMapping("saveCutAccountRecharge")
+    @RequiresPermissions("advertiserinfo:advertiserInfo:edit")
+    public String saveCutAccountRecharge(AccountMoney accountMoney, ModelMap modelMap) {
+        try {
+            String user = UserUtils.getUser().getAccount();
+            String password = UserUtils.getUser().getPassword();
+            String pwd = MD5Util.encrypt(accountMoney.getPassword());
+        	AdvertiserInfo advertiserInfo = advertiserInfoService.get(accountMoney.getAdvertiserInfoId());
+        	advertiserInfo.setPrice(accountMoney.getPrice());
+        	advertiserInfo.setRemark(accountMoney.getRemarks());
+            modelMap.addAttribute("advertiserInfo",advertiserInfo);
+            if (accountMoney.getPrice() == null || accountMoney.getPrice() <= 0) {
+                modelMap.addAttribute("error", "请输入扣款金额！");
+                return "advertiserinfo/cutAdvertiserInfoForm";
+			} else if (!(user.equals(accountMoney.getAdmin()) && password.equals(pwd))) {
+                modelMap.addAttribute("error", "账号密码错误！");
+                return "advertiserinfo/cutAdvertiserInfoForm";
+			} else if (advertiserInfo != null && (advertiserInfo.getAccountBalance() == null ? 0 : advertiserInfo.getAccountBalance()) < accountMoney.getPrice()){
+                modelMap.addAttribute("error", "账户余额不足！");
+                return "advertiserinfo/cutAdvertiserInfoForm";
+            } else {
+                advertiserInfoService.saveCutAccountRecharge(accountMoney);
+            }
+        } catch (Exception e) {
+            //异常回滚
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            e.printStackTrace();
+            modelMap.addAttribute("error", "保存失败！");
+            return "advertiserinfo/cutAdvertiserInfoForm";
+        }
+        return successPath;
+    }
+
+    @Log("广告商我的账单")
+    @RequestMapping("advertiseInfoMyBill")
+    @RequiresPermissions("advertiserinfo:advertiserInfo:view")
+    public String advertiseInfoMyBill() {
+        return "advertiserinfo/advertiseInfoMyBillList";
+    }
+
+
+    @Log("打开账户充值页面")
+    @RequestMapping("AdvertiserAccountInfo")
+    @RequiresPermissions("advertiserinfo:advertiserInfo:view")
+    public String AdvertiserAccountInfo() {
+        return "advertiserinfo/advertiserAccountRecharge";
+    }
+
+
+    @Log("广告主登记")
+    @RequestMapping("advertiserRegisterForm")
+    @RequiresPermissions("advertiserinfo:advertiserInfo:view")
+    public String advertiserRegisterForm(AdvertiserInfo advertiserInfo, ModelMap modelMap) {
+        advertiserInfo.setBusinessLicense("/images/default2.png");
+        modelMap.addAttribute("advertiserInfo", advertiserInfo);
+        return "advertiserinfo/advertiserRegisterForm";
+    }
+
+    @Log("打开广告商我的财务")
+    @RequestMapping("myAdvertiserFinanceIndex")
+    @RequiresPermissions("advertiserinfo:advertiserInfo:view")
+    public String myAdvertiserFinanceIndex(AdvertiserInfo advertiserInfo, ModelMap modelMap) {
+        advertiserInfo.setId(UserUtils.getUser().getBusinessId());
+        advertiserInfo = advertiserInfoService.get(advertiserInfo);
+        modelMap.addAttribute("advertiserInfo", advertiserInfo);
+        return "advertiserinfo/advertiserInfoMyFinance";
+    }
+
+
+    /**
+     * @Description：广告商管理新增/编辑 保存方法
+     * @author chen
+     */
+    @Log("广告主登记")
+    @RequestMapping("saveAdvertiserInfo2")
+    @RequiresPermissions("advertiserinfo:advertiserInfo:edit")
+    public String saveAdvertiserInfo2(AdvertiserInfo advertiserInfo, ModelMap model) {
+        try {
+            String businessLicense = OSSClientUtils.ossUploadPictures(advertiserInfo.getBusinessLicense());
+            advertiserInfo.setBusinessLicense(businessLicense);
+            Date date = new Date();
+            advertiserInfo.setCreateDate(date);
+            String string = advertiserInfo.getAdvertiserName();
+            String string1 = getPinYinHeadChar(string);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+            advertiserInfo.setId(UserUtils.getUser().getBusinessId());
+            advertiserInfo.setAdvertiserNumber(string1.toUpperCase() + simpleDateFormat.format(advertiserInfo.getCreateDate()));
+            advertiserInfoService.insertForm(advertiserInfo);
+
+//            User user = new User();
+//            user.setId(UserUtils.getUser().getId());
+//            user.setBusinessId(advertiserInfo.getId());
+//            userService.updateUser(user);
+
+//            advertiserInfo=advertiserInfoService.get(advertiserInfo.getId());
+            AdvertiserInfo advertiserInfo1 = new AdvertiserInfo();
+            advertiserInfo1.setBusinessLicense("/images/default2.png");
+            model.addAttribute("advertiserInfo", advertiserInfo1);
+        } catch (Exception e) {
+            //异常回滚
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            log.error("保存失败！ msg={}", e.getMessage(), e);
+            AdvertiserInfo advertiserInfo1 = new AdvertiserInfo();
+            advertiserInfo1.setBusinessLicense("/images/default2.png");
+            model.addAttribute("advertiserInfo", advertiserInfo1);
+            model.addAttribute("error", "保存失败！");
+            return "advertiserinfo/advertiserRegisterForm";
+        }
+        model.addAttribute("value", "1");
+        return "advertiserinfo/advertiserRegisterForm";
+    }
+
+    /**
+     * 得到中文首字母
+     *
+     * @param str
+     * @return
+     */
+    public static String getPinYinHeadChar(String str) {
+        String convert = "";
+        for (int j = 0; j < str.length(); j++) {
+            char word = str.charAt(j);
+            String[] pinyinArray = PinyinHelper.toHanyuPinyinStringArray(word);
+            if (pinyinArray != null) {
+                convert += pinyinArray[0].charAt(0);
+            } else {
+                convert += word;
+            }
+        }
+        return convert;
+    }
+
+    @Log("在线商家统计")
+    @RequestMapping("ShopService")
+    @RequiresPermissions("advertiserinfo:advertiserInfo:view")
+    public String ShopService() {
+        return "shopinfo/ShopServiceDateCount";
+    }
+
+
+    @Log("更新广告商我的财务")
+    @RequestMapping("updateMyAdvertiserFinance")
+    @RequiresPermissions("advertiserinfo:advertiserInfo:view")
+    public String updateMyAdvertiserFinance(AdvertiserInfo advertiserInfo, ModelMap modelMap, HttpServletRequest request, HttpServletResponse response) {
+        try {
+            //当前为新增的状态
+            if (advertiserInfo.getId() == null) {
+                SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");//设置日期格式
+                String nowdate = df.format(new Date());
+                String name = getPinYinHeadChar(advertiserInfo.getCompanyName());
+                String advertiserName = name + "" + nowdate;
+                advertiserInfo.setAdvertiserNumber(advertiserName);
+            }
+            advertiserInfoService.save(advertiserInfo);
+            //返回新增的主键id
+            if (advertiserInfo.getInsertId() != null) {
+                User user = new User();
+                user.setId(UserUtils.getUser().getId());
+                user.setBusinessId(advertiserInfo.getInsertId());
+                //更新当前用户信息
+                userService.save(user);
+                return myAdvertiserFinance2Index(advertiserInfo, modelMap);
+            }
+        } catch (Exception e) {
+            //异常回滚
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            log.error("更新失败！ msg={}", e.getMessage(), e);
+        }
+        return myAdvertiserFinanceIndex(advertiserInfo, modelMap);
+    }
+
+
+    //第一次广告商录入信息调用的接口
+    @RequestMapping("myAdvertiserFinance2Index")
+    @RequiresPermissions("advertiserinfo:advertiserInfo:view")
+    public String myAdvertiserFinance2Index(AdvertiserInfo advertiserInfo, ModelMap modelMap) {
+        //新增唯一标识的状态
+        advertiserInfo.setStatus(2);
+        //获取当前操作系统
+        String osName = System.getProperty("os.name");
+        String fileName = osName.toLowerCase().contains("windows") ? publicBean.WINDOWIP : publicBean.LUNIXIP;
+        advertiserInfo.setRoute(fileName);
+        modelMap.addAttribute("advertiserInfo", advertiserInfo);
+        return "advertiserinfo/advertiserInfoMyFinance";
+    }
+
+    /**
+     * @Description：广告商管理数据统计页面
+     * @author chen
+     */
+
+    @Log("打开广告商管理数据统计页面")
+    @RequestMapping("advertiserInfoCountList")
+    @RequiresPermissions("advertiserinfo:advertiserInfo:view")
+    public String advertiserInfoCountList() {
+        return "advertiserinfo/advertiserInfoCountList";
+    }
+
+
+    @Log("投放位选择")
+    @RequestMapping("selectPlease")
+    @RequiresPermissions("advertiserinfo:advertiserInfo:view")
+    public String selectPlease(ModelMap modelMap) {
+        Integer num = hotelInfoService.getAllHotelInfo();
+        HotelInfo hotelInfo = new HotelInfo();
+        hotelInfo.setCountNum(num);
+        modelMap.addAttribute("hotelInfo", hotelInfo);
+        return "advertiserinfo/selectPleaseList";
+    }
+
+    @Log("打开内容匹配")
+    @RequestMapping("contentMatch")
+    @RequiresPermissions("advertiserinfo:advertiserInfo:view")
+    public String contentMatch(AdvertisingOrder advertisingOrder, ModelMap modelMap) {
+    	Integer uploadTime = redisUtil.getByClass(RedisKeyCode.UPLOAD_ADVERTISEMENT_TIME, Integer.class);
+    	uploadTime = uploadTime == null ? 15 : uploadTime;
+        modelMap.addAttribute("uploadTime", uploadTime);
+        Integer picSize = redisUtil.getByClass(RedisKeyCode.UPLOAD_ADVERTISEMENT_P_SIZE, Integer.class);
+        picSize = picSize == null ? 10 : picSize;
+        modelMap.addAttribute("picSize", picSize);
+        Integer videoSize = redisUtil.getByClass(RedisKeyCode.UPLOAD_ADVERTISEMENT_V_SIZE, Integer.class);
+        videoSize = videoSize == null ? 30 : videoSize;
+        modelMap.addAttribute("videoSize", videoSize);
+        if (advertisingOrder.getId() == null) {
+            return "advertiserinfo/AdvertisementMatchForm";
+        } else {
+            advertisingOrder = advertisingOrderService.getTypeData(advertisingOrder.getOrdernumber());
+            if (advertisingOrder.getDeliveryType() == 1) {
+                advertisingOrder.setStateName("图文");
+            } else {
+                advertisingOrder.setStateName("视频");
+            }
+            String[] str = advertisingOrder.getStand().split(",");
+            advertisingOrder.setStand(adviertisementTypeService.getType3Name(Integer.parseInt(str[2])).getType3Name());
+            modelMap.addAttribute("advertisingOrder", advertisingOrder);
+            return "advertiserinfo/AdvertisementMatchForm";
+        }
+    }
+
+
+    @Log("获取广告主编号")
+    @RequestMapping("getMasterNum")
+    @ResponseBody
+    public List<AdvertiserInfo> getMasterNum(AdvertiserInfo advertiserInfo) {
+        advertiserInfo.setId(UserUtils.getUser().getBusinessId());
+        return advertiserInfoService.getMasterNum(advertiserInfo);
+    }
+
+    @Log("广告商星级管理页面")
+    @RequestMapping(value = "advertiserStar")
+    @RequiresPermissions("advertiserinfo:advertiserInfo:view")
+    public String advertiserStar(AdvertiserInfo advertiserInfo, ModelMap model) {
+        advertiserInfo = advertiserInfoService.get(advertiserInfo.getId());
+        LyConfigStar currentStar = lyConfigStarService.selectByPrimaryKey(advertiserInfo.getStarId());
+        advertiserInfo.setStarId(currentStar == null ? 0 : currentStar.getStar().longValue());
+        model.addAttribute("advertiserInfo", advertiserInfo);
+        List<LyConfigStar> configStars = lyConfigStarService.getAllConfigStar();
+        model.addAttribute("configStars", configStars);
+        return "advertiserinfo/advertiserStar";
+    }
+    
+    @Log("更新广告商星级")
+    @RequestMapping(value = "updateAdvertiserStar")
+    @RequiresPermissions("advertiserinfo:advertiserInfo:edit")
+    public String updateAdvertiserStar(AdvertiserInfo advertiserInfo, ModelMap model) {
+    	try {
+    		if (advertiserInfo != null && advertiserInfo.getId() != null && advertiserInfo.getStarId() != null) {
+    			advertiserInfoService.updateStar(advertiserInfo);
+			}
+        } catch (Exception e) {
+            log.error("更新广告商星级发生异常！ msg={}", e.getMessage(), e);
+            model.addAttribute("error", "更新失败！");
+            return index();
+        }
+        return successPath;
+    }
+}

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chunqiu.mrjuly.modules.hotelinfo.dao.ClientBianmaInfoDao">
+
+	<sql id="clientBianmaInfoColumns">
+		a.id AS "id",
+		a.equipment_number AS "equipmentNumber",
+		a.equipment_name AS "equipmentName",
+		a.type AS "type",
+		a.create_date AS "createDate",
+		a.dormancy_date AS "dormancyDate",
+		a.status AS "status",
+		a.unique_id AS "uniqueId",
+		a.activation AS "activation",
+		a.activation_date AS "activationDate"
+	</sql>
+
+	<sql id="clientBianmaInfoJoins">
+	</sql>
+
+	<select id="get" resultType="ClientBianmaInfo">
+		SELECT
+			<include refid="clientBianmaInfoColumns"/>
+		FROM client_bianma_info a
+		<include refid="clientBianmaInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="ClientBianmaInfo">
+		SELECT  DISTINCT a.equipment_name
+		FROM client_bianma_info a
+		LEFT JOIN notice_info n ON a.equipment_number=n.hotel_code_id
+		<include refid="clientBianmaInfoJoins"/>
+		<where>
+			a.type=1 AND
+			a.activation=1
+			and a.equipment_number = #{equipmentNumber}
+		</where>
+		<choose>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="ClientBianmaInfo">
+		SELECT
+			<include refid="clientBianmaInfoColumns"/>
+		FROM client_bianma_info a
+		<include refid="clientBianmaInfoJoins"/>
+		<where>
+
+		</where>
+		<choose>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO client_bianma_info(
+								equipment_number,
+						equipment_name,
+						type,
+						create_date,
+						dormancy_date,
+						status,
+						unique_id,
+						activation,
+						activation_date
+		) VALUES (
+								#{equipmentNumber},
+						#{equipmentName},
+						#{type},
+						#{createDate},
+						#{dormancyDate},
+						#{status},
+						#{uniqueId},
+						#{activation},
+						#{activationDate}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE client_bianma_info
+		<set>
+			<if test="equipmentNumber != null">
+				equipment_number = #{equipmentNumber},
+			</if>
+			<if test="equipmentName != null and equipmentName != ''">
+				equipment_name = #{equipmentName},
+			</if>
+			<if test="type != null">
+				type = #{type},
+			</if>
+			<if test="createDate != null and createDate != ''">
+				create_date = #{createDate},
+			</if>
+			<if test="dormancyDate != null and dormancyDate != ''">
+				dormancy_date = #{dormancyDate},
+			</if>
+			<if test="status != null">
+				status = #{status},
+			</if>
+			<if test="uniqueId != null">
+				unique_id = #{uniqueId},
+			</if>
+			<if test="activation != null">
+				activation = #{activation},
+			</if>
+			<if test="activationDate != null and activationDate != ''">
+				activation_date = #{activationDate},
+			</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		DELETE FROM client_bianma_info
+		WHERE id = #{id}
+	</update>
+
+</mapper>

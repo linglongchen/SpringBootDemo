@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>广告滚动时间管理</title>
+
+	<head th:include="init :: init"></head>
+
+	<script type="text/javascript">
+
+        //提交表单
+        function editDict(){
+            $('#signupForm').validate({
+                submitHandler:function(form){
+                    loading();
+                    form.action = '[[${ctx}]]/advertisingplaytime/advertisingPlayTime/saveAdvertisingPlayTime';
+                    form.submit();
+                }
+            });
+            $('#signupForm').submit();
+            closeLoading();
+        }
+
+
+	</script>
+</head>
+<body layadmin-themealias="default">
+	<div class="wrapper animated fadeInRight">
+		<div class="ibox-content">
+			<div class="row">
+				<form id="signupForm" class="layui-form form-horizontal m-t">
+					<input type="hidden" name="id" th:value="${advertisingPlayTime?.id}">
+					<div class="layui-form-item col-lg-12 col-sm-12 col-xs-12" style="margin-left: 26%">
+						<label class="col-xs-6 layui-form-label"><i class="required">*</i>全屏广告滚动时间(s)：</label>
+						<div class="col-xs-6">
+							<input name="fullScreenTime" id="fullScreenTime"class="layui-input" th:value="${advertisingPlayTime?.fullScreenTime }" placeholder="全屏广告滚动时间" autocomplete="off" type="number" required  maxlength="100">
+						</div>
+					</div>
+					<div class="layui-form-item col-lg-12 col-sm-12 col-xs-12" style="margin-left: 26%">
+						<label style="font-size: 15px" class="col-xs-6 layui-form-label"><i class="required">*</i>首页广告滚动时间(s)：</label>
+						<div class="col-xs-6">
+							<input  name="indexScreenTime" id="indexScreenTime" class="layui-input" th:value="${advertisingPlayTime?.indexScreenTime }" placeholder="首页广告滚动时间" autocomplete="off" type="number" required  maxlength="100">
+						</div>
+					</div>
+					<div>
+						<button class="btn btn-primary " id="btn" style="margin-left: -37.5%;margin-top: 15%" type="button" data-toggle="modal" onclick="editDict()"> <i class="fa fa-save"></i>&nbsp;保存</button>
+					</div>
+				</form>
+
+			</div>
+		</div>
+	</div>
+</body>
+</html>
