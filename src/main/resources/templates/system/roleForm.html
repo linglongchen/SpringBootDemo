@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>系统角色管理</title>
+
+	<head th:include="init :: init"></head>
+
+	<script type="text/javascript">
+		$(function(){
+		})
+
+		//提交表单
+		function validForm(){
+			$('#signupForm').validate({
+		        submitHandler:function(form){
+		            loading();
+		            form.action = '[[${ctx}]]/system/role/saveRole';
+					form.submit();
+		        }
+			});
+		    $('#signupForm').submit();
+		}
+	</script>
+</head>
+<body class="gray-bg">
+	<div class="wrapper animated fadeInRight">
+    	<div class="ibox-content">
+    		<div class="row">
+    			<form id="signupForm" class="layui-form form-horizontal m-t">
+    			<input type="hidden" name="id" th:value="${role.id}">
+					<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label"><i class="required">*</i>职位名称：</label>
+						<div class="col-xs-6">
+							<input name="name" class="layui-input" th:value="${role.name }" placeholder="请输入职位名称" autocomplete="off" type="text" required  maxlength="50">
+						</div>
+					</div>
+    				<div class="layui-form-item col-lg-6 col-sm-12 col-xs-12">
+						<label class="col-xs-3 layui-form-label"><i class="required">*</i>角色描述：</label>
+				        <div class="col-xs-6">
+    						<input name="comment" class="layui-input" th:value="${role.comment }" placeholder="请输入角色描述" autocomplete="off" type="text" required  maxlength="50">
+    					</div>
+				    </div>
+    			</form>
+    		</div>
+    	</div>
+    </div>
+</body>
+</html>
